@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   description: 'Machine Learning Researcher focused on computational neuroscience and early detection of neurological disorders. Bridging AI research with clinical medicine.',
   keywords: ['machine learning', 'neuroscience', 'research', 'developer', 'AI', 'medical'],
   authors: [{ name: 'Cameron Brady' }],
+  icons: {
+    icon: '/brain-favicon.svg',
+  },
   openGraph: {
     title: 'Cameron Brady - ML Researcher & Future Neurosurgeon',
     description: 'Bridging AI research with clinical medicine to advance neurological disorder detection',
