@@ -3,7 +3,9 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import Navigation from '@/components/Navigation'
 import type { Metadata } from 'next'
-import { Toaster } from "sonner";
+import { Toaster } from "sonner"
+import { Github, Linkedin } from 'lucide-react'
+import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -37,11 +39,31 @@ export default function RootLayout({
           {children}
           <Toaster position="top-right" />
         </main>
-        <footer className="bg-white border-t border-slate-200 py-12">
-          <div className="container mx-auto px-6 text-center">
+        <footer className="bg-white border-t border-slate-200 py-8">
+          <div className="container mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-slate-600">
-              © 2025 Cameron Brady. Built with Next.js and hosted on Vercel.
+              © 2025 Cameron Brady
             </p>
+            <div className="flex gap-4">
+              <Link
+                href="https://www.linkedin.com/in/cameron-brady-5770431b5/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-600 hover:text-blue-600 transition-colors"
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={24} />
+              </Link>
+              <Link
+                href="https://github.com/cameronbrady1527"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-600 hover:text-slate-900 transition-colors"
+                aria-label="GitHub"
+              >
+                <Github size={24} />
+              </Link>
+            </div>
           </div>
         </footer>
       </body>
