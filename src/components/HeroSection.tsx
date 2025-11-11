@@ -8,9 +8,10 @@ export default function HeroSection() {
   const [currentRole, setCurrentRole] = useState(0)
   
   const roles = [
+    'Academic Tutor',
+    'Fullstack Developer',
     'Machine Learning Researcher',
     'Computational Neuroscientist', 
-    'Future Neurosurgeon'
   ]
   
   useEffect(() => {

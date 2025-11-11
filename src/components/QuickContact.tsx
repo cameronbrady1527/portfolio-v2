@@ -22,7 +22,7 @@ export default function QuickContact() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <Mail className="text-blue-600" size={20} />
-                  <span className="text-slate-600">cameron.brady@example.com</span>
+                  <span className="text-slate-600"><a href="mailto:cameronbrady1527@gmail.com">cameronbrady1527@gmail.com</a></span>
                 </div>
                 
                 <div className="flex items-center gap-3">
@@ -35,7 +35,7 @@ export default function QuickContact() {
                 <h4 className="font-medium text-slate-700 mb-4">Connect With Me</h4>
                 <div className="flex gap-4">
                   <a 
-                    href="https://linkedin.com/in/cameronbrady"
+                    href="https://www.linkedin.com/in/cameron-brady-5770431b5/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"

@@ -50,7 +50,7 @@ const TestimonialsSection = () => {
         >
           <h2 className="text-4xl font-light text-slate-800 mb-4">Success Stories</h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            From confusion to confidence—see what students and parents say
+            From confusion to confidence, see what students and parents say
           </p>
         </motion.div>
 

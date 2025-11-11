@@ -1,4 +1,6 @@
 // components/ui/contact-form.tsx
+'use client'
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
@@ -130,10 +132,10 @@ const ContactForm = ({
 
     } catch (error) {
       console.error('Form submission error:', error);
-      const errorMessage = error instanceof Error ? error.message : "Please try again or contact me directly.";
-      
-      toast.error("Error sending message", {
-        description: errorMessage,
+
+      toast.error("Message failed to send", {
+        description: "The contact form is currently experiencing issues. Please email me at cameronbrady1527@gmail.com or text me at (845) 264-3972 while I work on fixing this. Sorry for the inconvenience!",
+        duration: 10000, // Show for 10 seconds so users have time to read
       });
     } finally {
       setIsSubmitting(false);
