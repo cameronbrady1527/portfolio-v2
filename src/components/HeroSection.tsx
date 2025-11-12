@@ -59,7 +59,13 @@ export default function HeroSection() {
               href="/projects"
               className="px-8 py-4 border-2 border-slate-300 text-slate-700 rounded-lg hover:border-slate-400 hover:bg-slate-50 transition-colors duration-200 text-lg font-medium"
             >
-              Technical Projects
+              Projects!
+            </Link>
+            <Link 
+              href="/services"
+              className="px-8 py-4 border-2 border-slate-300 text-slate-700 rounded-lg hover:border-slate-400 hover:bg-slate-50 transition-colors duration-200 text-lg font-medium"
+            >
+              Tutoring!
             </Link>
           </div>
           
@@ -67,14 +73,14 @@ export default function HeroSection() {
           <div className="max-w-2xl mx-auto p-6 bg-white/70 backdrop-blur-sm rounded-xl border border-slate-200">
             <p className="text-sm text-slate-500 uppercase tracking-wider mb-2">Currently Working On</p>
             <p className="text-slate-700 font-medium">
-              Parkinson's disease detection through vocal biomarkers using machine learning
+              Alzheimer's Prevention ML Systems, Research Assistance AI, & Client Programs 
             </p>
           </div>
         </div>
       </div>
       
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 animate-bounce">
         <ChevronDown size={24} className="text-slate-400" />
       </div>
     </section>
