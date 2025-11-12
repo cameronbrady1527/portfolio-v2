@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Create enum types
 CREATE TYPE user_role AS ENUM ('admin', 'user', 'guest');
-CREATE TYPE project_category AS ENUM ('ml', 'fullstack', 'frontend', 'backend', 'research', 'ai', 'dsa', 'other');
+CREATE TYPE project_category AS ENUM ('ml', 'fullstack', 'frontend', 'backend', 'research', 'ai', 'dsa', 'tutor', 'other');
 CREATE TYPE project_status AS ENUM ('active', 'completed', 'on_hold', 'cancelled');
 CREATE TYPE content_status AS ENUM ('published', 'draft', 'archived');
 
