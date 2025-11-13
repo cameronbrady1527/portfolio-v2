@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronDown, ArrowRight } from 'lucide-react';
+import { motion } from "motion/react";
+
+import { LayoutTextFlip } from '@/components/ui/layout-text-flip';
 
 export default function HeroSection() {
   const [currentRole, setCurrentRole] = useState(0);
@@ -46,16 +49,24 @@ export default function HeroSection() {
       <div className="container mx-auto px-6 text-center relative z-10">
         <div className="max-w-4xl mx-auto">
           {/* Main heading */}
-          <h1 className="text-5xl md:text-7xl font-light text-slate-800 mb-6">
+          {/* <h1 className="text-5xl md:text-7xl font-light text-slate-800 mb-6">
             Cameron Brady
-          </h1>
+          </h1> */}
           
           {/* Animated role */}
-          <div className="text-2xl md:text-3xl text-slate-600 mb-8 h-16 flex items-center justify-center">
+          {/* <div className="text-2xl md:text-3xl text-slate-600 mb-8 h-16 flex items-center justify-center">
             <span className="font-light transition-all duration-500 ease-in-out">
               {roles[currentRole]}
             </span>
-          </div>
+          </div> */}
+
+          {/* Animated role pt 2 */}
+          <motion.div className="relative mx-4 mb-4 flex flex-col items-center justify-center gap-4 text-center sm:mx-0 sm:mb-0 sm:flex-row">
+            <LayoutTextFlip 
+              text="Cameron Brady"
+              words={roles}
+            />
+          </motion.div>
           
           {/* Value proposition */}
           <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed">
