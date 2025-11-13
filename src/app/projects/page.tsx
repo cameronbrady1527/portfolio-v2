@@ -1,6 +1,6 @@
 // app/projects/page.tsx - Projects page
 import { Metadata } from 'next';
-import ProjectsGrid from '@/components/home/ProjectsGrid';
+import ProjectsGrid from '@/components/projects/ProjectsGrid';
 
 export const metadata: Metadata = {
   title: 'Projects - Cameron Brady',
