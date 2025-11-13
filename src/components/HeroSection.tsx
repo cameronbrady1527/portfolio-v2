@@ -1,26 +1,36 @@
 // components/HeroSection.tsx - Simplified hero section
 'use client'
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { ChevronDown, ArrowRight } from 'lucide-react'
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { ChevronDown, ArrowRight } from 'lucide-react';
 
 export default function HeroSection() {
-  const [currentRole, setCurrentRole] = useState(0)
-  
+  const [currentRole, setCurrentRole] = useState(0);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+
   const roles = [
     'Academic Tutor',
     'Fullstack Developer',
     'Machine Learning Researcher',
     'Computational Neuroscientist', 
-  ]
+  ];
   
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentRole((prev) => (prev + 1) % roles.length)
-    }, 3000)
+    }, 3000);
     
     return () => clearInterval(interval)
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollIndicator(window.scrollY < 50);
+    }
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
@@ -80,9 +90,10 @@ export default function HeroSection() {
       </div>
       
       {/* Scroll indicator */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <div className={`absolute bottom-4 left-1/2 transform -translate-x-1/2 animate-bounce transition-opacity duration-500 ${showScrollIndicator ? 'opacity-100'
+        : 'opacity-0 pointer-events-none'}`}>
         <ChevronDown size={24} className="text-slate-400" />
       </div>
     </section>
-  )
+  );
 }
