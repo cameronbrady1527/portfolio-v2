@@ -1,11 +1,12 @@
 // app/layout.tsx - Updated root layout
 import './globals.css'
 import { Inter } from 'next/font/google'
-import Navigation from '@/components/Navigation'
 import type { Metadata } from 'next'
 import { Toaster } from "sonner"
 import { Github, Linkedin } from 'lucide-react'
 import Link from 'next/link'
+
+import Navigation from '@/components/Navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 

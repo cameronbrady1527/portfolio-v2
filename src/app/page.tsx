@@ -1,6 +1,6 @@
-import HeroSection from "@/components/HeroSection";
-import FeaturedWork from "@/components/FeaturedWork";
-import QuickContact from "@/components/QuickContact";
+import HeroSection from "@/components/home/HeroSection";
+import FeaturedWork from "@/components/home/FeaturedWork";
+import QuickContact from "@/components/home/QuickContact";
 
 export default function Home() {
   const subtleGradient = {
