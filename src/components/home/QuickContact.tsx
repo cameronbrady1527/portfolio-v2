@@ -24,13 +24,13 @@ export default function QuickContact() {
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Contact info */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="bg-white rounded-xl p-8 border border-slate-200"
+              className="bg-white rounded-xl p-6 border border-slate-200"
             >
-              <h3 className="text-xl font-semibold text-slate-800 mb-6">Contact Information</h3>
+              <h3 className="text-xl font-semibold text-slate-800 mb-4">Contact Information</h3>
               
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
@@ -44,10 +44,10 @@ export default function QuickContact() {
                 </div>
               </div>
               
-              <div className="border-t border-slate-200 pt-6 mt-6">
-                <h4 className="font-medium text-slate-700 mb-4">Connect With Me</h4>
+              <div className="border-t border-slate-200 pt-4 mt-4">
+                <h4 className="font-medium text-slate-700 mb-3">Connect With Me</h4>
                 <div className="flex gap-4">
-                  <a 
+                  <a
                     href="https://www.linkedin.com/in/cameron-brady-5770431b5/"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -55,7 +55,7 @@ export default function QuickContact() {
                   >
                     <Linkedin size={20} className="text-slate-600" />
                   </a>
-                  <a 
+                  <a
                     href="https://github.com/cameronbrady1527"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -64,6 +64,78 @@ export default function QuickContact() {
                     <Github size={20} className="text-slate-600" />
                   </a>
                 </div>
+              </div>
+
+              <div className="border-t-2 border-slate-300 pt-6 mt-8">
+                <h3 className="text-xl font-semibold text-slate-800 mb-4">Interested in Hiring Me?</h3>
+                <motion.a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
+                  initial="initial"
+                  whileHover="hover"
+                >
+                  <span className="relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
+                               after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
+                               hover:after:origin-left hover:after:scale-x-100 after:transition-transform
+                               after:duration-300 after:ease-out">
+                    View Resume
+                  </span>
+                  <motion.span
+                    variants={{
+                      initial: { x: 0 },
+                      hover: {
+                        x: [0, 8, 0],
+                        transition: {
+                          duration: 0.6,
+                          ease: "easeInOut",
+                          repeat: Infinity
+                        }
+                      }
+                    }}
+                    className="inline-block"
+                  >
+                    <ArrowRight size={16} />
+                  </motion.span>
+                </motion.a>
+              </div>
+
+              <div className="border-t border-slate-200 pt-4 mt-4">
+                <h4 className="font-medium text-slate-700 mb-3">Not Sure Yet?</h4>
+                <Link
+                  href="/about"
+                  className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  <motion.div
+                    className="flex items-center gap-2"
+                    initial="initial"
+                    whileHover="hover"
+                  >
+                    <span className="relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
+                                 after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
+                                 hover:after:origin-left hover:after:scale-x-100 after:transition-transform
+                                 after:duration-300 after:ease-out">
+                      Learn More About Me
+                    </span>
+                    <motion.span
+                      variants={{
+                        initial: { x: 0 },
+                        hover: {
+                          x: [0, 8, 0],
+                          transition: {
+                            duration: 0.6,
+                            ease: "easeInOut",
+                            repeat: Infinity
+                          }
+                        }
+                      }}
+                      className="inline-block"
+                    >
+                      <ArrowRight size={16} />
+                    </motion.span>
+                  </motion.div>
+                </Link>
               </div>
             </motion.div>
             
@@ -110,27 +182,38 @@ export default function QuickContact() {
               </form>
               
               <div className="mt-6 pt-6 border-t border-slate-200">
-                <Link 
+                <Link
                   href="/contact"
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
                 >
-                  <span className="relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
-                               after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
-                               hover:after:origin-left hover:after:scale-x-100 after:transition-transform
-                               after:duration-300 after:ease-out">
-                    View Full Contact Page
-                  </span>
-                  <motion.span
-                    animate={{ x: [0, 8, 0] }}
-                    transition={{
-                      duration: 1.0,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                    className="inline-block"
+                  <motion.div
+                    className="flex items-center gap-2"
+                    initial="initial"
+                    whileHover="hover"
                   >
-                    <ArrowRight size={16} />
-                  </motion.span>
+                    <span className="relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
+                                 after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
+                                 hover:after:origin-left hover:after:scale-x-100 after:transition-transform
+                                 after:duration-300 after:ease-out">
+                      View Full Contact Page
+                    </span>
+                    <motion.span
+                      variants={{
+                        initial: { x: 0 },
+                        hover: {
+                          x: [0, 8, 0],
+                          transition: {
+                            duration: 0.6,
+                            ease: "easeInOut",
+                            repeat: Infinity
+                          }
+                        }
+                      }}
+                      className="inline-block"
+                    >
+                      <ArrowRight size={16} />
+                    </motion.span>
+                  </motion.div>
                 </Link>
               </div>
             </motion.div>

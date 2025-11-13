@@ -17,8 +17,7 @@ export default function Navigation() {
     { href: '/about', label: 'About' },
     { href: '/projects', label: 'Projects' },
     { href: '/services', label: 'Services' },
-    { href: '/contact', label: 'Contact' },
-    { href: '/resume.pdf', label: 'Resume', isExternal: true }
+    { href: '/contact', label: 'Contact' }
   ];
 
   useEffect(() => {
@@ -55,7 +54,7 @@ export default function Navigation() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
                   transition={{ duration: 0.2 }}
-                  className="text-xl font-semibold text-slate-400"
+                  className="text-base font-normal text-slate-400"
                 >
                   {hoveredPath}
                 </motion.span>
@@ -64,24 +63,9 @@ export default function Navigation() {
           </div>
           
           {/* Desktop navigation */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
             {navItems.map((item) =>
-              item.isExternal ? (
-                <div
-                  key={item.href}
-                  onMouseEnter={() => setHoveredPath(item.href)}
-                  onMouseLeave={() => setHoveredPath(null)}
-                >
-                  <a
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                  >
-                    {item.label}
-                  </a>
-                </div>
-              ) : (
+              (
                 <div
                   key={item.href}
                   onMouseEnter={() => setHoveredPath(item.href)}
@@ -120,34 +104,19 @@ export default function Navigation() {
         {isOpen && (
           <div className="md:hidden border-t border-slate-200 bg-white/95 backdrop-blur-md">
             <div className="py-4 space-y-2">
-              {navItems.map((item) =>
-                item.isExternal ? (
-                  <div key={item.href} className="px-4 pt-2">
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg text-center font-medium hover:bg-blue-700 transition-colors"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {item.label}
-                    </a>
-                  </div>
-                ) : (
-                  <Link
-                    key={item.href}
+              {navItems.map((item) =>(
+                <div key={item.href} className="px-4 pt-2">
+                  <a
                     href={item.href}
-                    className={`block py-2 px-4 transition-colors ${
-                      pathname === item.href
-                        ? 'text-blue-600 bg-blue-50'
-                        : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50'
-                    }`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg text-center font-medium hover:bg-blue-700 transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
                     {item.label}
-                  </Link>
-                )
-              )}
+                  </a>
+                </div>
+              ))}
             </div>
           </div>
         )}
