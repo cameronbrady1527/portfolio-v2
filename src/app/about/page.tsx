@@ -1,6 +1,7 @@
 // app/about/page.tsx - About page
 import { Metadata } from 'next'
 import { GraduationCap, Brain, Stethoscope, Code } from 'lucide-react'
+import NavLink from '@/components/NavLink'
 
 export const metadata: Metadata = {
   title: 'About - Cameron Brady',
@@ -159,12 +160,12 @@ export default function AboutPage() {
                 I'm always interested in discussing research opportunities, collaboration possibilities, 
                 or innovative applications of AI in healthcare.
               </p>
-              <a 
+              <NavLink
                 href="/contact"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
               >
                 Get In Touch
-              </a>
+              </NavLink>
             </div>
           </div>
         </div>

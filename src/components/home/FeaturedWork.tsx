@@ -7,6 +7,7 @@ import { motion } from 'motion/react';
 import { Github, ExternalLink, BookOpen, ArrowRight } from 'lucide-react';
 
 import { ProjectsContext } from '@/lib/utils';
+import NavLink from '@/components/NavLink';
 
 export default function FeaturedWork() {
   const allProjects = useContext(ProjectsContext);
@@ -37,28 +38,39 @@ export default function FeaturedWork() {
             className="flex items-center justify-between mb-8"
           >
             <h3 className="text-2xl font-semibold text-slate-800">Check These Out!</h3>
-            <Link 
+            <NavLink
               href="/projects"
               className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium group"
             >
-              <span className="relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
-                               after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
-                               hover:after:origin-left hover:after:scale-x-100 after:transition-transform
-                               after:duration-300 after:ease-out">
-                All Projects
-              </span>
-              <motion.span
-                animate={{ x: [0, 8, 0] }}
-                transition={{
-                  duration: 1.0,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="inline-block"
+              <motion.div
+                className="flex items-center gap-2"
+                initial="initial"
+                whileHover="hover"
               >
-                <ArrowRight size={18} />
-              </motion.span>
-            </Link>
+                <span className="relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
+                                 after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
+                                 hover:after:origin-left hover:after:scale-x-100 after:transition-transform
+                                 after:duration-300 after:ease-out">
+                  All Projects
+                </span>
+                <motion.span
+                  variants={{
+                    initial: { x: 0 },
+                    hover: {
+                      x: [0, 8, 0],
+                      transition: {
+                        duration: 0.6,
+                        ease: "easeInOut",
+                        repeat: Infinity
+                      }
+                    }
+                  }}
+                  className="inline-block"
+                >
+                  <ArrowRight size={18} />
+                </motion.span>
+              </motion.div>
+            </NavLink>
           </motion.div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

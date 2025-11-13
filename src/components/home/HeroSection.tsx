@@ -6,6 +6,7 @@ import { ChevronDown, ArrowRight } from 'lucide-react';
 import { motion } from "motion/react";
 
 import { LayoutTextFlip } from '@/components/ui/layout-text-flip';
+import NavLink from '@/components/NavLink';
 
 export default function HeroSection() {
   const [currentRole, setCurrentRole] = useState(0);
@@ -67,18 +68,18 @@ export default function HeroSection() {
           
           {/* Call-to-action buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Link 
+            <NavLink
               href="/projects"
               className="px-8 py-4 border-2 border-slate-300 text-slate-700 rounded-lg hover:border-slate-400 hover:bg-slate-50 transition-colors duration-200 text-lg font-medium"
             >
               Projects!
-            </Link>
-            <Link 
+            </NavLink>
+            <NavLink
               href="/services"
               className="px-8 py-4 border-2 border-slate-300 text-slate-700 rounded-lg hover:border-slate-400 hover:bg-slate-50 transition-colors duration-200 text-lg font-medium"
             >
               Tutoring!
-            </Link>
+            </NavLink>
           </div>
           
           {/* Current focus */}

@@ -4,6 +4,7 @@
 import { Mail, Phone, MapPin, Linkedin, Github, ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
+import NavLink from '@/components/NavLink';
 
 export default function QuickContact() {
   return (
@@ -68,42 +69,45 @@ export default function QuickContact() {
 
               <div className="border-t-2 border-slate-300 pt-6 mt-8">
                 <h3 className="text-xl font-semibold text-slate-800 mb-4">Interested in Hiring Me?</h3>
-                <motion.a
+                <NavLink
                   href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  openInNewTab
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
-                  initial="initial"
-                  whileHover="hover"
                 >
-                  <span className="relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
-                               after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
-                               hover:after:origin-left hover:after:scale-x-100 after:transition-transform
-                               after:duration-300 after:ease-out">
-                    View Resume
-                  </span>
-                  <motion.span
-                    variants={{
-                      initial: { x: 0 },
-                      hover: {
-                        x: [0, 8, 0],
-                        transition: {
-                          duration: 0.6,
-                          ease: "easeInOut",
-                          repeat: Infinity
-                        }
-                      }
-                    }}
-                    className="inline-block"
+                  <motion.div
+                    className="flex items-center gap-2"
+                    initial="initial"
+                    whileHover="hover"
                   >
-                    <ArrowRight size={16} />
-                  </motion.span>
-                </motion.a>
+                    <span className="relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
+                                 after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
+                                 hover:after:origin-left hover:after:scale-x-100 after:transition-transform
+                                 after:duration-300 after:ease-out">
+                      View Resume
+                    </span>
+                    <motion.span
+                      variants={{
+                        initial: { x: 0 },
+                        hover: {
+                          x: [0, 8, 0],
+                          transition: {
+                            duration: 0.6,
+                            ease: "easeInOut",
+                            repeat: Infinity
+                          }
+                        }
+                      }}
+                      className="inline-block"
+                    >
+                      <ArrowRight size={16} />
+                    </motion.span>
+                  </motion.div>
+                </NavLink>
               </div>
 
               <div className="border-t border-slate-200 pt-4 mt-4">
                 <h4 className="font-medium text-slate-700 mb-3">Not Sure Yet?</h4>
-                <Link
+                <NavLink
                   href="/about"
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
                 >
@@ -135,7 +139,7 @@ export default function QuickContact() {
                       <ArrowRight size={16} />
                     </motion.span>
                   </motion.div>
-                </Link>
+                </NavLink>
               </div>
             </motion.div>
             
@@ -182,7 +186,7 @@ export default function QuickContact() {
               </form>
               
               <div className="mt-6 pt-6 border-t border-slate-200">
-                <Link
+                <NavLink
                   href="/contact"
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
                 >
@@ -214,7 +218,7 @@ export default function QuickContact() {
                       <ArrowRight size={16} />
                     </motion.span>
                   </motion.div>
-                </Link>
+                </NavLink>
               </div>
             </motion.div>
           </div>
