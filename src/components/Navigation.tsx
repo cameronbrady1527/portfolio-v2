@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hoveredPath, setHoveredPath] = useState<string | null>(null);
   const pathname = usePathname();
   
   const navItems = [
@@ -16,8 +18,9 @@ export default function Navigation() {
     { href: '/projects', label: 'Projects' },
     { href: '/services', label: 'Services' },
     { href: '/contact', label: 'Contact' },
+    { href: '/resume.pdf', label: 'Resume', isExternal: true }
   ];
-  
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -34,36 +37,74 @@ export default function Navigation() {
     }`}>
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          <Link 
-            href="/" 
-            className="text-xl font-semibold text-slate-800 hover:text-blue-600 transition-colors"
+          <div
+            className="flex items-center"
+            onMouseEnter={() => setHoveredPath('/')}
+            onMouseLeave={() => setHoveredPath(null)}
           >
-            Cameron Brady
-          </Link>
+            <Link
+              href="/"
+              className="text-xl font-semibold text-slate-800 hover:text-blue-600 transition-colors"
+            >
+              cameronbrady.dev
+            </Link>
+            <AnimatePresence>
+              {hoveredPath && (
+                <motion.span
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  transition={{ duration: 0.2 }}
+                  className="text-xl font-semibold text-slate-400"
+                >
+                  {hoveredPath}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
           
           {/* Desktop navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`font-medium transition-colors ${
-                  pathname === item.href
-                    ? 'text-blue-600'
-                    : 'text-slate-600 hover:text-slate-800'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-            >
-              Resume
-            </a>
+          <div className="hidden md:flex items-center space-x-4">
+            {navItems.map((item) =>
+              item.isExternal ? (
+                <div
+                  key={item.href}
+                  onMouseEnter={() => setHoveredPath(item.href)}
+                  onMouseLeave={() => setHoveredPath(null)}
+                >
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  >
+                    {item.label}
+                  </a>
+                </div>
+              ) : (
+                <div
+                  key={item.href}
+                  onMouseEnter={() => setHoveredPath(item.href)}
+                  onMouseLeave={() => setHoveredPath(null)}
+                >
+                  <Link
+                    href={item.href}
+                    className={`font-medium transition-colors ${
+                      pathname === item.href
+                        ? 'text-blue-600'
+                        : 'text-slate-600 hover:text-slate-800'
+                    }`}
+                  >
+                    <span className="relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
+                                   after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
+                                   hover:after:origin-left hover:after:scale-x-100 after:transition-transform
+                                   after:duration-300 after:ease-out">
+                      {item.label}
+                    </span>
+                  </Link>
+                </div>
+              )
+            )}
           </div>
           
           {/* Mobile menu button */}
@@ -79,30 +120,34 @@ export default function Navigation() {
         {isOpen && (
           <div className="md:hidden border-t border-slate-200 bg-white/95 backdrop-blur-md">
             <div className="py-4 space-y-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`block py-2 px-4 transition-colors ${
-                    pathname === item.href
-                      ? 'text-blue-600 bg-blue-50'
-                      : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50'
-                  }`}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <div className="px-4 pt-2">
-                <a
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg text-center font-medium hover:bg-blue-700 transition-colors"
-                >
-                  Resume
-                </a>
-              </div>
+              {navItems.map((item) =>
+                item.isExternal ? (
+                  <div key={item.href} className="px-4 pt-2">
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg text-center font-medium hover:bg-blue-700 transition-colors"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.label}
+                    </a>
+                  </div>
+                ) : (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`block py-2 px-4 transition-colors ${
+                      pathname === item.href
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50'
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              )}
             </div>
           </div>
         )}
