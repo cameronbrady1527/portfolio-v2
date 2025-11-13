@@ -1,6 +1,6 @@
 // app/layout.tsx - Updated root layout
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Inter, JetBrains_Mono } from 'next/font/google'
 import type { Metadata } from 'next'
 import { Toaster } from "sonner"
 import { Github, Linkedin } from 'lucide-react'
@@ -8,7 +8,8 @@ import Link from 'next/link'
 
 import Navigation from '@/components/Navigation'
 
-const inter = Inter({ subsets: ['latin'] })
+// const inter = Inter({ subsets: ['latin'] })
+const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Cameron Brady - ML Researcher & Future Neurosurgeon',
@@ -34,7 +35,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} antialiased bg-slate-50`}>
+      <body className={`${jetbrainsMono.className} antialiased bg-slate-50`}>
         <Navigation />
         <main className="min-h-screen">
           {children}
