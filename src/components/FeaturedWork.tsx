@@ -1,10 +1,12 @@
 // components/FeaturedWork.tsx - Featured projects and research
-'use client'
-import Link from 'next/link'
-import { useContext } from 'react'
-import { Github, ExternalLink, BookOpen, ArrowRight } from 'lucide-react'
+'use client';
 
-import { ProjectsContext } from '@/lib/utils'
+import Link from 'next/link';
+import { useContext } from 'react';
+import { motion } from 'motion/react';
+import { Github, ExternalLink, BookOpen, ArrowRight } from 'lucide-react';
+
+import { ProjectsContext } from '@/lib/utils';
 
 export default function FeaturedWork() {
   const allProjects = useContext(ProjectsContext);
@@ -14,28 +16,60 @@ export default function FeaturedWork() {
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto w-9/10 px-6">
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
           <h2 className="text-4xl font-light text-slate-800 mb-4">Featured Work</h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
             Highlights from my research and technical projects
           </p>
-        </div>
+        </motion.div>
         
         {/* Featured Projects */}
         <div className="mb-20">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-2xl font-semibold text-slate-800">Featured Projects</h3>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex items-center justify-between mb-8"
+          >
+            <h3 className="text-2xl font-semibold text-slate-800">Check These Out!</h3>
             <Link 
               href="/projects"
-              className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
+              className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium group"
             >
-              View All Projects <ArrowRight size={16} />
+              <span className="relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
+                               after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
+                               hover:after:origin-left hover:after:scale-x-100 after:transition-transform
+                               after:duration-300 after:ease-out">
+                All Projects
+              </span>
+              <motion.span
+                animate={{ x: [0, 8, 0] }}
+                transition={{
+                  duration: 1.0,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="inline-block"
+              >
+                <ArrowRight size={18} />
+              </motion.span>
             </Link>
-          </div>
+          </motion.div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {featuredProjects.map((project) => (
-              <div key={project.title} className="group bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            {featuredProjects.map((project, index) => (
+              <motion.div 
+                key={project.title} 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="group bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              >
                 <div className="p-6">
                   {/* <div className="flex items-center justify-between mb-3">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -93,7 +127,7 @@ export default function FeaturedWork() {
                     )}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

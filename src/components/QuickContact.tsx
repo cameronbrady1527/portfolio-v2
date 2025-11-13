@@ -1,22 +1,35 @@
 // components/QuickContact.tsx - Contact section for home page
-import { Mail, Phone, MapPin, Linkedin, Github } from 'lucide-react'
-import Link from 'next/link'
+"use client";
+
+import { Mail, Phone, MapPin, Linkedin, Github, ArrowRight } from 'lucide-react';
+import { motion } from 'motion/react';
+import Link from 'next/link';
 
 export default function QuickContact() {
   return (
     <section className="py-20 bg-slate-100">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-12">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
           <h2 className="text-4xl font-light text-slate-800 mb-4">Get In Touch</h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
             Interested in collaboration, research opportunities, or discussing AI applications in healthcare?
           </p>
-        </div>
+        </motion.div>
         
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Contact info */}
-            <div className="bg-white rounded-xl p-8 border border-slate-200">
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="bg-white rounded-xl p-8 border border-slate-200"
+            >
               <h3 className="text-xl font-semibold text-slate-800 mb-6">Contact Information</h3>
               
               <div className="space-y-4">
@@ -52,10 +65,15 @@ export default function QuickContact() {
                   </a>
                 </div>
               </div>
-            </div>
+            </motion.div>
             
             {/* Quick contact form */}
-            <div className="bg-white rounded-xl p-8 border border-slate-200">
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-white rounded-xl p-8 border border-slate-200"
+            >
               <h3 className="text-xl font-semibold text-slate-800 mb-6">Send a Message</h3>
               
               <form className="space-y-4">
@@ -94,15 +112,31 @@ export default function QuickContact() {
               <div className="mt-6 pt-6 border-t border-slate-200">
                 <Link 
                   href="/contact"
-                  className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+                  className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
                 >
-                  View full contact page →
+                  <span className="relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
+                               after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
+                               hover:after:origin-left hover:after:scale-x-100 after:transition-transform
+                               after:duration-300 after:ease-out">
+                    View Full Contact Page
+                  </span>
+                  <motion.span
+                    animate={{ x: [0, 8, 0] }}
+                    transition={{
+                      duration: 1.0,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    className="inline-block"
+                  >
+                    <ArrowRight size={16} />
+                  </motion.span>
                 </Link>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
