@@ -29,10 +29,10 @@ export default function ProjectsGrid() {
 
   const categories = [
     // { id: 'all', label: 'All Projects', count: allProjects.length },
-    { id: 'project', label: 'Project', count: allProjects.filter(p => p.type.includes('project')).length },
-    { id: 'ml', label: 'Machine Learning', count: allProjects.filter(p => p.type.includes('ml')).length },
+    { id: 'project', label: 'All', count: allProjects.filter(p => p.type.includes('project')).length },
+    { id: 'ml', label: 'ML', count: allProjects.filter(p => p.type.includes('ml')).length },
     { id: 'ai', label: 'AI', count: allProjects.filter(p => p.type.includes('ai')).length },
-    { id: 'research', label: 'Research Tools', count: allProjects.filter(p => p.type.includes('research')).length },
+    { id: 'research', label: 'Research', count: allProjects.filter(p => p.type.includes('research')).length },
     { id: 'cornell', label: 'Cornell Project', count: allProjects.filter(p => p.type.includes('cornell')).length },
   ];
   

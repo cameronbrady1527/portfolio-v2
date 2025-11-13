@@ -14,17 +14,8 @@ export default function HeroSection() {
   const roles = [
     'Academic Tutor',
     'Fullstack Developer',
-    'Machine Learning Researcher',
-    'Computational Neuroscientist', 
+    'ML Researcher',
   ];
-  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentRole((prev) => (prev + 1) % roles.length)
-    }, 3000);
-    
-    return () => clearInterval(interval)
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
