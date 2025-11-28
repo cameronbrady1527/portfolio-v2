@@ -55,22 +55,25 @@ export const ExperienceSection = () => {
                 index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
               }`}
             >
-              {/* Timeline dot */}
-              <div className={`absolute left-8 md:left-1/2 w-4 h-4 -ml-2 rounded-full bg-${exp.color}-500 border-4 border-white shadow-lg z-10`} />
+              {/* Timeline dot - simple circle, pulsating green if current */}
+              <div className="absolute left-8 md:left-1/2 -ml-2 z-10">
+                {exp.current ? (
+                  <div className="relative flex h-4 w-4">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500 border-2 border-white shadow-lg"></span>
+                  </div>
+                ) : (
+                  <div className="w-4 h-4 rounded-full bg-slate-400 border-2 border-white shadow-lg"></div>
+                )}
+              </div>
 
               {/* Content */}
               <div className={`flex-1 ${index % 2 === 0 ? 'md:text-right md:pr-12' : 'md:pl-12'} pl-20 md:pl-0`}>
                 <div className={`inline-block ${index % 2 === 0 ? 'md:float-right' : ''}`}>
-                  <div className="mb-2">
-                    <div className={`inline-flex items-center gap-2 px-3 py-1 bg-${exp.color}-100 rounded-full`}>
-                      <div className={`text-${exp.color}-600`}>
-                        {getIcon(exp.iconName, "h-4 w-4")}
-                      </div>
-                      <span className={`text-xs font-medium text-${exp.color}-700`}>{exp.period}</span>
-                    </div>
-                  </div>
                   <h3 className="text-xl font-semibold text-slate-800 mb-1">{exp.title}</h3>
-                  <p className="text-sm font-medium text-slate-600 mb-3">{exp.company}</p>
+                  <p className="text-sm font-medium text-slate-600 mb-3">
+                    {exp.company} <span className="text-slate-400">·</span> {exp.period}
+                  </p>
                   <p className="text-sm text-slate-600 leading-relaxed max-w-md">{exp.description}</p>
                 </div>
               </div>

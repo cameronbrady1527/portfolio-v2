@@ -20,6 +20,7 @@ export interface Experience {
   description: string;
   iconName: 'Code' | 'Briefcase' | 'BookOpen' | 'GraduationCap' | 'TreePine' | 'Brain';
   color: 'blue' | 'purple' | 'green' | 'indigo' | 'emerald' | 'pink';
+  current?: boolean; // Mark if this is a current/active position
 }
 
 export interface VolunteerWork {
@@ -90,7 +91,8 @@ const experiences: Experience[] = [
     period: "Jun 2025 - Present",
     description: "Building full-stack AI-powered web applications and web crawling automations for clients and the Astral platform.",
     iconName: "Code",
-    color: "blue"
+    color: "blue",
+    current: true
   },
   {
     title: "Independent Nonprofit Consultant",
@@ -106,7 +108,8 @@ const experiences: Experience[] = [
     period: "2024 - Present",
     description: "K-12 classroom coverage across all subjects. Specialized in supporting students with IEPs and learning disabilities through personalized instruction.",
     iconName: "BookOpen",
-    color: "green"
+    color: "green",
+    current: true
   },
   {
     title: "Head Teaching Assistant",
@@ -130,7 +133,8 @@ const experiences: Experience[] = [
     period: "2018 - Present",
     description: "K-12 tutoring specializing in math and science subjects. Consistently high success rates through personalized, adaptive teaching approaches.",
     iconName: "Brain",
-    color: "pink"
+    color: "pink",
+    current: true
   }
 ];
 

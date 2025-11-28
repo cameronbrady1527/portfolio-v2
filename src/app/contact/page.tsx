@@ -8,8 +8,14 @@ import { motion } from 'framer-motion'
 
 export default function ContactPage() {
   return (
-    <div className="pt-20 pb-16 min-h-screen bg-slate-50">
-      <div className="container mx-auto px-6">
+    <div className="pt-20 pb-16 min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 relative">
+      {/* Floating background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-200 rounded-full blur-3xl opacity-20 animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-200 rounded-full blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <motion.div
@@ -36,7 +42,7 @@ export default function ContactPage() {
               className="space-y-6"
             >
               {/* Contact Details */}
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
+              <div className="bg-white rounded-xl p-6 border border-slate-200 relative" style={{ zIndex: 20 }}>
                 <h3 className="text-lg font-semibold text-slate-800 mb-4">Contact Information</h3>
 
                 <div className="space-y-4">
@@ -85,7 +91,7 @@ export default function ContactPage() {
               </div>
 
               {/* Social Links */}
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
+              <div className="bg-white rounded-xl p-6 border border-slate-200 relative" style={{ zIndex: 20 }}>
                 <h3 className="text-lg font-semibold text-slate-800 mb-4">Connect With Me</h3>
                 <div className="space-y-3">
                   <a
@@ -110,7 +116,7 @@ export default function ContactPage() {
               </div>
 
               {/* Office Hours / Availability */}
-              <div className="bg-blue-50 rounded-xl p-6 border border-blue-100">
+              <div className="bg-blue-50 rounded-xl p-6 border border-blue-100 relative" style={{ zIndex: 20 }}>
                 <h3 className="text-lg font-semibold text-slate-800 mb-3">Availability</h3>
                 <p className="text-sm text-slate-600 mb-3">
                   I'm currently available for:
@@ -164,7 +170,7 @@ export default function ContactPage() {
               Frequently Asked Questions
             </h2>
 
-            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden relative p-6" style={{ zIndex: 20 }}>
               <Accordion
                 items={[
                   {

@@ -210,7 +210,7 @@ const ContactForm = ({
   };
 
   const SuccessContent = () => (
-    <Card className={`shadow-lg ${className}`}>
+    <Card className={`shadow-lg relative ${className}`} style={{ zIndex: 20 }}>
       <CardContent className="flex flex-col items-center justify-center p-12 text-center">
         <motion.div
           initial={{ scale: 0 }}
@@ -365,7 +365,7 @@ const ContactForm = ({
   }
 
   return (
-    <Card className={`shadow-lg hover:shadow-xl transition-shadow duration-300 ${className}`}>
+    <Card className={`shadow-lg hover:shadow-xl transition-shadow duration-300 relative ${className}`} style={{ zIndex: 20 }}>
       <CardHeader>
         <CardTitle className="text-2xl text-center">{title}</CardTitle>
         {subtitle && <p className="text-center text-gray-600">{subtitle}</p>}

@@ -15,8 +15,8 @@ export default function FeaturedWork() {
   const featuredProjects = allProjects.slice(0, 4);
 
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto w-9/10 px-6">
+    <section className="py-20">
+      <div className="container mx-auto w-9/10 px-6 relative z-10">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -61,7 +61,7 @@ export default function FeaturedWork() {
                       transition: {
                         duration: 0.6,
                         ease: "easeInOut",
-                        repeat: Infinity
+                        repeat: 1
                       }
                     }
                   }}
@@ -104,10 +104,6 @@ export default function FeaturedWork() {
 
                 {/* Content Area */}
                 <div className="flex-1">
-                  <div className="inline-block px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium mb-4">
-                    Featured
-                  </div>
-
                   <h4 className="text-3xl font-light text-slate-800 mb-4">
                     {project.title}
                   </h4>

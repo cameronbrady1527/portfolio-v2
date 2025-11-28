@@ -26,15 +26,6 @@ const HeroSection = () => {
 
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-16 pb-12">
-      {/* Subtle background gradient matching main site */}
-      <div className="absolute inset-0 bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50" />
-
-      {/* Floating elements for depth */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-200 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-200 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-      </div>
-
       <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center relative z-10">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -57,7 +48,7 @@ const HeroSection = () => {
           className="relative"
         >
           {/* Clean card matching main site aesthetic */}
-          <div className="bg-white/70 backdrop-blur-sm border border-slate-200 rounded-xl p-8 flex flex-col items-center justify-center shadow-lg">
+          <div className="bg-white/70 backdrop-blur-sm border border-slate-200 rounded-xl p-8 flex flex-col items-center justify-center shadow-lg relative" style={{ zIndex: 20 }}>
             <div className="text-center">
               <div className="relative w-40 h-40 sm:w-48 sm:h-48 mx-auto mb-6">
                 <Image

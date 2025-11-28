@@ -181,7 +181,7 @@ const generateConfirmationEmail = (data: any) => {
       <p style="margin-top: 30px;">
         Looking forward to ${formVariant === 'tutoring' ? 'helping you succeed' : 'working together'}!<br>
         <strong>Cameron Brady</strong><br>
-        <a href="mailto:your-email@gmail.com">your-email@gmail.com</a><br>
+        <a href="mailto:cameronbrady1527@gmail.com">your-email@gmail.com</a><br>
         <a href="https://cameronbrady.dev">cameronbrady.dev</a>
       </p>
     </div>
@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
     // Send email to you (the recipient)
     const { data: tutorEmail, error: tutorError } = await resend.emails.send({
       from: `${formVariant === 'tutoring' ? 'Tutoring' : formVariant === 'portfolio' ? 'Portfolio' : 'Contact'} Inquiry <noreply@cameronbrady.dev>`,
-      to: ['your-email@gmail.com'], // Your email
+      to: ['cameronbrady1527@gmail.com'],
       subject: subjectLine,
       html: tutorEmailHtml,
     });

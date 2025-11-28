@@ -1,4 +1,4 @@
-// components/HeroSection.tsx - Simplified hero section
+// components/HeroSection.tsx
 'use client'
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -9,7 +9,6 @@ import { LayoutTextFlip } from '@/components/ui/layout-text-flip';
 import NavLink from '@/components/NavLink';
 
 export default function HeroSection() {
-  const [currentRole, setCurrentRole] = useState(0);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
   const roles = [
@@ -29,15 +28,6 @@ export default function HeroSection() {
   
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
-      {/* Subtle background gradient */}
-      <div className="absolute inset-0 bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50" />
-      
-      {/* Floating elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-200 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-200 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-      </div>
-      
       <div className="container mx-auto px-6 text-center relative z-10">
         <div className="max-w-4xl mx-auto">
           {/* Main heading */}
@@ -52,7 +42,7 @@ export default function HeroSection() {
             </span>
           </div> */}
 
-          {/* Animated role pt 2 */}
+          {/* Animated role */}
           <motion.div className="relative mx-4 mb-4 flex flex-col items-center justify-center gap-4 text-center sm:mx-0 sm:mb-0 sm:flex-row">
             <LayoutTextFlip 
               text="Cameron Brady"
@@ -62,32 +52,77 @@ export default function HeroSection() {
           
           {/* Value proposition */}
           <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Bridging cutting-edge AI research with clinical medicine to advance 
+            Bridging cutting-edge AI research with clinical medicine to advance
             early detection of neurological disorders and improve patient outcomes.
           </p>
-          
-          {/* Call-to-action buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+
+          {/* CTA links */}
+          <div className="flex flex-col sm:flex-row gap-8 justify-center items-center">
             <NavLink
               href="/projects"
-              className="px-8 py-4 border-2 border-slate-300 text-slate-700 rounded-lg hover:border-slate-400 hover:bg-slate-50 transition-colors duration-200 text-lg font-medium"
+              className="group relative text-slate-700 hover:text-slate-900 transition-colors"
             >
-              Projects!
+              <motion.div
+                className="flex items-center gap-3"
+                initial="initial"
+                whileHover="hover"
+              >
+                <span className="text-2xl font-light relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
+                                 after:w-full after:h-0.5 after:bg-slate-700 after:origin-right after:scale-x-0
+                                 hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out">
+                  View Projects
+                </span>
+                <motion.span
+                  variants={{
+                    initial: { x: 0 },
+                    hover: {
+                      x: [0, 5, 0],
+                      transition: {
+                        duration: 0.6,
+                        ease: "easeInOut",
+                        repeat: 1
+                      }
+                    }
+                  }}
+                  className="inline-block"
+                >
+                  <ArrowRight size={24} className="text-slate-500" />
+                </motion.span>
+              </motion.div>
             </NavLink>
+
             <NavLink
               href="/services"
-              className="px-8 py-4 border-2 border-slate-300 text-slate-700 rounded-lg hover:border-slate-400 hover:bg-slate-50 transition-colors duration-200 text-lg font-medium"
+              className="group relative text-slate-700 hover:text-slate-900 transition-colors"
             >
-              Tutoring!
+              <motion.div
+                className="flex items-center gap-3"
+                initial="initial"
+                whileHover="hover"
+              >
+                <span className="text-2xl font-light relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
+                                 after:w-full after:h-0.5 after:bg-slate-700 after:origin-right after:scale-x-0
+                                 hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out">
+                  Tutoring Services
+                </span>
+                <motion.span
+                  variants={{
+                    initial: { x: 0 },
+                    hover: {
+                      x: [0, 5, 0],
+                      transition: {
+                        duration: 0.6,
+                        ease: "easeInOut",
+                        repeat: 1
+                      }
+                    }
+                  }}
+                  className="inline-block"
+                >
+                  <ArrowRight size={24} className="text-slate-500" />
+                </motion.span>
+              </motion.div>
             </NavLink>
-          </div>
-          
-          {/* Current focus */}
-          <div className="max-w-2xl mx-auto p-6 bg-white/70 backdrop-blur-sm rounded-xl border border-slate-200">
-            <p className="text-sm text-slate-500 uppercase tracking-wider mb-2">Currently Working On</p>
-            <p className="text-slate-700 font-medium">
-              Alzheimer's Prevention ML Systems, Research Assistance AI, & Client Programs 
-            </p>
           </div>
         </div>
       </div>

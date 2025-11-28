@@ -31,8 +31,8 @@ const PricingContactSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-linear-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
-      <div className="container mx-auto px-6">
+    <section className="py-20">
+      <div className="container mx-auto px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

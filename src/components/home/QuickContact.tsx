@@ -1,16 +1,68 @@
 // components/QuickContact.tsx - Contact section for home page
 "use client";
 
-import { Mail, Phone, MapPin, Linkedin, Github, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { Mail, Phone, MapPin, Linkedin, Github, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import NavLink from '@/components/NavLink';
 
 export default function QuickContact() {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          message: formData.message,
+          formVariant: 'general'
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({ firstName: '', lastName: '', email: '', message: '' });
+        setTimeout(() => setSubmitStatus('idle'), 5000);
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
   return (
-    <section className="py-20 bg-slate-100">
-      <div className="container mx-auto px-6">
-        <motion.div 
+    <section className="py-20">
+      <div className="container mx-auto px-6 relative z-10">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -21,7 +73,7 @@ export default function QuickContact() {
             Interested in collaboration, research opportunities, or discussing AI applications in healthcare?
           </p>
         </motion.div>
-        
+
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Contact info */}
@@ -29,7 +81,8 @@ export default function QuickContact() {
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="bg-white rounded-xl p-6 border border-slate-200"
+              className="bg-white rounded-xl p-6 border border-slate-200 relative"
+              style={{ zIndex: 20 }}
             >
               <h3 className="text-xl font-semibold text-slate-800 mb-4">Contact Information</h3>
               
@@ -93,7 +146,7 @@ export default function QuickContact() {
                           transition: {
                             duration: 0.6,
                             ease: "easeInOut",
-                            repeat: Infinity
+                            repeat: 1
                           }
                         }
                       }}
@@ -130,7 +183,7 @@ export default function QuickContact() {
                           transition: {
                             duration: 0.6,
                             ease: "easeInOut",
-                            repeat: Infinity
+                            repeat: 1
                           }
                         }
                       }}
@@ -144,46 +197,87 @@ export default function QuickContact() {
             </motion.div>
             
             {/* Quick contact form */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-white rounded-xl p-8 border border-slate-200"
+              className="bg-white rounded-xl p-8 border border-slate-200 relative"
+              style={{ zIndex: 20 }}
             >
               <h3 className="text-xl font-semibold text-slate-800 mb-6">Send a Message</h3>
-              
-              <form className="space-y-4">
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Your Name"
-                    className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <input
-                    type="email"
-                    placeholder="Your Email"
-                    className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <textarea
-                    placeholder="Your Message"
-                    rows={4}
-                    className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                  />
-                </div>
-                
-                <button
-                  type="submit"
-                  className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+
+              {submitStatus === 'success' ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center py-8"
                 >
-                  Send Message
-                </button>
-              </form>
+                  <CheckCircle2 className="mx-auto text-green-600 mb-4" size={48} />
+                  <h4 className="text-lg font-semibold text-slate-800 mb-2">Message Sent!</h4>
+                  <p className="text-slate-600">Thank you for reaching out. I'll get back to you soon.</p>
+                </motion.div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      placeholder="First Name"
+                      required
+                      className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    />
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      placeholder="Last Name"
+                      required
+                      className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="Your Email"
+                      required
+                      className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      placeholder="Your Message"
+                      rows={4}
+                      required
+                      className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all"
+                    />
+                  </div>
+
+                  {submitStatus === 'error' && (
+                    <p className="text-sm text-red-600">
+                      Something went wrong. Please try again or email me directly.
+                    </p>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                  </button>
+                </form>
+              )}
               
               <div className="mt-6 pt-6 border-t border-slate-200">
                 <NavLink
@@ -209,7 +303,7 @@ export default function QuickContact() {
                           transition: {
                             duration: 0.6,
                             ease: "easeInOut",
-                            repeat: Infinity
+                            repeat: 1
                           }
                         }
                       }}

@@ -36,14 +36,26 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${jetbrainsMono.className} antialiased bg-slate-50`}>
+      <body className={`${jetbrainsMono.className} antialiased bg-slate-50 relative`}>
+        {/* Global grid pattern */}
+        <div
+          className="fixed inset-0 opacity-30 pointer-events-none"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgb(148 163 184 / 0.5) 1px, transparent 1px),
+              linear-gradient(to bottom, rgb(148 163 184 / 0.5) 1px, transparent 1px)
+            `,
+            backgroundSize: '80px 80px',
+            zIndex: 5
+          }}
+        />
         <NavigationProvider>
           <Navigation />
-          <main className="min-h-screen">
+          <main className="min-h-screen relative">
             {children}
             <Toaster position="top-right" />
           </main>
-          <footer className="bg-white border-t border-slate-200 py-8">
+          <footer className="bg-white border-t border-slate-200 py-8 relative" style={{ zIndex: 20 }}>
             <div className="container mx-auto px-6">
               <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
                 <p className="text-slate-600">

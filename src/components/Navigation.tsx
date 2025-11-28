@@ -14,12 +14,23 @@ export default function Navigation() {
   const pathname = usePathname();
   
   const navItems = [
-    // { href: '/', label: 'Home' },
+    { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
     { href: '/projects', label: 'Projects' },
     { href: '/services', label: 'Services' },
     { href: '/contact', label: 'Contact' }
   ];
+
+  // Find current page label
+  const currentPage = navItems.find(item => item.href === pathname);
+  const displayText = hoveredPath
+    ? navItems.find(item => item.href === hoveredPath)?.label
+    : currentPage?.label;
+
+  // Format display text: lowercase, and just "/" for home
+  const formattedDisplayText = displayText
+    ? (displayText === 'Home' ? '/' : `/${displayText.toLowerCase()}`)
+    : null;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,27 +48,30 @@ export default function Navigation() {
     }`}>
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          <div
-            className="flex items-center"
-            onMouseEnter={() => setHoveredPath('/')}
-            onMouseLeave={() => setHoveredPath(null)}
-          >
+          <div className="flex items-center">
             <Link
               href="/"
               className="text-xl font-semibold text-slate-800 hover:text-blue-600 transition-colors"
+              onMouseEnter={() => setHoveredPath('/')}
+              onMouseLeave={() => setHoveredPath(null)}
             >
               cameronbrady.dev
             </Link>
-            <AnimatePresence>
-              {hoveredPath && (
+            <AnimatePresence mode="wait">
+              {formattedDisplayText && (
                 <motion.span
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 10 }}
+                  key={hoveredPath || pathname}
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 5 }}
                   transition={{ duration: 0.2 }}
-                  className="text-base font-normal text-slate-400"
+                  className={`text-base font-medium ${
+                    hoveredPath
+                      ? 'text-blue-500'
+                      : 'text-slate-600'
+                  }`}
                 >
-                  {hoveredPath}
+                  {formattedDisplayText}
                 </motion.span>
               )}
             </AnimatePresence>
@@ -105,17 +119,19 @@ export default function Navigation() {
         {isOpen && (
           <div className="md:hidden border-t border-slate-200 bg-white/95 backdrop-blur-md">
             <div className="py-4 space-y-2">
-              {navItems.map((item) =>(
-                <div key={item.href} className="px-4 pt-2">
-                  <a
+              {navItems.map((item) => (
+                <div key={item.href} className="px-4">
+                  <Link
                     href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg text-center font-medium hover:bg-blue-700 transition-colors"
+                    className={`block w-full px-4 py-3 rounded-lg text-center font-medium transition-colors ${
+                      pathname === item.href
+                        ? 'bg-blue-600 text-white'
+                        : 'text-slate-700 hover:bg-slate-100'
+                    }`}
                     onClick={() => setIsOpen(false)}
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 </div>
               ))}
             </div>

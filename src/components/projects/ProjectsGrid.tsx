@@ -12,6 +12,7 @@ import { Github, ExternalLink, Filter } from 'lucide-react'
 /* -------------------------------------------------------------------------- */
 import { ProjectsContext } from '@/lib/utils'
 import Image from 'next/image'
+import ProjectDetailPanel from './ProjectDetailPanel'
 
 /* -------------------------------------------------------------------------- */
 /*                                   Types                                    */
@@ -23,9 +24,22 @@ type ProjectCategory = 'project' | 'ml' | 'ai' | 'research' | 'cornell'
 /* -------------------------------------------------------------------------- */
 export default function ProjectsGrid() {
   const [selectedCategory, setSelectedCategory] = useState<ProjectCategory>('project');
-  
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+
   // Load project data
   const allProjects = useContext(ProjectsContext);
+
+  const handleProjectClick = (project: any) => {
+    setSelectedProject(project);
+    setIsPanelOpen(true);
+  };
+
+  const handleClosePanel = () => {
+    setIsPanelOpen(false);
+    // Wait for animation to complete before clearing project
+    setTimeout(() => setSelectedProject(null), 300);
+  };
 
   const categories = [
     // { id: 'all', label: 'All Projects', count: allProjects.length },
@@ -48,11 +62,12 @@ export default function ProjectsGrid() {
           <button
             key={category.id}
             onClick={() => setSelectedCategory(category.id as ProjectCategory)}
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 relative ${
               selectedCategory === category.id
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
             }`}
+            style={{ zIndex: 20 }}
           >
             {category.label} ({category.count})
           </button>
@@ -62,7 +77,12 @@ export default function ProjectsGrid() {
       {/* Projects grid */}
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-8">
         {filteredProjects.map((project) => (
-          <div key={project.title} className="group bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+          <div
+            key={project.title}
+            onClick={() => handleProjectClick(project)}
+            className="group bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer relative"
+            style={{ zIndex: 20 }}
+          >
             {/* Project image */}
             <div className="aspect-video overflow-hidden bg-slate-100">
               <div className="w-full h-full bg-linear-to-br from-slate-200 to-slate-300 flex items-center justify-center">
@@ -99,9 +119,9 @@ export default function ProjectsGrid() {
               </p>
               
               {/* Tech stack */}
-              <div className="flex flex-wrap gap-2 mb-4">
+              <div className="flex flex-wrap gap-2">
                 {project.technologies.map((tech, index) => (
-                  <span 
+                  <span
                     key={index}
                     className="px-2 py-1 bg-slate-100 text-slate-600 rounded text-sm"
                   >
@@ -114,33 +134,6 @@ export default function ProjectsGrid() {
                   </span>
                 )} */}
               </div>
-              
-              {/* Actions */}
-              <div className="flex gap-3">
-                {project.codeRepo && (
-                  <a 
-                    href={project.codeRepo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium"
-                  >
-                    <Github size={16} />
-                    Code
-                  </a>
-                )}
-                
-                {project.demoLink !== 'TODO' && (
-                  <a 
-                    href={project.demoLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                  >
-                    <ExternalLink size={16} />
-                    Live Demo
-                  </a>
-                )}
-              </div>
             </div>
           </div>
         ))}
@@ -151,6 +144,13 @@ export default function ProjectsGrid() {
           <p className="text-slate-500 text-lg">No projects found in this category.</p>
         </div>
       )}
+
+      {/* Project Detail Panel */}
+      <ProjectDetailPanel
+        project={selectedProject}
+        isOpen={isPanelOpen}
+        onClose={handleClosePanel}
+      />
     </div>
   )
 }
