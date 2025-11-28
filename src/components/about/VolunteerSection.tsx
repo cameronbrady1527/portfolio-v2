@@ -15,44 +15,51 @@ export const VolunteerSection = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
-      className="max-w-6xl mx-auto mb-32"
+      className="max-w-5xl mx-auto mb-32"
     >
-      <div className="text-center mb-12">
+      <div className="text-center mb-16">
         <h2 className="text-4xl font-light text-slate-800 mb-4">Making Impact</h2>
         <p className="text-xl text-slate-600">
           Committed to serving communities and addressing critical needs
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="space-y-24">
         {volunteerWork.map((work, index) => (
           <motion.div
             key={index}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="group"
+            transition={{ duration: 0.6, delay: index * 0.2 }}
+            className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-8 items-center`}
           >
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl border border-slate-200 hover:shadow-2xl transition-all">
-              <div className="relative h-64 bg-linear-to-br from-slate-200 to-slate-300 flex items-center justify-center">
-                {work.imageSrc ? (
-                  <Image
-                    src={work.imageSrc}
-                    alt={work.imageAlt}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <p className="text-slate-500 text-sm">Photo: {work.imageAlt}</p>
-                )}
+            {/* Image */}
+            <div className="flex-1 w-full">
+              <div className="relative h-80 rounded-2xl overflow-hidden shadow-2xl group">
+                <div className="absolute inset-0 bg-linear-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+                  {work.imageSrc ? (
+                    <Image
+                      src={work.imageSrc}
+                      alt={work.imageAlt}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  ) : (
+                    <p className="text-slate-500 text-sm">Photo: {work.imageAlt}</p>
+                  )}
+                </div>
               </div>
+            </div>
 
-              <div className="p-6">
-                <h3 className="text-2xl font-semibold text-slate-800 mb-2">{work.title}</h3>
-                <p className="text-sm font-medium text-blue-600 mb-3">{work.role}</p>
-                <p className="text-slate-600 leading-relaxed">{work.description}</p>
+            {/* Content */}
+            <div className="flex-1">
+              <div className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-full mb-4">
+                {work.role}
               </div>
+              <h3 className="text-3xl font-light text-slate-800 mb-4">{work.title}</h3>
+              <div className="h-1 w-20 bg-blue-500 rounded-full mb-6" />
+              <p className="text-slate-600 leading-relaxed text-lg">{work.description}</p>
             </div>
           </motion.div>
         ))}

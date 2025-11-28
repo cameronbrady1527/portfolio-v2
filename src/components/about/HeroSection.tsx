@@ -22,7 +22,7 @@ export const HeroSection = () => {
             Building Solutions, Serving Communities
           </h1>
           <p className="text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
-            Software engineer, educator, nonprofit founder, and researcher—combining technical expertise
+            Software engineer, educator, nonprofit founder, and researcher. Combining technical expertise
             with a passion for making meaningful impact in healthcare, education, and community development.
           </p>
         </motion.div>

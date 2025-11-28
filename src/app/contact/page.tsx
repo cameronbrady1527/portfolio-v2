@@ -2,6 +2,7 @@
 'use client'
 
 import { ContactForm } from '@/components/ui/contact-form'
+import { Accordion } from '@/components/ui/accordion'
 import { Mail, MapPin, Linkedin, Github, Clock, Phone } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -159,44 +160,32 @@ export default function ContactPage() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-16"
           >
-            <div className="bg-white rounded-xl p-8 border border-slate-200">
-              <h2 className="text-2xl font-semibold text-slate-800 mb-6 text-center">
-                Frequently Asked Questions
-              </h2>
+            <h2 className="text-2xl font-semibold text-slate-800 mb-8 text-center">
+              Frequently Asked Questions
+            </h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-semibold text-slate-700 mb-2">What types of projects do you work on?</h3>
-                  <p className="text-sm text-slate-600">
-                    I specialize in machine learning applications, particularly in healthcare and neuroscience.
-                    I'm also available for web development, data analysis, and academic tutoring.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-slate-700 mb-2">What's your typical response time?</h3>
-                  <p className="text-sm text-slate-600">
-                    I aim to respond to all inquiries within 24 hours. For urgent matters,
-                    please indicate that in your message.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-slate-700 mb-2">Do you offer consulting services?</h3>
-                  <p className="text-sm text-slate-600">
-                    Yes, I'm available for consulting on AI/ML projects, particularly those related to
-                    healthcare applications, data analysis, and research methodology.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-slate-700 mb-2">Are you available for speaking engagements?</h3>
-                  <p className="text-sm text-slate-600">
-                    I'm open to speaking opportunities, especially on topics related to AI in healthcare,
-                    machine learning, and computational neuroscience.
-                  </p>
-                </div>
-              </div>
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+              <Accordion
+                items={[
+                  {
+                    question: "What types of projects do you work on?",
+                    answer: "I specialize in machine learning applications, particularly in healthcare and neuroscience. I'm also available for web development, data analysis, and academic tutoring."
+                  },
+                  {
+                    question: "What's your typical response time?",
+                    answer: "I aim to respond to all inquiries within 24 hours. For urgent matters, please indicate that in your message."
+                  },
+                  {
+                    question: "Do you offer consulting services?",
+                    answer: "Yes, I'm available for consulting on AI/ML projects, particularly those related to healthcare applications, data analysis, and research methodology."
+                  },
+                  {
+                    question: "Are you available for speaking engagements?",
+                    answer: "I'm open to speaking opportunities, especially on topics related to AI in healthcare, machine learning, and computational neuroscience."
+                  }
+                ]}
+                defaultOpen={0}
+              />
             </div>
           </motion.div>
         </div>

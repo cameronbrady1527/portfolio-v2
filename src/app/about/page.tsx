@@ -24,25 +24,18 @@ export default function AboutPage() {
         </div>
 
         <div className="container mx-auto px-6 relative z-10">
-          {/* Journey Timeline */}
           <JourneyTimeline />
 
-          {/* Professional Experience */}
           <ExperienceSection />
 
-          {/* Making Impact - Volunteer Work */}
           <VolunteerSection />
 
-          {/* Beyond Work - Personal Interests */}
           <PersonalInterestsSection />
 
-          {/* Research Highlight */}
           <ResearchHighlight />
 
-          {/* Technical Skills */}
           <SkillsSection />
 
-          {/* Call to Action */}
           <CTASection />
         </div>
       </div>

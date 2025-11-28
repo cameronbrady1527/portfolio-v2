@@ -46,27 +46,38 @@ export const SkillsSection = () => {
         <h2 className="text-4xl font-light text-slate-800 mb-4">Technical Skills</h2>
       </div>
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-10 shadow-xl border border-slate-200">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {skillCategories.map((category, index) => (
-            <div key={index}>
-              <div className="flex items-center gap-2 mb-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {skillCategories.map((category, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: index * 0.1 }}
+            className="relative"
+          >
+            <div className="flex items-center gap-2 mb-4">
+              <div className={`p-2 rounded-lg bg-${skillColors[index]}-100`}>
                 {category.icon}
-                <h3 className="font-semibold text-slate-700">{category.title}</h3>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {category.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className={`px-2 py-1 bg-${skillColors[index]}-100 text-${skillColors[index]}-700 rounded text-xs font-medium`}
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
+              <h3 className="font-semibold text-slate-800">{category.title}</h3>
             </div>
-          ))}
-        </div>
+            <div className="flex flex-wrap gap-2">
+              {category.skills.map((skill, skillIndex) => (
+                <motion.span
+                  key={skill}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: index * 0.1 + skillIndex * 0.05 }}
+                  className={`px-3 py-1.5 bg-${skillColors[index]}-100 text-${skillColors[index]}-700 rounded-full text-sm font-medium hover:bg-${skillColors[index]}-200 transition-colors cursor-default`}
+                >
+                  {skill}
+                </motion.span>
+              ))}
+            </div>
+          </motion.div>
+        ))}
       </div>
     </motion.div>
   );

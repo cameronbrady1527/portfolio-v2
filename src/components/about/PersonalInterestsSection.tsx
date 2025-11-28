@@ -9,6 +9,8 @@ export const PersonalInterestsSection = () => {
   const aboutData = useContext(AboutContext);
   const { personalInterests } = aboutData;
 
+  const heights = ['h-64', 'h-80', 'h-72']; // Varying heights for masonry effect
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -24,27 +26,39 @@ export const PersonalInterestsSection = () => {
         </p>
       </div>
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-10 shadow-xl border border-slate-200">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {personalInterests.map((interest, index) => (
-            <div key={index} className="text-center">
-              <div className={`relative h-48 bg-linear-to-br from-${interest.gradientFrom} to-${interest.gradientTo} rounded-xl mb-4 flex items-center justify-center overflow-hidden`}>
+      <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+        {personalInterests.map((interest, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: index * 0.1 }}
+            className="break-inside-avoid mb-6"
+          >
+            <div className="group cursor-default">
+              <div className={`relative ${heights[index % heights.length]} bg-linear-to-br from-${interest.gradientFrom} to-${interest.gradientTo} rounded-2xl overflow-hidden`}>
                 {interest.imageSrc ? (
                   <Image
                     src={interest.imageSrc}
                     alt={interest.imageAlt}
                     fill
-                    className="object-cover"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
-                  <p className="text-slate-600 text-sm">Photo: {interest.imageAlt}</p>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <p className="text-slate-600 text-sm">Photo: {interest.imageAlt}</p>
+                  </div>
                 )}
+                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                  <h3 className="text-xl font-semibold mb-2">{interest.title}</h3>
+                  <p className="text-white/90 text-sm">{interest.description}</p>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-slate-800 mb-2">{interest.title}</h3>
-              <p className="text-slate-600">{interest.description}</p>
             </div>
-          ))}
-        </div>
+          </motion.div>
+        ))}
       </div>
     </motion.div>
   );
