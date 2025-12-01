@@ -1,5 +1,4 @@
 import HeroSection from "@/components/home/HeroSection";
-import WhatIDo from "@/components/home/WhatIDo";
 import FeaturedWork from "@/components/home/FeaturedWork";
 import QuickContact from "@/components/home/QuickContact";
 
@@ -13,7 +12,6 @@ export default function Home() {
       </div>
 
       <HeroSection />
-      <WhatIDo />
       <FeaturedWork />
       <QuickContact />
     </div>
