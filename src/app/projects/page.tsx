@@ -1,6 +1,7 @@
 // app/projects/page.tsx - Projects page
 import { Metadata } from 'next';
 import ProjectsGrid from '@/components/projects/ProjectsGrid';
+import ProjectsCTA from '@/components/projects/ProjectsCTA';
 
 export const metadata: Metadata = {
   title: 'Projects - Cameron Brady',
@@ -28,6 +29,8 @@ export default function ProjectsPage() {
         </div>
 
         <ProjectsGrid />
+
+        <ProjectsCTA />
       </div>
     </div>
   )

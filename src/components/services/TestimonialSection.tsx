@@ -5,7 +5,6 @@ import { Star, Quote } from "lucide-react";
 import { motion } from "motion/react";
 
 const TestimonialsSection = () => {
-  // Placeholder testimonials based on your success stories
   const testimonials = [
     {
       quote: "Cameron helped me go from getting every calculus problem wrong to approaching tests with confidence. His diagnostic approach revealed gaps I didn't even know I had.",
@@ -26,8 +25,12 @@ const TestimonialsSection = () => {
       quote: "Cameron's computer science tutoring got me into my dream college program. His explanations made complex algorithms finally click.",
       name: "David K.",
       title: "High School Graduate"
+    },
+    {
+      quote: "I remember when you helped me practice with a math test that was really hard for me. I thought I was going to fail, but you showed my that I knew way more than I thought.",
+      name: "Ethan D.",
+      title: "Elementary School Student"
     }
-    // Add more as you collect real testimonials
   ];
 
   return (

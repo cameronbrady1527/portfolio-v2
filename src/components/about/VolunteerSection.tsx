@@ -57,7 +57,18 @@ export const VolunteerSection = () => {
               <div className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-full mb-4">
                 {work.role}
               </div>
-              <h3 className="text-3xl font-light text-slate-800 mb-4">{work.title}</h3>
+              {work.link ? (
+                <a
+                  href={work.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-3xl font-light text-slate-800 hover:text-blue-600 mb-4 block transition-colors"
+                >
+                  {work.title}
+                </a>
+              ) : (
+                <h3 className="text-3xl font-light text-slate-800 mb-4">{work.title}</h3>
+              )}
               <div className="h-1 w-20 bg-blue-500 rounded-full mb-6" />
               <p className="text-slate-600 leading-relaxed text-lg">{work.description}</p>
             </div>

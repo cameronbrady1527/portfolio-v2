@@ -30,7 +30,7 @@ export const ResearchHighlight = () => {
             <div className="max-w-4xl mx-auto">
               {/* Header */}
               <div className="flex items-start gap-4 mb-8">
-                <div className="flex-shrink-0 w-16 h-16 bg-linear-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="shrink-0 w-16 h-16 bg-linear-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
                   <Brain className="h-8 w-8 text-white" />
                 </div>
                 <div className="flex-1">
@@ -47,8 +47,11 @@ export const ResearchHighlight = () => {
               <div className="space-y-6">
                 <p className="text-slate-700 leading-relaxed text-lg">
                   Developing machine learning systems for early detection of Alzheimer's disease using
-                  vocal biomarker analysis. This work combines deep learning, signal processing, and
-                  medical research to identify neurological disorders years before traditional diagnosis.
+                  bioinformatics data accessed through Alzheimer's Disease Neuroimaging Initiative (ADNI).
+                  This work combines deep learning, signal processing, and medical research to identify
+                  neurological disorders years before traditional diagnosis. Current work focuses on
+                  leveraging data from the <a href="https://www.alz.org/us-pointer/home.asp" className="text-blue-600 hover:text-blue-700 font-medium underline decoration-blue-600/0 hover:decoration-blue-600 underline-offset-2 decoration-2 transition-all duration-300">Alzheimer's Association U.S. Study to Protect Brain Health
+                  Through Lifestyle Intervention to Reduce Risk (U.S. POINTER)</a>.
                 </p>
 
                 <div className="bg-white/60 backdrop-blur-sm border-l-4 border-purple-500 rounded-r-xl pl-6 pr-6 py-4 shadow-sm">

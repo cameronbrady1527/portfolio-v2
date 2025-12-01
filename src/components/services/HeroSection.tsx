@@ -1,12 +1,24 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import Image from "next/image";
 
-import { MapPin, Globe, GraduationCap } from "lucide-react";
+import { MapPin, Globe, GraduationCap, ChevronDown } from "lucide-react";
 import { motion } from "motion/react";
 
 const HeroSection = () => {
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollIndicator(window.scrollY < 50);
+    }
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const words = [
     { text: "Cornell-Educated", className: "text-slate-800" },
     { text: "Tutor", className: "text-blue-600" },
@@ -64,6 +76,12 @@ const HeroSection = () => {
             </div>
           </div>
         </motion.div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className={`absolute bottom-4 left-1/2 transform -translate-x-1/2 animate-bounce transition-opacity duration-500 ${showScrollIndicator ? 'opacity-100'
+        : 'opacity-0 pointer-events-none'}`}>
+        <ChevronDown size={24} className="text-slate-400" />
       </div>
     </section>
   );

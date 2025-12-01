@@ -30,6 +30,7 @@ export interface VolunteerWork {
   imageAlt: string;
   imageSrc?: string; // Optional - will be added when photos are available
   imageClassName?: string; // Optional - custom positioning classes for the image
+  link?: string; // Optional - external link for the organization
 }
 
 export interface PersonalInterest {
@@ -54,17 +55,9 @@ const journeyTimeline: JourneyTimelineItem[] = [
     year: "2018-2019",
     period: "The Beginning",
     title: "Service & Discovery",
-    description: "Started tutoring classmates while volunteering with Appalachia Service Project, renovating homes for families in need. Discovered the power of combining technical skills with genuine impact.",
+    description: "Started tutoring classmates in CS and advanced STEM subjects while volunteering with Sparrows Nest and Appalachia Service Project, renovating homes for families in need. Discovered the power of combining technical skills with a genuine, passionate devotion to others.",
     iconName: "Heart",
     color: "from-red-500 to-pink-500"
-  },
-  {
-    year: "2019-2024",
-    period: "Cornell",
-    title: "Education & Leadership",
-    description: "Founded The Clover Project nonprofit farm while studying CS at Cornell. Rose to Head Teaching Assistant, leading teams and using data analytics to improve student outcomes.",
-    iconName: "GraduationCap",
-    color: "from-blue-500 to-purple-500"
   },
   {
     year: "2019-2023",
@@ -75,10 +68,18 @@ const journeyTimeline: JourneyTimelineItem[] = [
     color: "from-green-500 to-emerald-500"
   },
   {
+    year: "2019-2024",
+    period: "Cornell",
+    title: "Education & Leadership",
+    description: "Managed and developed the Clove Project through college, while studying Computer Science, Applied Economics, and Agricultural Sciences at Cornell. Rose to Head Teaching Assistant in an upper-level class, leading teams and using data analytics to improve student outcomes. Applied new technical skills to the Clover Project to streamline efficiency and prioritize impact.",
+    iconName: "GraduationCap",
+    color: "from-blue-500 to-purple-500"
+  },
+  {
     year: "2024-Present",
     period: "Today",
     title: "Multi-Faceted Career",
-    description: "Software engineer building AI applications, substitute teacher, tutor, nonprofit consultant, and researcher developing ML systems for early Alzheimer's detection. Serving on Walk to End Alzheimer's committee.",
+    description: "Software engineer building AI applications, substitute teacher, tutor, nonprofit consultant, and researcher developing ML systems for early Alzheimer's detection. Serving on Walk to End Alzheimer's committee. Learning in-demand technical skills through research and application, especially in the AI and Machine Learning space.",
     iconName: "Zap",
     color: "from-orange-500 to-yellow-500"
   }
@@ -147,7 +148,8 @@ const volunteerWork: VolunteerWork[] = [
     description: "Recruiting volunteers and raising community awareness about Alzheimer's disease and research funding.",
     imageAlt: "Walk to End Alzheimer's event",
     imageSrc: "/imgs/alz-walk-research.jpg",
-    imageClassName: "object-top"
+    imageClassName: "object-top",
+    link: "https://act.alz.org/site/SPageServer?pagename=walk_about"
   },
   {
     title: "The Clover Project",
@@ -161,14 +163,16 @@ const volunteerWork: VolunteerWork[] = [
     role: "Volunteer (2018-2019)",
     description: "Home renovation and repair for low-income families in the lower Appalachian region.",
     imageAlt: "Home renovation project",
-    imageSrc: "/imgs/asp-working.jpeg"
+    imageSrc: "/imgs/asp-working.jpeg",
+    link: "https://asphome.org/"
   },
   {
     title: "Sparrow's Nest",
     role: "Volunteer & Donor",
-    description: "Supporting families affected by cancer through produce donations and volunteer service.",
+    description: "Supporting families affected by cancer through produce donations, volunteer service, and fundraising.",
     imageAlt: "Community service",
-    imageSrc: "/imgs/sparrows-race.jpeg"
+    imageSrc: "/imgs/sparrows-race.jpeg",
+    link: "https://sparrowsnestcharity.org/"
   }
 ];
 

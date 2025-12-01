@@ -8,17 +8,17 @@ export const SkillsSection = () => {
     {
       icon: <Brain className="text-purple-600 h-5 w-5" />,
       title: "Machine Learning",
-      skills: ['Deep Learning', 'Computer Vision', 'NLP', 'Signal Processing']
+      skills: ['Deep Learning', 'Computer Vision', 'NLP', 'Signal Processing', 'Feature Engineering']
     },
     {
       icon: <Code className="text-blue-600 h-5 w-5" />,
       title: "Development",
-      skills: ['Python', 'TypeScript', 'React', 'Next.js', 'Node.js', 'SQL']
+      skills: ['Python', 'JavaScript', 'TypeScript', 'Java', 'HTML', 'CSS', 'React', 'Next.js', 'Tailwind', 'Node.js', 'SQL']
     },
     {
       icon: <Zap className="text-green-600 h-5 w-5" />,
       title: "Tools & Frameworks",
-      skills: ['TensorFlow', 'PyTorch', 'Pandas', 'PostgreSQL']
+      skills: ['TensorFlow', 'PyTorch', 'Scikit-learn', 'Pandas', 'NumPy', 'Matplotlib', 'Seaborn', 'FastAPI', 'MongoDB', 'PostgreSQL']
     },
     {
       icon: <BookOpen className="text-orange-600 h-5 w-5" />,

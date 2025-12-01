@@ -171,7 +171,7 @@ const ContactForm = ({
                 <FormItem>
                   <FormLabel>Project Type</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Web Development, Mobile App, Data Analysis" {...field} disabled={isSubmitting} />
+                    <Input placeholder="e.g., Web Development, Web Scraping, Data Analysis" {...field} disabled={isSubmitting} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

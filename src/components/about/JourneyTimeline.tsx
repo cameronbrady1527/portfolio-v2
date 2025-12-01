@@ -44,7 +44,7 @@ export const JourneyTimeline = () => {
 
       <div className="relative">
         {/* Timeline line */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-linear-to-b from-red-300 via-purple-300 via-green-300 to-orange-300 hidden lg:block" />
+        <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-linear-to-b from-red-300 via-purple-300 to-orange-300 hidden lg:block" />
 
         <div className="space-y-16">
           {journeyTimeline.map((event, index) => (

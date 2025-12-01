@@ -52,8 +52,8 @@ export default function HeroSection() {
           
           {/* Value proposition */}
           <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Bridging cutting-edge AI research with clinical medicine to advance
-            early detection of neurological disorders and improve patient outcomes.
+            Software engineer, educator, nonprofit founder, and researcher. Combining technical expertise
+            with a passion for making meaningful impact in healthcare, education, and community development.
           </p>
 
           {/* CTA links */}

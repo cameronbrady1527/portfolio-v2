@@ -28,8 +28,8 @@ export default function ContactPage() {
               Let's Connect
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Interested in collaboration, research opportunities, or discussing AI applications in healthcare?
-              I'd love to hear from you.
+              Need someone to build your web app idea? Looking for a tutor? 
+              Want to chat or collaborate on a project? I'd love to hear from you.
             </p>
           </motion.div>
 
@@ -132,11 +132,11 @@ export default function ContactPage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 mt-1">"</span>
-                    <span>Speaking engagements</span>
+                    <span>Academic tutoring</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 mt-1">"</span>
-                    <span>Academic tutoring</span>
+                    <span>Freelance development</span>
                   </li>
                 </ul>
               </div>
@@ -184,10 +184,6 @@ export default function ContactPage() {
                   {
                     question: "Do you offer consulting services?",
                     answer: "Yes, I'm available for consulting on AI/ML projects, particularly those related to healthcare applications, data analysis, and research methodology."
-                  },
-                  {
-                    question: "Are you available for speaking engagements?",
-                    answer: "I'm open to speaking opportunities, especially on topics related to AI in healthcare, machine learning, and computational neuroscience."
                   }
                 ]}
                 defaultOpen={0}

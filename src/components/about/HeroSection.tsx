@@ -1,8 +1,21 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 
 export const HeroSection = () => {
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollIndicator(window.scrollY < 50);
+    }
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="relative min-h-screen flex items-center justify-center">
       {/* Floating background elements */}
@@ -26,6 +39,12 @@ export const HeroSection = () => {
             with a passion for making meaningful impact in healthcare, education, and community development.
           </p>
         </motion.div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className={`absolute bottom-4 left-1/2 transform -translate-x-1/2 animate-bounce transition-opacity duration-500 ${showScrollIndicator ? 'opacity-100'
+        : 'opacity-0 pointer-events-none'}`}>
+        <ChevronDown size={24} className="text-slate-400" />
       </div>
     </div>
   );
