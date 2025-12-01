@@ -222,7 +222,7 @@ const ContactForm = ({
         </motion.div>
         <h3 className="text-2xl font-bold text-gray-900 mb-2">Message Sent!</h3>
         <p className="text-gray-600 mb-6">
-          Thanks for reaching out. I'll review your message and get back to you within 24 hours.
+          Thanks for reaching out. I&apos;ll review your message and get back to you within 24 hours.
         </p>
         <Button 
           variant="outline" 
@@ -340,7 +340,7 @@ const ContactForm = ({
         </motion.div>
 
         <p className="text-sm text-gray-600 text-center pt-2">
-          I'll respond within 24 hours to discuss your needs and schedule a consultation.
+          I&apos;ll respond within 24 hours to discuss your needs and schedule a consultation.
         </p>
       </form>
     </Form>

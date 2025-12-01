@@ -46,11 +46,11 @@ export const ResearchHighlight = () => {
               {/* Body */}
               <div className="space-y-6">
                 <p className="text-slate-700 leading-relaxed text-lg">
-                  Developing machine learning systems for early detection of Alzheimer's disease using
-                  bioinformatics data accessed through Alzheimer's Disease Neuroimaging Initiative (ADNI).
+                  Developing machine learning systems for early detection of Alzheimer&apos;s disease using
+                  bioinformatics data accessed through Alzheimer&apos;s Disease Neuroimaging Initiative (ADNI).
                   This work combines deep learning, signal processing, and medical research to identify
                   neurological disorders years before traditional diagnosis. Current work focuses on
-                  leveraging data from the <a href="https://www.alz.org/us-pointer/home.asp" className="text-blue-600 hover:text-blue-700 font-medium underline decoration-blue-600/0 hover:decoration-blue-600 underline-offset-2 decoration-2 transition-all duration-300">Alzheimer's Association U.S. Study to Protect Brain Health
+                  leveraging data from the <a href="https://www.alz.org/us-pointer/home.asp" className="text-blue-600 hover:text-blue-700 font-medium underline decoration-blue-600/0 hover:decoration-blue-600 underline-offset-2 decoration-2 transition-all duration-300">Alzheimer&apos;s Association U.S. Study to Protect Brain Health
                   Through Lifestyle Intervention to Reduce Risk (U.S. POINTER)</a>.
                 </p>
 

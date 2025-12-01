@@ -214,7 +214,7 @@ export default function QuickContact() {
                 >
                   <CheckCircle2 className="mx-auto text-green-600 mb-4" size={48} />
                   <h4 className="text-lg font-semibold text-slate-800 mb-2">Message Sent!</h4>
-                  <p className="text-slate-600">Thank you for reaching out. I'll get back to you soon.</p>
+                  <p className="text-slate-600">Thank you for reaching out. I&apos;ll get back to you soon.</p>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">

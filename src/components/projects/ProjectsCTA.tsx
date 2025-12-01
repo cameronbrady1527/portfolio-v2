@@ -66,7 +66,7 @@ export default function ProjectsCTA() {
             <h3 className="text-2xl font-light text-slate-800">Get In Touch</h3>
           </div>
           <p className="text-slate-600 mb-6 leading-relaxed">
-            Have a project in mind or want to collaborate? Let's discuss how we can work together.
+            Have a project in mind or want to collaborate? Let&apos;s discuss how we can work together.
           </p>
           <NavLink
             href="/contact"

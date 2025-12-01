@@ -68,7 +68,7 @@ const PricingContactSection = () => {
 
                 {/* Features */}
                 <div className="space-y-3">
-                  <h4 className="font-semibold text-lg">What's Included:</h4>
+                  <h4 className="font-semibold text-lg">What&apos;s Included:</h4>
                   {pricingFeatures.map((feature, index) => (
                     <motion.div
                       key={index}

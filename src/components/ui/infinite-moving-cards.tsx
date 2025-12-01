@@ -97,7 +97,7 @@ export const InfiniteMovingCards = ({
                 </svg>
               </div>
               <p className="relative z-20 text-base leading-relaxed font-normal text-slate-700 mb-6">
-                "{item.quote}"
+                &quot;{item.quote}&quot;
               </p>
               <div className="relative z-20 flex flex-row items-center border-t border-slate-100 pt-4">
                 <span className="flex flex-col gap-1">

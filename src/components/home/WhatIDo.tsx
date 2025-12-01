@@ -6,7 +6,7 @@ import { Brain, Code, GraduationCap } from 'lucide-react';
 
 export default function WhatIDo() {
   type Area = {
-    icon: any;
+    icon: React.ComponentType<{ className?: string; size?: number; strokeWidth?: number }>;
     title: string;
     description: string;
     color: 'purple' | 'blue' | 'green';

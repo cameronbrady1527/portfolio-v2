@@ -20,10 +20,10 @@ export const CTASection = () => {
             <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
               <Mail className="text-blue-600" size={24} />
             </div>
-            <h3 className="text-2xl font-light text-slate-800">Let's Connect</h3>
+            <h3 className="text-2xl font-light text-slate-800">Let&apos;s Connect</h3>
           </div>
           <p className="text-slate-600 mb-6 leading-relaxed">
-            Looking for software development, tutoring, research collaboration, or nonprofit consulting? Let's explore how we can work together.
+            Looking for software development, tutoring, research collaboration, or nonprofit consulting? Let&apos;s explore how we can work together.
           </p>
           <NavLink
             href="/contact"

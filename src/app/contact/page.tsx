@@ -25,11 +25,11 @@ export default function ContactPage() {
             className="text-center mb-16"
           >
             <h1 className="text-4xl md:text-5xl font-light text-slate-800 mb-4">
-              Let's Connect
+              Let&apos;s Connect
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Need someone to build your web app idea? Looking for a tutor? 
-              Want to chat or collaborate on a project? I'd love to hear from you.
+              Need someone to build your web app idea? Looking for a tutor?
+              Want to chat or collaborate on a project? I&apos;d love to hear from you.
             </p>
           </motion.div>
 
@@ -119,23 +119,23 @@ export default function ContactPage() {
               <div className="bg-blue-50 rounded-xl p-6 border border-blue-100 relative" style={{ zIndex: 20 }}>
                 <h3 className="text-lg font-semibold text-slate-800 mb-3">Availability</h3>
                 <p className="text-sm text-slate-600 mb-3">
-                  I'm currently available for:
+                  I&apos;m currently available for:
                 </p>
                 <ul className="text-sm text-slate-700 space-y-2">
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-600 mt-1">"</span>
+                    <span className="text-blue-600 mt-1">•</span>
                     <span>Research collaborations</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-600 mt-1">"</span>
+                    <span className="text-blue-600 mt-1">•</span>
                     <span>Consulting projects</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-600 mt-1">"</span>
+                    <span className="text-blue-600 mt-1">•</span>
                     <span>Academic tutoring</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-600 mt-1">"</span>
+                    <span className="text-blue-600 mt-1">•</span>
                     <span>Freelance development</span>
                   </li>
                 </ul>

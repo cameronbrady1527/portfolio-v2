@@ -19,18 +19,30 @@ import ProjectDetailPanel from './ProjectDetailPanel'
 /* -------------------------------------------------------------------------- */
 type ProjectCategory = 'project' | 'ml' | 'ai' | 'research' | 'cornell'
 
+type Project = {
+  title: string;
+  description: string;
+  about: string;
+  demoLink: string;
+  imageUrl: string;
+  codeRepo: string;
+  type: string[];
+  technologies: string[];
+  status: string;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                 Component                                  */
 /* -------------------------------------------------------------------------- */
 export default function ProjectsGrid() {
   const [selectedCategory, setSelectedCategory] = useState<ProjectCategory>('project');
-  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   // Load project data
   const allProjects = useContext(ProjectsContext);
 
-  const handleProjectClick = (project: any) => {
+  const handleProjectClick = (project: Project) => {
     setSelectedProject(project);
     setIsPanelOpen(true);
   };

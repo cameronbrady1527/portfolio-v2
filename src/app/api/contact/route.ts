@@ -28,7 +28,7 @@ const portfolioSchema = baseContactSchema.extend({
 const generalSchema = baseContactSchema; // No additional fields
 
 // Dynamic validation based on form variant
-const validateFormData = (data: any) => {
+const validateFormData = (data: z.infer<typeof baseContactSchema>) => {
   switch (data.formVariant) {
     case 'tutoring':
       return tutoringSchema.parse(data);
@@ -41,7 +41,7 @@ const validateFormData = (data: any) => {
 };
 
 // Generate email content based on variant
-const generateEmailContent = (data: any) => {
+const generateEmailContent = (data: z.infer<typeof baseContactSchema> & { subject?: string; projectType?: string; budget?: string }) => {
   const { firstName, lastName, email, phone, message, formVariant } = data;
 
   let subjectLine = '';
@@ -102,7 +102,7 @@ const generateEmailContent = (data: any) => {
 };
 
 // Generate confirmation email based on variant
-const generateConfirmationEmail = (data: any) => {
+const generateConfirmationEmail = (data: z.infer<typeof baseContactSchema> & { subject?: string; projectType?: string; budget?: string }) => {
   const { firstName, formVariant } = data;
 
   let title = '';
