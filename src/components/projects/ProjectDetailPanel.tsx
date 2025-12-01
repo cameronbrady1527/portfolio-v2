@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Github, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Project {
   title: string;
@@ -24,15 +24,39 @@ interface ProjectDetailPanelProps {
 }
 
 export default function ProjectDetailPanel({ project, isOpen, onClose }: ProjectDetailPanelProps) {
-  // Prevent body scroll when panel is open
+  const [expandedImage, setExpandedImage] = useState<string | null>(null);
+
+  // Prevent body scroll, hide footer, and set navbar background when panel is open
   useEffect(() => {
+    const footer = document.querySelector('footer');
+    const navbar = document.querySelector('nav') || document.querySelector('header');
+
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      if (footer) {
+        footer.style.display = 'none';
+      }
+      if (navbar) {
+        navbar.classList.add('bg-white', 'shadow-sm');
+      }
     } else {
       document.body.style.overflow = 'unset';
+      if (footer) {
+        footer.style.display = '';
+      }
+      if (navbar) {
+        navbar.classList.remove('bg-white', 'shadow-sm');
+      }
     }
+
     return () => {
       document.body.style.overflow = 'unset';
+      if (footer) {
+        footer.style.display = '';
+      }
+      if (navbar) {
+        navbar.classList.remove('bg-white', 'shadow-sm');
+      }
     };
   }, [isOpen]);
 
@@ -75,21 +99,31 @@ export default function ProjectDetailPanel({ project, isOpen, onClose }: Project
             </button>
 
             {/* Content */}
-            <div className="p-8 pt-0">
+            <div className="p-8">
               {/* Hero Image */}
-              <div className="aspect-video w-full rounded-xl overflow-hidden mb-6 bg-slate-100 -mt-16 pt-16">
+              <div className="aspect-video w-full rounded-xl overflow-hidden mb-6 bg-slate-100">
                 {project.imageUrl === "TODO" ? (
                   <div className="w-full h-full bg-linear-to-br from-slate-200 to-slate-300 flex items-center justify-center">
                     <span className="text-slate-500 text-2xl font-light">{project.title}</span>
                   </div>
                 ) : (
-                  <Image
-                    src={project.imageUrl}
-                    alt={project.title}
-                    width={800}
-                    height={450}
-                    className="w-full h-full object-cover"
-                  />
+                  <div
+                    onClick={() => setExpandedImage(project.imageUrl)}
+                    className="relative w-full h-full cursor-pointer group"
+                  >
+                    <Image
+                      src={project.imageUrl}
+                      alt={project.title}
+                      width={800}
+                      height={450}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <span className="text-white text-sm font-medium bg-black/50 px-4 py-2 rounded-lg">
+                        Click to expand
+                      </span>
+                    </div>
+                  </div>
                 )}
               </div>
 
@@ -173,6 +207,46 @@ export default function ProjectDetailPanel({ project, isOpen, onClose }: Project
               </div>
             </div>
           </motion.div>
+
+          {/* Image Lightbox Modal */}
+          {expandedImage && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setExpandedImage(null)}
+              className="fixed left-0 right-0 bg-black/90 z-60 flex items-center justify-center cursor-pointer"
+              style={{ top: '64px', height: 'calc(100vh - 64px)' }}
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setExpandedImage(null)}
+                className="absolute top-6 right-6 p-3 bg-white/20 hover:bg-white/30 rounded-full transition-colors shadow-lg border-2 border-white/30"
+                aria-label="Close image"
+              >
+                <X size={28} className="text-white" />
+              </button>
+
+              {/* Expanded Image */}
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative cursor-default"
+                style={{ maxWidth: '80vw', maxHeight: '80%' }}
+              >
+                <Image
+                  src={expandedImage}
+                  alt="Expanded view"
+                  width={1900}
+                  height={870}
+                  className="w-auto h-auto max-w-full max-h-full object-contain rounded-lg"
+                />
+              </motion.div>
+            </motion.div>
+          )}
         </>
       )}
     </AnimatePresence>

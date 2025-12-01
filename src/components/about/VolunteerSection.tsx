@@ -43,7 +43,7 @@ export const VolunteerSection = () => {
                       src={work.imageSrc}
                       alt={work.imageAlt}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      className={`object-cover transition-transform duration-500 group-hover:scale-110 ${work.imageClassName || ''}`}
                     />
                   ) : (
                     <p className="text-slate-500 text-sm">Photo: {work.imageAlt}</p>

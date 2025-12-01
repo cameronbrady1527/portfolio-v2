@@ -29,6 +29,7 @@ export interface VolunteerWork {
   description: string;
   imageAlt: string;
   imageSrc?: string; // Optional - will be added when photos are available
+  imageClassName?: string; // Optional - custom positioning classes for the image
 }
 
 export interface PersonalInterest {
@@ -144,29 +145,30 @@ const volunteerWork: VolunteerWork[] = [
     title: "Walk to End Alzheimer's",
     role: "Community Engagement Committee",
     description: "Recruiting volunteers and raising community awareness about Alzheimer's disease and research funding.",
-    imageAlt: "Walk to End Alzheimer's event"
-    // imageSrc: "/images/volunteer/walk-alzheimers.jpg" // TODO: Add when photo available
+    imageAlt: "Walk to End Alzheimer's event",
+    imageSrc: "/imgs/alz-walk-research.jpg",
+    imageClassName: "object-top"
   },
   {
     title: "The Clover Project",
     role: "Founder & CEO",
     description: "25+ tons of fresh produce donated to food banks and families facing food insecurity across the Hudson Valley.",
-    imageAlt: "Clover Project garden"
-    // imageSrc: "/images/volunteer/clover-project.jpg" // TODO: Add when photo available
+    imageAlt: "Clover Project garden",
+    imageSrc: "/imgs/clover-aerial.jpeg"
   },
   {
     title: "Appalachia Service Project",
     role: "Volunteer (2018-2019)",
     description: "Home renovation and repair for low-income families in the lower Appalachian region.",
-    imageAlt: "Home renovation project"
-    // imageSrc: "/images/volunteer/appalachia-service.jpg" // TODO: Add when photo available
+    imageAlt: "Home renovation project",
+    imageSrc: "/imgs/asp-working.jpeg"
   },
   {
     title: "Sparrow's Nest",
     role: "Volunteer & Donor",
     description: "Supporting families affected by cancer through produce donations and volunteer service.",
-    imageAlt: "Community service"
-    // imageSrc: "/images/volunteer/sparrows-nest.jpg" // TODO: Add when photo available
+    imageAlt: "Community service",
+    imageSrc: "/imgs/sparrows-race.jpeg"
   }
 ];
 
@@ -177,24 +179,24 @@ const personalInterests: PersonalInterest[] = [
     description: "Staying fit and clearing my mind on the trails",
     imageAlt: "Running",
     gradientFrom: "blue-200",
-    gradientTo: "blue-300"
-    // imageSrc: "/images/personal/running.jpg" // TODO: Add when photo available
+    gradientTo: "blue-300",
+    imageSrc: "/imgs/running.jpeg"
   },
   {
     title: "NY Rangers",
     description: "Lifelong hockey fan and Rangers supporter",
     imageAlt: "NY Rangers fan",
     gradientFrom: "slate-200",
-    gradientTo: "slate-300"
-    // imageSrc: "/images/personal/rangers.jpg" // TODO: Add when photo available
+    gradientTo: "slate-300",
+    imageSrc: "/imgs/nyrangers.jpeg"
   },
   {
     title: "Reading & Nature",
     description: "Finding inspiration in books and the outdoors",
     imageAlt: "Nature and reading",
     gradientFrom: "green-200",
-    gradientTo: "green-300"
-    // imageSrc: "/images/personal/nature.jpg" // TODO: Add when photo available
+    gradientTo: "green-300",
+    imageSrc: "/imgs/reading-spot.jpeg"
   }
 ];
 

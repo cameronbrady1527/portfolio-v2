@@ -5,7 +5,15 @@ import { motion } from 'motion/react';
 import { Brain, Code, GraduationCap } from 'lucide-react';
 
 export default function WhatIDo() {
-  const areas = [
+  type Area = {
+    icon: any;
+    title: string;
+    description: string;
+    color: 'purple' | 'blue' | 'green';
+    current: string;
+  };
+
+  const areas: Area[] = [
     {
       icon: Brain,
       title: 'AI Research',
@@ -29,6 +37,39 @@ export default function WhatIDo() {
     }
   ];
 
+  const colorClassesMap = {
+    purple: {
+      iconBg: 'bg-purple-100',
+      iconText: 'text-purple-600',
+      line: 'bg-purple-500',
+      badgeBg: 'bg-purple-50',
+      badgeBorder: 'border-purple-500',
+      badgeText: 'text-purple-700',
+      cardBorder: 'border-purple-200 hover:border-purple-300',
+      cardShadow: 'hover:shadow-purple-100'
+    },
+    blue: {
+      iconBg: 'bg-blue-100',
+      iconText: 'text-blue-600',
+      line: 'bg-blue-500',
+      badgeBg: 'bg-blue-50',
+      badgeBorder: 'border-blue-500',
+      badgeText: 'text-blue-700',
+      cardBorder: 'border-blue-200 hover:border-blue-300',
+      cardShadow: 'hover:shadow-blue-100'
+    },
+    green: {
+      iconBg: 'bg-green-100',
+      iconText: 'text-green-600',
+      line: 'bg-green-500',
+      badgeBg: 'bg-green-50',
+      badgeBorder: 'border-green-500',
+      badgeText: 'text-green-700',
+      cardBorder: 'border-green-200 hover:border-green-300',
+      cardShadow: 'hover:shadow-green-100'
+    }
+  };
+
   return (
     <section className="py-20">
       <div className="container mx-auto px-6 relative z-10">
@@ -45,9 +86,11 @@ export default function WhatIDo() {
           </p>
         </motion.div>
 
-        <div className="max-w-5xl mx-auto space-y-16">
+        <div className="max-w-5xl mx-auto space-y-12">
           {areas.map((area, index) => {
             const Icon = area.icon;
+            const colorClasses = colorClassesMap[area.color];
+
             return (
               <motion.div
                 key={area.title}
@@ -55,35 +98,37 @@ export default function WhatIDo() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.15 }}
-                className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-12`}
+                className={`group bg-white rounded-2xl border-2 ${colorClasses.cardBorder} shadow-lg ${colorClasses.cardShadow} hover:shadow-2xl transition-all duration-300 p-8 md:p-10`}
               >
-                {/* Icon */}
-                <div className="flex-shrink-0">
-                  <div className={`w-32 h-32 rounded-3xl bg-${area.color}-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className={`text-${area.color}-600`} size={56} />
+                <div className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8 md:gap-12`}>
+                  {/* Icon */}
+                  <div className="shrink-0">
+                    <div className={`w-28 h-28 rounded-2xl ${colorClasses.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md`}>
+                      <Icon className={colorClasses.iconText} size={48} strokeWidth={1.5} />
+                    </div>
                   </div>
-                </div>
 
-                {/* Content */}
-                <div className="flex-1 text-center md:text-left">
-                  <h3 className="text-3xl font-light text-slate-800 mb-4">
-                    {area.title}
-                  </h3>
+                  {/* Content */}
+                  <div className="flex-1 text-center md:text-left">
+                    <h3 className="text-3xl font-light text-slate-800 mb-4">
+                      {area.title}
+                    </h3>
 
-                  <div className={`h-1 w-20 bg-${area.color}-500 rounded-full mb-6 ${index % 2 === 0 ? 'md:mx-0 mx-auto' : 'md:mx-0 mx-auto md:ml-auto'}`} />
+                    <div className={`h-1 w-20 ${colorClasses.line} rounded-full mb-6 mx-auto md:mx-0`} />
 
-                  <p className="text-lg text-slate-600 leading-relaxed mb-6">
-                    {area.description}
-                  </p>
-
-                  {/* Currently Working On */}
-                  <div className={`inline-block px-4 py-2 bg-${area.color}-50 border-l-4 border-${area.color}-500 rounded-r-lg`}>
-                    <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">
-                      Currently Working On
+                    <p className="text-lg text-slate-600 leading-relaxed mb-6">
+                      {area.description}
                     </p>
-                    <p className={`text-sm font-medium text-${area.color}-700`}>
-                      {area.current}
-                    </p>
+
+                    {/* Currently Working On */}
+                    <div className={`inline-block px-4 py-2 ${colorClasses.badgeBg} border-l-4 ${colorClasses.badgeBorder} rounded-r-lg shadow-sm`}>
+                      <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">
+                        Currently Working On
+                      </p>
+                      <p className={`text-sm font-medium ${colorClasses.badgeText}`}>
+                        {area.current}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </motion.div>

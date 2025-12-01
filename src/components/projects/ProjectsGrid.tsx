@@ -86,9 +86,9 @@ export default function ProjectsGrid() {
             {/* Project image */}
             <div className="aspect-video overflow-hidden bg-slate-100">
               <div className="w-full h-full bg-linear-to-br from-slate-200 to-slate-300 flex items-center justify-center">
-                {project.imageUrl === "TODO" 
-                  ? <span className="text-slate-500 text-xl">{project.title}</span> 
-                  : <Image src={project.imageUrl} alt={project.title} />
+                {project.imageUrl === "TODO"
+                  ? <span className="text-slate-500 text-xl">{project.title}</span>
+                  : <Image src={project.imageUrl} alt={project.title} width={1900} height={870} className="w-full h-full object-contain" />
                 }
                 {/* <span className="text-slate-500 text-2xl">{project.title}</span> */}
               </div>

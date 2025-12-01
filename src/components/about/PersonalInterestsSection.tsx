@@ -9,8 +9,6 @@ export const PersonalInterestsSection = () => {
   const aboutData = useContext(AboutContext);
   const { personalInterests } = aboutData;
 
-  const heights = ['h-64', 'h-80', 'h-72']; // Varying heights for masonry effect
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -37,7 +35,7 @@ export const PersonalInterestsSection = () => {
             className="break-inside-avoid mb-6"
           >
             <div className="group cursor-default">
-              <div className={`relative ${heights[index % heights.length]} bg-linear-to-br from-${interest.gradientFrom} to-${interest.gradientTo} rounded-2xl overflow-hidden`}>
+              <div className={`relative h-72 bg-linear-to-br from-${interest.gradientFrom} to-${interest.gradientTo} rounded-2xl overflow-hidden`}>
                 {interest.imageSrc ? (
                   <Image
                     src={interest.imageSrc}

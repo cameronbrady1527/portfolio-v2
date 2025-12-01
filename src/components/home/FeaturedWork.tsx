@@ -2,17 +2,32 @@
 'use client';
 
 import Link from 'next/link';
-import { useContext } from 'react';
-import { motion } from 'motion/react';
-import { Github, ExternalLink, BookOpen, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import { useContext, useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Github, ExternalLink, BookOpen, ArrowRight, X } from 'lucide-react';
 
 import { ProjectsContext } from '@/lib/utils';
 import NavLink from '@/components/NavLink';
 
 export default function FeaturedWork() {
   const allProjects = useContext(ProjectsContext);
+  const [expandedImage, setExpandedImage] = useState<string | null>(null);
 
   const featuredProjects = allProjects.slice(0, 4);
+
+  // Prevent body scroll when image is expanded
+  useEffect(() => {
+    if (expandedImage) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [expandedImage]);
 
   return (
     <section className="py-20">
@@ -84,21 +99,22 @@ export default function FeaturedWork() {
               >
                 {/* Visual/Image Area */}
                 <div className="flex-1 w-full">
-                  <div className={`relative h-96 rounded-2xl overflow-hidden shadow-2xl group bg-linear-to-br ${
-                    project.type.includes('ml')
-                      ? 'from-purple-100 via-blue-100 to-indigo-100'
-                      : 'from-blue-100 via-cyan-100 to-teal-100'
-                  }`}>
-                    {/* Placeholder for project screenshot - can be replaced with actual images */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center p-8">
-                        <BookOpen className={`mx-auto mb-4 ${
-                          project.type.includes('ml') ? 'text-purple-400' : 'text-blue-400'
-                        }`} size={64} />
-                        <p className="text-slate-500 text-sm">Project Preview</p>
-                      </div>
+                  <div
+                    onClick={() => setExpandedImage(project.imageUrl)}
+                    className="relative rounded-2xl overflow-hidden shadow-2xl group bg-slate-100 cursor-pointer"
+                  >
+                    <Image
+                      src={project.imageUrl}
+                      alt={project.title}
+                      width={1900}
+                      height={870}
+                      className="w-full h-auto object-contain"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <span className="text-white text-sm font-medium bg-black/50 px-4 py-2 rounded-lg">
+                        Click to expand
+                      </span>
                     </div>
-                    <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                 </div>
 
@@ -108,9 +124,7 @@ export default function FeaturedWork() {
                     {project.title}
                   </h4>
 
-                  <div className={`h-1 w-20 rounded-full mb-6 ${
-                    project.type.includes('ml') ? 'bg-purple-500' : 'bg-blue-500'
-                  }`} />
+                  <div className="h-1 w-20 rounded-full mb-6 bg-blue-500" />
 
                   <p className="text-slate-600 leading-relaxed text-lg mb-6">
                     {project.description}
@@ -120,11 +134,7 @@ export default function FeaturedWork() {
                     {project.technologies.map((tech, techIndex) => (
                       <span
                         key={techIndex}
-                        className={`px-3 py-1.5 rounded-full text-sm font-medium ${
-                          project.type.includes('ml')
-                            ? 'bg-purple-50 text-purple-700 border border-purple-200'
-                            : 'bg-blue-50 text-blue-700 border border-blue-200'
-                        }`}
+                        className="px-3 py-1.5 rounded-full text-sm font-medium bg-blue-50 text-blue-700 border border-blue-200"
                       >
                         {tech}
                       </span>
@@ -149,11 +159,7 @@ export default function FeaturedWork() {
                         href={project.demoLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-white transition-all text-sm font-medium ${
-                          project.type.includes('ml')
-                            ? 'bg-purple-600 hover:bg-purple-700'
-                            : 'bg-blue-600 hover:bg-blue-700'
-                        }`}
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white transition-all text-sm font-medium bg-blue-600 hover:bg-blue-700"
                       >
                         <ExternalLink size={18} />
                         Live Demo
@@ -166,6 +172,49 @@ export default function FeaturedWork() {
           </div>
         </div>
       </div>
+
+      {/* Image Lightbox Modal */}
+      <AnimatePresence>
+        {expandedImage && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setExpandedImage(null)}
+              className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 cursor-pointer"
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setExpandedImage(null)}
+                className="absolute top-6 right-6 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"
+                aria-label="Close image"
+              >
+                <X size={24} className="text-white" />
+              </button>
+
+              {/* Expanded Image */}
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative max-w-7xl max-h-[90vh] w-full"
+              >
+                <Image
+                  src={expandedImage}
+                  alt="Expanded view"
+                  width={1900}
+                  height={870}
+                  className="w-full h-auto object-contain rounded-lg"
+                />
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </section>
   )
 }
