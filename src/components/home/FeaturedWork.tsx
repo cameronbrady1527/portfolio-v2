@@ -173,7 +173,7 @@ export default function FeaturedWork() {
                         className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white transition-all text-sm font-medium bg-green-600 hover:bg-green-700"
                       >
                         <Download size={18} />
-                        Download
+                        Download Project
                       </a>
                     )}
 
@@ -184,7 +184,7 @@ export default function FeaturedWork() {
                         className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white transition-all text-sm font-medium bg-green-600 hover:bg-green-700"
                       >
                         <Download size={18} />
-                        Download
+                        Download Demo
                       </a>
                     )}
                   </div>

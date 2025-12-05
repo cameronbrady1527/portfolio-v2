@@ -214,7 +214,7 @@ export default function ProjectDetailPanel({ project, isOpen, onClose }: Project
                     className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors font-medium"
                   >
                     <Download size={20} />
-                    Download
+                    Download Project
                   </a>
                 )}
 
@@ -225,7 +225,7 @@ export default function ProjectDetailPanel({ project, isOpen, onClose }: Project
                     className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors font-medium"
                   >
                     <Download size={20} />
-                    Download
+                    Download Demo
                   </a>
                 )}
               </div>
