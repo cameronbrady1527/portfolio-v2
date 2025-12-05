@@ -26,6 +26,8 @@ type Project = {
   demoLink: string;
   imageUrl: string;
   codeRepo: string;
+  downloadLink?: string;
+  demoDownload?: string;
   type: string[];
   technologies: string[];
   status: string;
@@ -61,9 +63,9 @@ export default function ProjectsGrid() {
     { id: 'research', label: 'Research', count: allProjects.filter(p => p.type.includes('research')).length },
     { id: 'cornell', label: 'Cornell Project', count: allProjects.filter(p => p.type.includes('cornell')).length },
   ];
-  
-  const filteredProjects = selectedCategory === 'project' 
-    ? allProjects 
+
+  const filteredProjects = selectedCategory === 'project'
+    ? allProjects
     : allProjects.filter(project => project.type.includes(selectedCategory));
   
   return (
@@ -100,7 +102,7 @@ export default function ProjectsGrid() {
               <div className="w-full h-full bg-linear-to-br from-slate-200 to-slate-300 flex items-center justify-center">
                 {project.imageUrl === "TODO"
                   ? <span className="text-slate-500 text-xl">{project.title}</span>
-                  : <Image src={project.imageUrl} alt={project.title} width={1900} height={870} className="w-full h-full object-contain" />
+                  : <Image src={project.imageUrl} alt={project.title} width={1900} height={870} className="w-full h-full object-contain object-center" />
                 }
                 {/* <span className="text-slate-500 text-2xl">{project.title}</span> */}
               </div>

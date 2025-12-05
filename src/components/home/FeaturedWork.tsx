@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useContext, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Github, ExternalLink, BookOpen, ArrowRight, X } from 'lucide-react';
+import { Github, ExternalLink, BookOpen, ArrowRight, X, Download } from 'lucide-react';
 
 import { ProjectsContext } from '@/lib/utils';
 import NavLink from '@/components/NavLink';
@@ -108,7 +108,7 @@ export default function FeaturedWork() {
                       alt={project.title}
                       width={1900}
                       height={870}
-                      className="w-full h-auto object-contain"
+                      className="w-full h-auto object-contain object-center"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <span className="text-white text-sm font-medium bg-black/50 px-4 py-2 rounded-lg">
@@ -163,6 +163,28 @@ export default function FeaturedWork() {
                       >
                         <ExternalLink size={18} />
                         Live Demo
+                      </a>
+                    )}
+
+                    {project.downloadLink && (
+                      <a
+                        href={project.downloadLink}
+                        download
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white transition-all text-sm font-medium bg-green-600 hover:bg-green-700"
+                      >
+                        <Download size={18} />
+                        Download
+                      </a>
+                    )}
+
+                    {project.demoDownload && (
+                      <a
+                        href={project.demoDownload}
+                        download
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white transition-all text-sm font-medium bg-green-600 hover:bg-green-700"
+                      >
+                        <Download size={18} />
+                        Download
                       </a>
                     )}
                   </div>

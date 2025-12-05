@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Github, ExternalLink } from 'lucide-react';
+import { X, Github, ExternalLink, Download } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
@@ -12,6 +12,8 @@ interface Project {
   demoLink: string;
   imageUrl: string;
   codeRepo: string;
+  downloadLink?: string;
+  demoDownload?: string;
   type: string[];
   technologies: string[];
   status: string;
@@ -116,7 +118,7 @@ export default function ProjectDetailPanel({ project, isOpen, onClose }: Project
                       alt={project.title}
                       width={800}
                       height={450}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain object-center"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <span className="text-white text-sm font-medium bg-black/50 px-4 py-2 rounded-lg">
@@ -202,6 +204,28 @@ export default function ProjectDetailPanel({ project, isOpen, onClose }: Project
                   >
                     <ExternalLink size={20} />
                     Live Demo
+                  </a>
+                )}
+
+                {project.downloadLink && (
+                  <a
+                    href={project.downloadLink}
+                    download
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors font-medium"
+                  >
+                    <Download size={20} />
+                    Download
+                  </a>
+                )}
+
+                {project.demoDownload && (
+                  <a
+                    href={project.demoDownload}
+                    download
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors font-medium"
+                  >
+                    <Download size={20} />
+                    Download
                   </a>
                 )}
               </div>

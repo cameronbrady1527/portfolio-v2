@@ -31,11 +31,24 @@ const PROJECTS_DATA = [
     title: "Sesha",
     description: "Article generation platform baked with AI and source aggregation",
     about: "AI-powered article generation platform that aggregates and processes multiple sources to produce structured articles with customizable presets and export capabilities.",
-    demoLink: "TODO",
+    demoLink: "",
     imageUrl: "/imgs/sesha-library-ss.png", // ⭐
     codeRepo: "https://github.com/astral-ai-labs/sesha-v4",
     type: ["project", "ai"],
     technologies: ["Anthropic Claude Sonnet 4.5", "OpenAI GPT-5", "Next.js", "React", "Typescript", "Tailwind", "Supabase"],
+    status: "prod"
+  },
+  {
+    title: "Race Training Template",
+    description: "Researched-developed race training plan template spreadsheet for runners of all levels",
+    about: "An easy-to-use spreadsheet for runners training for a race. Well documented for easy use, helping a runner develop their own plan or bring in an existing one. Visualizations of your training statistics and goal tracking to build confidence and motivation in a virtuous cycle! Helped me crush my 2025 running goals and will be used for 2026, where I plan to run a few half marathons and my first marathon :) [IMPORTANT] Press Enable Content when you open the Template for full functionality.",
+    demoLink: "",
+    imageUrl: "/imgs/training-plan-ss.png",
+    codeRepo: "",
+    downloadLink: "/training-plan-template.xlsm",
+    demoDownload: "/training-plan-template-demo.xlsm",
+    type: ["project"],
+    technologies: ["Excel", "VBA"],
     status: "prod"
   },
   {
