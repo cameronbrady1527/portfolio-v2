@@ -1,7 +1,7 @@
 "use client";
 
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
-import { Calculator, Code, BookOpen, Users, TrendingUp, FlaskConical } from "lucide-react";
+import { Calculator, Code, BookOpen, TrendingUp, FlaskConical } from "lucide-react";
 import { motion } from "motion/react";
 
 const SubjectsSection = () => {

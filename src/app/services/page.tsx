@@ -4,6 +4,7 @@ import { ApproachSection } from "@/components/services/ApproachSection";
 import { TestimonialsSection } from "@/components/services/TestimonialSection";
 import { AboutSection } from "@/components/services/AboutSection";
 import { PricingContactSection } from "@/components/services/PricingSection";
+import { ComingSoonSection } from "@/components/services/ComingSoonSection";
 
 const ServicesPage = () => {
   return (
@@ -24,6 +25,8 @@ const ServicesPage = () => {
         <TestimonialsSection />
 
         <AboutSection />
+
+        <ComingSoonSection />
 
         <PricingContactSection />
       </div>

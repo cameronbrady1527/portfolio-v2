@@ -5,7 +5,7 @@
 /*                            External Dependencies                           */
 /* -------------------------------------------------------------------------- */
 import { useState, useContext } from 'react'
-import { Github, ExternalLink, Filter } from 'lucide-react'
+import { Github, ExternalLink } from 'lucide-react'
 
 /* -------------------------------------------------------------------------- */
 /*                            Internal Dependencies                           */

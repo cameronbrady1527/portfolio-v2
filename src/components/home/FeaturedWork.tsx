@@ -1,11 +1,10 @@
 // components/FeaturedWork.tsx - Featured projects and research
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { useContext, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Github, ExternalLink, BookOpen, ArrowRight, X, Download } from 'lucide-react';
+import { Github, ExternalLink, ArrowRight, X, Download } from 'lucide-react';
 
 import { ProjectsContext } from '@/lib/utils';
 import NavLink from '@/components/NavLink';

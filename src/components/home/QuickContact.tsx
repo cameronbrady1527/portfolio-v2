@@ -2,9 +2,8 @@
 "use client";
 
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Linkedin, Github, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Mail, MapPin, Linkedin, Github, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import Link from 'next/link';
 import NavLink from '@/components/NavLink';
 
 export default function QuickContact() {

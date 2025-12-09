@@ -1,6 +1,6 @@
 // app/layout.tsx - Updated root layout
 import './globals.css'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import { JetBrains_Mono } from 'next/font/google'
 import type { Metadata } from 'next'
 import { Toaster } from "sonner"
 import { Github, Linkedin } from 'lucide-react'

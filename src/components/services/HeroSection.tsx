@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import Image from "next/image";
 
-import { MapPin, Globe, GraduationCap, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { motion } from "motion/react";
 
 const HeroSection = () => {
