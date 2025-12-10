@@ -58,17 +58,9 @@ const PricingContactSection = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Price */}
-                <div className="text-center bg-linear-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-6">
-                  <div className="text-4xl font-bold text-blue-600 mb-2">
-                    $60<span className="text-lg font-normal text-gray-600">/hour</span>
-                  </div>
-                  <p className="text-gray-600 text-lg">All subjects and grade levels</p>
-                </div>
-
-                {/* Features */}
+                {/* Session Options */}
                 <div className="space-y-3">
-                  <h4 className="font-semibold text-lg">What&apos;s Included:</h4>
+                  <h4 className="font-semibold text-lg">Session Options:</h4>
                   {pricingFeatures.map((feature, index) => (
                     <motion.div
                       key={index}
@@ -81,6 +73,13 @@ const PricingContactSection = () => {
                       <span className="text-gray-700 dark:text-gray-300">{feature}</span>
                     </motion.div>
                   ))}
+                </div>
+
+                {/* Rates */}
+                <div className="bg-linear-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-5 border border-blue-100 dark:border-blue-900/30">
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    Rates vary based on subject complexity and session type. Reach out and we&apos;ll find an arrangement that works for your needs and budget.
+                  </p>
                 </div>
 
                 {/* Availability */}
