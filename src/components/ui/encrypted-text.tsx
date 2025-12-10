@@ -22,6 +22,11 @@ type EncryptedTextProps = {
   encryptedClassName?: string;
   /** CSS class for styling the revealed characters */
   revealedClassName?: string;
+  /**
+   * Optional callback fired when the text reveal animation completes.
+   * Fires exactly once when all characters have been revealed.
+   */
+  onComplete?: () => void;
 };
 
 const DEFAULT_CHARSET =
@@ -53,6 +58,7 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
   flipDelayMs = 50,
   encryptedClassName,
   revealedClassName,
+  onComplete,
 }) => {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true });
@@ -61,6 +67,7 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
   const animationFrameRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
   const lastFlipTimeRef = useRef<number>(0);
+  const hasCalledComplete = useRef<boolean>(false);
   const scrambleCharsRef = useRef<string[]>(
     text ? generateGibberishPreservingSpaces(text, charset).split("") : [],
   );
@@ -76,6 +83,7 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
     startTimeRef.current = performance.now();
     lastFlipTimeRef.current = startTimeRef.current;
     setRevealCount(0);
+    hasCalledComplete.current = false;
 
     let isCancelled = false;
 
@@ -92,6 +100,11 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
       setRevealCount(currentRevealCount);
 
       if (currentRevealCount >= totalLength) {
+        // Fire completion callback exactly once
+        if (onComplete && !hasCalledComplete.current) {
+          hasCalledComplete.current = true;
+          onComplete();
+        }
         return;
       }
 

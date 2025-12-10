@@ -7,45 +7,29 @@ import { AnimatePresence, motion } from "motion/react";
 
 export function ComingSoonSection() {
     const [mounted, setMounted] = useState(false);
-    const [visibleSection, setVisibleSection] = useState(0);
-    const [isDecrypting, setIsDecrypting] = useState(true);
+    const [titleComplete, setTitleComplete] = useState(false);
+    const [buttonClicked, setButtonClicked] = useState(false);
+    const [activeParagraph, setActiveParagraph] = useState<0 | 1 | 2 | 3>(0);
+    const [allParagraphsComplete, setAllParagraphsComplete] = useState(false);
     const [showCracked, setShowCracked] = useState(false);
-    const [showIndicator, setShowIndicator] = useState(true);
+    const [showIndicator, setShowIndicator] = useState(false);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    useEffect(() => {
-        if (!mounted) return;
+    const handleButtonClick = () => {
+        setButtonClicked(true);
+        setShowIndicator(true);
+        setActiveParagraph(1);
+    };
 
-        // Title: 29 chars * 25ms = 725ms
-        const timer1 = setTimeout(() => setVisibleSection(1), 800);
-
-        // Para 1: 291 chars * 12ms = 3492ms + 800ms = 4292ms
-        const timer2 = setTimeout(() => setVisibleSection(2), 4400);
-
-        // Para 2: 283 chars * 12ms = 3396ms + 4400ms = 7796ms
-        const timer3 = setTimeout(() => setVisibleSection(3), 7900);
-
-        // Last: 97 chars * 15ms = 1455ms + 7900ms = 9355ms
-        // Stop showing decrypting and show "we cracked it!"
-        const timer4 = setTimeout(() => {
-            setIsDecrypting(false);
-            setShowCracked(true);
-        }, 9400);
-
-        // Hide the entire indicator after showing "we cracked it!" for 2 seconds
-        const timer5 = setTimeout(() => setShowIndicator(false), 11400);
-
-        return () => {
-            clearTimeout(timer1);
-            clearTimeout(timer2);
-            clearTimeout(timer3);
-            clearTimeout(timer4);
-            clearTimeout(timer5);
-        };
-    }, [mounted]);
+    const handleFinalParagraphComplete = () => {
+        setAllParagraphsComplete(true);
+        setShowCracked(true);
+        // Hide indicator after 2 seconds
+        setTimeout(() => setShowIndicator(false), 2000);
+    };
 
     return (
         <section className="mx-auto max-w-5xl px-6 py-20">
@@ -64,7 +48,7 @@ export function ComingSoonSection() {
                             transition={{ duration: 0.3 }}
                             className="absolute top-4 right-4 flex items-center gap-1 text-green-600 dark:text-green-400 text-sm font-mono"
                         >
-                            {isDecrypting ? (
+                            {!allParagraphsComplete ? (
                                 <>
                                     <span>Decrypting</span>
                                     <span className="flex gap-0.2 text-base">
@@ -124,45 +108,66 @@ export function ComingSoonSection() {
                                 encryptedClassName="text-slate-400 dark:text-slate-600"
                                 revealedClassName="text-slate-900 dark:text-slate-50"
                                 revealDelayMs={25}
+                                onComplete={() => setTitleComplete(true)}
                             />
                         ) : (
-                            <span className="text-slate-900 dark:text-slate-50">Coming Soon: Tutor Platform!</span>
+                            <span className="text-slate-900 dark:text-slate-50">Up Next: Complete Tutor Platform!</span>
                         )}
                     </h2>
 
-                    {/* Main description - reveals second after title completes */}
+                    {/* Decrypt Info Button - appears after title completes */}
+                    {titleComplete && !buttonClicked && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4 }}
+                            className="flex justify-center"
+                        >
+                            <button
+                                onClick={handleButtonClick}
+                                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95"
+                            >
+                                Decrypt Info
+                            </button>
+                        </motion.div>
+                    )}
+
+                    {/* Main description - reveals sequentially after button click */}
                     <div className="text-base md:text-lg leading-relaxed space-y-5 max-w-3xl mx-auto">
-                        {mounted && visibleSection >= 1 && (
+                        {buttonClicked && activeParagraph >= 1 && (
                             <p>
                                 <EncryptedText
                                     text="I have been finding great success with students. Scores are improving and students are loving the personalized and additional learning material I am giving them outside of the session (free of charge)! To continue improving the experience, I am building on what works, developing a platform for students and parents where they can access additional content."
                                     encryptedClassName="text-slate-400 dark:text-slate-700"
                                     revealedClassName="text-slate-700 dark:text-slate-300"
                                     revealDelayMs={12}
+                                    onComplete={() => setActiveParagraph(2)}
                                 />
                             </p>
                         )}
 
-                        {/* Key features highlight - reveals third after para 1 completes */}
-                        {mounted && visibleSection >= 2 && (
+                        {/* Key features highlight - reveals after para 1 completes */}
+                        {buttonClicked && activeParagraph >= 2 && (
                             <p>
                                 <EncryptedText
                                     text="It will be personalized to each student's learning needs with in-house AI integration for targeted learning content and additional resource suggestions and assessment of needs. This platform will allow students to extend their learning beyond the tutoring session, and access past, present, and brand new, research-backed materials."
                                     encryptedClassName="text-slate-400 dark:text-slate-700"
                                     revealedClassName="text-slate-700 dark:text-slate-300"
                                     revealDelayMs={12}
+                                    onComplete={() => setActiveParagraph(3)}
                                 />
                             </p>
                         )}
 
-                        {/* Closing statement - reveals last after para 2 completes */}
-                        {mounted && visibleSection >= 3 && (
+                        {/* Closing statement - reveals after para 2 completes */}
+                        {buttonClicked && activeParagraph >= 3 && (
                             <p className="pt-4 italic font-medium text-lg">
                                 <EncryptedText
                                     text="I love teaching and cannot wait to roll out this platform for your or your loved ones' benefit."
                                     encryptedClassName="text-slate-400 dark:text-slate-700"
                                     revealedClassName="text-blue-600 dark:text-blue-400"
                                     revealDelayMs={15}
+                                    onComplete={handleFinalParagraphComplete}
                                 />
                             </p>
                         )}
