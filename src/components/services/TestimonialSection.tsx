@@ -16,13 +16,13 @@ const TestimonialsSection = () => {
       title: "Elementary School Student"
     },
     {
-      quote: "The way Cameron connects concepts I already knew to solve new problems was amazing. I finally understood how algebra actually works!",
-      name: "Michael R.", 
-      title: "Sophomore, Algebra II Honors"
+      quote: "Working with Cam on Algebra II and Physics H was incredibly helpful. He patiently broke down complex topics, boosted my confidence, and made algebra and physics a lot less stressful and more understandable with great support.",
+      name: "Cooper C.", 
+      title: "Junior, Algebra II Honors & Physics Honors"
     },
     {
-      quote: "My daughter's math anxiety completely disappeared after working with Cameron. He's patient and really understands how kids learn.",
-      name: "Jennifer L.",
+      quote: "Cameron has the ability to make complex topics fun and understandable, leading to a huge improvement in my son's grades and self-esteem.",
+      name: "Caryn C.",
       title: "Parent"
     },
     {
