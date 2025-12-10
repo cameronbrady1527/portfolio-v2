@@ -6,14 +6,14 @@ import { motion } from "motion/react";
 const TestimonialsSection = () => {
   const testimonials = [
     {
+      quote: "Cameron has the ability to make complex topics fun and understandable, leading to a huge improvement in my son's grades and self-esteem.",
+      name: "Caryn C.",
+      title: "Parent"
+    },    
+    {
       quote: "Cam was an excellent tutor who provided clear and in-depth explanations of complex CS concepts. He was patient and used language I could understand in his lessons. Thanks to his guidance, I gained a deeper understanding of coding and he helped increase my skills significantly in Java, Python, and CS fundamentals.",
       name: "Brady K.",
       title: "High School Senior, AP Computer Science"
-    },
-    {
-      quote: "I remember when you helped me practice with a math test that was really hard for me. I thought I was going to fail, but you showed my that I knew way more than I thought.",
-      name: "Ethan D.",
-      title: "Elementary School Student"
     },
     {
       quote: "Working with Cam on Algebra II and Physics H was incredibly helpful. He patiently broke down complex topics, boosted my confidence, and made algebra and physics a lot less stressful and more understandable with great support.",
@@ -21,15 +21,15 @@ const TestimonialsSection = () => {
       title: "Junior, Algebra II Honors & Physics Honors"
     },
     {
-      quote: "Cameron has the ability to make complex topics fun and understandable, leading to a huge improvement in my son's grades and self-esteem.",
-      name: "Caryn C.",
-      title: "Parent"
+      quote: "I remember when you helped me practice with a math test that was really hard for me. I thought I was going to fail, but you showed my that I knew way more than I thought.",
+      name: "Ethan D.",
+      title: "Elementary School Student"
     },
-    {
-      quote: "Cameron's computer science tutoring got me into my dream college program. His explanations made complex algorithms finally click.",
-      name: "David K.",
-      title: "High School Graduate"
-    }
+    // {
+    //   quote: "Cameron's computer science tutoring got me into my dream college program. His explanations made complex algorithms finally click.",
+    //   name: "David K.",
+    //   title: "High School Graduate"
+    // }
 
   ];
 
