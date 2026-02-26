@@ -171,7 +171,7 @@ export default function ContactPage() {
                 items={[
                   {
                     question: "What subjects do you tutor?",
-                    answer: `I tutor all K-12 mathematics (Pre-Algebra through AP Calculus BC and Statistics), computer science (introductory programming through Machine Learning), and sciences (Earth Science through AP Physics C). I also work with elementary and middle school students across all core subjects. See my full subject list on my ${<Link href="/services">Services page</Link>}.`
+                    answer: `I tutor all K-12 mathematics (Pre-Algebra through AP Calculus BC and Statistics), computer science (introductory programming through Machine Learning), and sciences (Earth Science through AP Physics C). I also work with elementary and middle school students across all core subjects. See my full subject list on my Services page (found in navigation bar above).`
                   },
                   {
                     question: "Do you offer online or in-person sessions?",
