@@ -28,7 +28,7 @@ const ServicesPage = () => {
 
         <PricingContactSection />
 
-        <ComingSoonSection />
+        {/* <ComingSoonSection /> */}
       </div>
     </div>
   );
