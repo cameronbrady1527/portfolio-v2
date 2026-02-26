@@ -15,7 +15,7 @@ export default function ProjectsCTA() {
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Services CTA */}
-        <div className="bg-white border-2 border-blue-200 rounded-2xl p-8 shadow-lg hover:shadow-xl hover:border-blue-300 transition-all">
+        {/* <div className="bg-white border-2 border-blue-200 rounded-2xl p-8 shadow-lg hover:shadow-xl hover:border-blue-300 transition-all">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
               <Briefcase className="text-blue-600" size={24} />
@@ -55,7 +55,7 @@ export default function ProjectsCTA() {
               </motion.span>
             </motion.div>
           </NavLink>
-        </div>
+        </div> */}
 
         {/* Contact CTA */}
         <div className="bg-white border-2 border-slate-200 rounded-2xl p-8 shadow-lg hover:shadow-xl hover:border-slate-300 transition-all">
