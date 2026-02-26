@@ -69,7 +69,7 @@ export default function QuickContact() {
         >
           <h2 className="text-4xl font-light text-slate-800 mb-4">Get In Touch</h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            Interested in collaboration, research opportunities, or discussing AI applications in healthcare?
+            Interested in tutoring, collaboration, or discussing AI applications in education?
           </p>
         </motion.div>
 
@@ -88,7 +88,7 @@ export default function QuickContact() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <Mail className="text-blue-600" size={20} />
-                  <span className="text-slate-600"><a href="mailto:cameronbrady1527@gmail.com">cameronbrady1527@gmail.com</a></span>
+                  <span className="text-slate-600"><a href="mailto:cab495@cornell.edu">cab495@cornell.edu</a></span>
                 </div>
                 
                 <div className="flex items-center gap-3">
@@ -122,7 +122,41 @@ export default function QuickContact() {
               <div className="border-t-2 border-slate-300 pt-6 mt-8">
                 <h3 className="text-xl font-semibold text-slate-800 mb-4">Interested in Hiring Me?</h3>
                 <NavLink
-                  href="/resume.pdf"
+                  href="/educationresume.pdf"
+                  openInNewTab
+                  className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-3"
+                >
+                  <motion.div
+                    className="flex items-center gap-2"
+                    initial="initial"
+                    whileHover="hover"
+                  >
+                    <span className="relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
+                                 after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
+                                 hover:after:origin-left hover:after:scale-x-100 after:transition-transform
+                                 after:duration-300 after:ease-out">
+                      View Education Resume
+                    </span>
+                    <motion.span
+                      variants={{
+                        initial: { x: 0 },
+                        hover: {
+                          x: [0, 8, 0],
+                          transition: {
+                            duration: 0.6,
+                            ease: "easeInOut",
+                            repeat: 1
+                          }
+                        }
+                      }}
+                      className="inline-block"
+                    >
+                      <ArrowRight size={16} />
+                    </motion.span>
+                  </motion.div>
+                </NavLink>
+                <NavLink
+                  href="/techresume.pdf"
                   openInNewTab
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
                 >
@@ -135,7 +169,7 @@ export default function QuickContact() {
                                  after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
                                  hover:after:origin-left hover:after:scale-x-100 after:transition-transform
                                  after:duration-300 after:ease-out">
-                      View Resume
+                      View Technical Resume
                     </span>
                     <motion.span
                       variants={{
