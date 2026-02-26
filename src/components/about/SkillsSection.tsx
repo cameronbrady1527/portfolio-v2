@@ -6,24 +6,24 @@ import { Brain, Code, Zap, BookOpen } from 'lucide-react';
 export const SkillsSection = () => {
   const skillCategories = [
     {
+      icon: <BookOpen className="text-orange-600 h-5 w-5" />,
+      title: "Subjects Taught",
+      skills: ['Mathematics (Pre-Algebra – AP Calculus BC)', 'Computer Science (Introductory – Machine Learning)', 'Science (Earth Science – AP Physics C)', 'All Elementary & Middle School Subjects']
+    },
+    {
       icon: <Brain className="text-purple-600 h-5 w-5" />,
-      title: "Machine Learning",
-      skills: ['Deep Learning', 'Computer Vision', 'NLP', 'Signal Processing', 'Feature Engineering']
+      title: "Pedagogical Skills",
+      skills: ['Differentiated Instruction', 'IEP & 504 Accommodation', 'Curriculum Design', 'Assessment Development', 'Classroom Management', 'Scaffolded Instruction', 'Data-Driven Lesson Planning', 'Student Progress Monitoring', 'Mentoring']
     },
     {
       icon: <Code className="text-blue-600 h-5 w-5" />,
-      title: "Development",
-      skills: ['Python', 'JavaScript', 'TypeScript', 'Java', 'HTML', 'CSS', 'React', 'Next.js', 'Tailwind', 'Node.js', 'SQL']
+      title: "Technical Skills",
+      skills: ['Python', 'JavaScript', 'TypeScript', 'Java', 'HTML', 'CSS', 'React', 'Next.js', 'SQL', 'TensorFlow', 'PyTorch', 'Full-Stack Development', 'Data Analysics', 'AI for Education']
     },
     {
       icon: <Zap className="text-green-600 h-5 w-5" />,
-      title: "Tools & Frameworks",
-      skills: ['TensorFlow', 'PyTorch', 'Scikit-learn', 'Pandas', 'NumPy', 'Matplotlib', 'Seaborn', 'FastAPI', 'MongoDB', 'PostgreSQL']
-    },
-    {
-      icon: <BookOpen className="text-orange-600 h-5 w-5" />,
-      title: "Teaching & Leadership",
-      skills: ['Curriculum Design', 'Data Analytics', 'Team Leadership', 'Mentoring']
+      title: "Tools",
+      skills: ['Microsoft Office', 'Google Suite', 'MongoDB', 'PostgreSQL']
     }
   ];
 

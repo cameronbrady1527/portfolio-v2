@@ -5,7 +5,7 @@ import { JourneyTimeline } from "@/components/about/JourneyTimeline";
 import { ExperienceSection } from "@/components/about/ExperienceSection";
 import { VolunteerSection } from "@/components/about/VolunteerSection";
 import { PersonalInterestsSection } from "@/components/about/PersonalInterestsSection";
-import { ResearchHighlight } from "@/components/about/ResearchHighlight";
+// import { ResearchHighlight } from "@/components/about/ResearchHighlight";
 import { SkillsSection } from "@/components/about/SkillsSection";
 import { CTASection } from "@/components/about/CTASection";
 
@@ -32,7 +32,7 @@ export default function AboutPage() {
 
           <PersonalInterestsSection />
 
-          <ResearchHighlight />
+          {/* <ResearchHighlight /> */}
 
           <SkillsSection />
 

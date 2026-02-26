@@ -32,11 +32,12 @@ export const HeroSection = () => {
           className="text-center"
         >
           <h1 className="text-5xl md:text-6xl font-light text-slate-800 mb-6">
-            Building Solutions, Serving Communities
+            Educator. Builder. Community Leader.
           </h1>
           <p className="text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
-            Software engineer, educator, nonprofit founder, and researcher. Combining technical expertise
-            with a passion for making meaningful impact in healthcare, education, and community development.
+            Educator, tutor, and nonprofit founder with 7+ years of teaching experience in
+            math, CS, and sciences. Cornell graduate combining classroom expertise with
+            technical skills to make meaningful impact for students and communities.
           </p>
         </motion.div>
       </div>

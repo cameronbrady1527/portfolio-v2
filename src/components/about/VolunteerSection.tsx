@@ -18,7 +18,7 @@ export const VolunteerSection = () => {
       className="max-w-5xl mx-auto mb-32"
     >
       <div className="text-center mb-16">
-        <h2 className="text-4xl font-light text-slate-800 mb-4">Making Impact</h2>
+        <h2 className="text-4xl font-light text-slate-800 mb-4">Making Impact through Volunteering</h2>
         <p className="text-xl text-slate-600">
           Committed to serving communities and addressing critical needs
         </p>

@@ -55,7 +55,7 @@ const journeyTimeline: JourneyTimelineItem[] = [
     year: "2018-2019",
     period: "The Beginning",
     title: "Service & Discovery",
-    description: "Started tutoring classmates in CS and advanced STEM subjects while volunteering with Sparrows Nest and Appalachia Service Project, renovating homes for families in need. Discovered the power of combining technical skills with a genuine, passionate devotion to others.",
+    description: "Started tutoring classmates in CS, discovering a passion for helping students connect with challenging material. Volunteered with Sparrows Nest and Appalachia Service Project (referenced below under the Making Impact section), learning the impact of showing up for others.",
     iconName: "Heart",
     color: "from-red-500 to-pink-500"
   },
@@ -68,18 +68,18 @@ const journeyTimeline: JourneyTimelineItem[] = [
     color: "from-green-500 to-emerald-500"
   },
   {
-    year: "2019-2024",
+    year: "2020-2024",
     period: "Cornell",
-    title: "Education & Leadership",
-    description: "Managed and developed the Clove Project through college, while studying Computer Science, Applied Economics, and Agricultural Sciences at Cornell. Rose to Head Teaching Assistant in an upper-level class, leading teams and using data analytics to improve student outcomes. Applied new technical skills to the Clover Project to streamline efficiency and prioritize impact.",
+    title: "Learning to Teach",
+    description: "Studied Computer Science, Applied Economics, and Agricultural Studies at Cornell while deepening my commitment to education. As Head Teaching Assistant for an upper-level business course, led a team of 5 TAs, developed lesson plans and assessments, and used data analytics to tailor instruction and improve student outcomes. Continued tutoring throughout, expanding from math into physics and advanced CS.",
     iconName: "GraduationCap",
     color: "from-blue-500 to-purple-500"
   },
   {
     year: "2024-Present",
     period: "Today",
-    title: "Multi-Faceted Career",
-    description: "Software engineer building AI applications, substitute teacher, tutor, nonprofit consultant, and researcher developing ML systems for early Alzheimer's detection. Serving on Walk to End Alzheimer's committee. Learning in-demand technical skills through research and application, especially in the AI and Machine Learning space.",
+    title: "In the Classroom",
+    description: "Substitute teacher across K-12 in a diverse district of 7,600+ students, leading full-class instruction in math, science, English, and social studies. Supporting students with IEPs and 504 plans through differentiated instruction. Continuing to tutor privately with students consistently improving from below 70% to the 85-100 range. Pursuing NYS certification in Mathematics Education while applying technical skills through freelance software development.",
     iconName: "Zap",
     color: "from-orange-500 to-yellow-500"
   }
@@ -87,30 +87,23 @@ const journeyTimeline: JourneyTimelineItem[] = [
 
 // Professional Experience Data
 const experiences: Experience[] = [
-  {
-    title: "Software Engineer",
-    company: "Astral",
-    period: "Jun 2025 - Present",
-    description: "Building full-stack AI-powered web applications and web crawling automations for clients and the Astral platform.",
-    iconName: "Code",
-    color: "blue",
-    current: true
-  },
-  {
-    title: "Independent Nonprofit Consultant",
-    company: "Community Mindfulness Project",
-    period: "Jan 2025 - Jun 2025",
-    description: "Developed free, open-source nonprofit data analysis tools covering 1.8M+ organizations. Created digital board handbook and advised on strategic program development.",
-    iconName: "Briefcase",
-    color: "purple"
-  },
+  // Teaching & Education Experience
   {
     title: "Substitute Teacher",
     company: "Arlington Central School District",
     period: "2024 - Present",
-    description: "K-12 classroom coverage across all subjects. Specialized in supporting students with IEPs and learning disabilities through personalized instruction.",
+    description: "Leading full-class instruction across K-12 in a diverse district, differentiating for IEPs/504s, building rapport across age groups and backgrounds.",
     iconName: "BookOpen",
     color: "green",
+    current: true
+  },
+  {
+    title: "Independent Tutor",
+    company: "Private Practice",
+    period: "2018 - Present",
+    description: "K-12 tutoring specializing in math and science subjects. Consistently high success rates through personalized, adaptive teaching approaches.",
+    iconName: "Brain",
+    color: "pink",
     current: true
   },
   {
@@ -121,6 +114,7 @@ const experiences: Experience[] = [
     iconName: "GraduationCap",
     color: "indigo"
   },
+  // Community Leadership & Service
   {
     title: "CEO & Co-Founder",
     company: "The Clover Project",
@@ -130,12 +124,21 @@ const experiences: Experience[] = [
     color: "emerald"
   },
   {
-    title: "Independent Tutor",
-    company: "Private Practice",
-    period: "2018 - Present",
-    description: "K-12 tutoring specializing in math and science subjects. Consistently high success rates through personalized, adaptive teaching approaches.",
-    iconName: "Brain",
-    color: "pink",
+    title: "Independent Nonprofit Consultant",
+    company: "Community Mindfulness Project",
+    period: "Jan 2025 - Jun 2025",
+    description: "Developed free, open-source nonprofit data analysis tools covering 1.8M+ organizations. Created digital board handbook and advised on strategic program development.",
+    iconName: "Briefcase",
+    color: "purple"
+  },
+  // Technical Experience
+  {
+    title: "Software Engineer",
+    company: "Astral",
+    period: "Jun 2025 - Present",
+    description: "Building full-stack AI-powered web applications and web crawling automations for clients and the Astral platform.",
+    iconName: "Code",
+    color: "blue",
     current: true
   }
 ];

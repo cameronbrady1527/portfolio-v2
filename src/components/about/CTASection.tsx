@@ -23,7 +23,7 @@ export const CTASection = () => {
             <h3 className="text-2xl font-light text-slate-800">Let&apos;s Connect</h3>
           </div>
           <p className="text-slate-600 mb-6 leading-relaxed">
-            Looking for software development, tutoring, research collaboration, or nonprofit consulting? Let&apos;s explore how we can work together.
+            Looking for a dedicated educator, private tutor, or a developer for a project? I would love to explore what I can do for you!
           </p>
           <NavLink
             href="/contact"

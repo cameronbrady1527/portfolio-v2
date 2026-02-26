@@ -38,7 +38,7 @@ export const JourneyTimeline = () => {
       >
         <h2 className="text-4xl font-light text-slate-800 mb-4">The Journey</h2>
         <p className="text-xl text-slate-600">
-          From high school volunteer to multi-faceted professional
+          From high school volunteer to results-focused educator
         </p>
       </motion.div>
 
