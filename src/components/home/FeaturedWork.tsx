@@ -37,7 +37,7 @@ export default function FeaturedWork() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-light text-slate-800 mb-4">Featured Work</h2>
+          <h2 className="text-4xl font-light text-slate-800 mb-4">Featured Projects</h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
             Highlights from my research and technical projects
           </p>
