@@ -5,6 +5,7 @@ import { ContactForm } from '@/components/ui/contact-form'
 import { Accordion } from '@/components/ui/accordion'
 import { Mail, MapPin, Linkedin, Github, Clock, Phone } from 'lucide-react'
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 
 export default function ContactPage() {
   return (
@@ -28,8 +29,7 @@ export default function ContactPage() {
               Let&apos;s Connect
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Need someone to build your web app idea? Looking for a tutor?
-              Want to chat or collaborate on a project? I&apos;d love to hear from you.
+              Need an experienced tutor? Want to chat or collaborate on a project? I&apos;d love to hear from you.
             </p>
           </motion.div>
 
@@ -51,10 +51,10 @@ export default function ContactPage() {
                     <div>
                       <p className="text-sm text-slate-500 mb-1">Email</p>
                       <a
-                        href="mailto:cameronbrady1527@gmail.com"
+                        href="mailto:cab495@cornell.edu"
                         className="text-slate-700 hover:text-blue-600 transition-colors"
                       >
-                        cameronbrady1527@gmail.com
+                        cab495@cornell.edu
                       </a>
                     </div>
                   </div>
@@ -76,7 +76,7 @@ export default function ContactPage() {
                     <MapPin className="text-blue-600 mt-1 shrink-0" size={20} />
                     <div>
                       <p className="text-sm text-slate-500 mb-1">Location</p>
-                      <span className="text-slate-700">New York, NY</span>
+                      <span className="text-slate-700">New York</span>
                     </div>
                   </div>
 
@@ -124,19 +124,15 @@ export default function ContactPage() {
                 <ul className="text-sm text-slate-700 space-y-2">
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 mt-1">•</span>
-                    <span>Research collaborations</span>
+                    <span>Academic Tutoring</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 mt-1">•</span>
-                    <span>Consulting projects</span>
+                    <span>Freelance Development</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 mt-1">•</span>
-                    <span>Academic tutoring</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-600 mt-1">•</span>
-                    <span>Freelance development</span>
+                    <span>Consulting Projects</span>
                   </li>
                 </ul>
               </div>
@@ -150,7 +146,7 @@ export default function ContactPage() {
               className="lg:col-span-2"
             >
               <ContactForm
-                variant="portfolio"
+                variant="general"
                 title="Send Me a Message"
                 subtitle="Fill out the form below and I'll get back to you within 24 hours"
                 showCard={true}
@@ -174,16 +170,28 @@ export default function ContactPage() {
               <Accordion
                 items={[
                   {
-                    question: "What types of projects do you work on?",
-                    answer: "I specialize in machine learning applications, particularly in healthcare and neuroscience. I'm also available for web development, data analysis, and academic tutoring."
+                    question: "What subjects do you tutor?",
+                    answer: `I tutor all K-12 mathematics (Pre-Algebra through AP Calculus BC and Statistics), computer science (introductory programming through Machine Learning), and sciences (Earth Science through AP Physics C). I also work with elementary and middle school students across all core subjects. See my full subject list on my ${<Link href="/services">Services page</Link>}.`
                   },
                   {
-                    question: "What's your typical response time?",
-                    answer: "I aim to respond to all inquiries within 24 hours. For urgent matters, please indicate that in your message."
+                    question: "Do you offer online or in-person sessions?",
+                    answer: "Both! In-person sessions are available in Dutchess County, NY. Virtual sessions are available for students anywhere. I use Google Meet with screen sharing and annotations (digital whiteboards) to make online sessions just as effective as in-person."
                   },
                   {
-                    question: "Do you offer consulting services?",
-                    answer: "Yes, I'm available for consulting on AI/ML projects, particularly those related to healthcare applications, data analysis, and research methodology."
+                    question: "What ages and grade levels do you work with?",
+                    answer: "I work with students from elementary school through college level, with a majority in high school. That being said, I work with students of all ages weekly and am open to clients K-12 and older!"
+                  },
+                  {
+                    question: "How do you approach the first session?",
+                    answer: "The first session is about getting to know the student — their goals, learning style, and where they are struggling. I assess not just what they know, but how they think through problems. From there, I build a personalized plan that targets their specific gaps and builds on their strengths."
+                  },
+                  {
+                    question: "What are your rates?",
+                    answer: "Rates vary based on subject, session type, and frequency with rates starting at $60/hour. I offer single sessions, weekly packages, and intensive exam prep packages (let me know the exam and timeline and I will build to your needs). Reach out and we will find an arrangement that works for your needs."
+                  },
+                  {
+                    question: "Do you do freelance development work?",
+                    answer: "Yes — I am a full-stack developer available for website building, web application, and automation projects. If you are looking for development work, feel free to reach out with your project details."
                   }
                 ]}
                 defaultOpen={0}

@@ -3,7 +3,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Contact - Cameron Brady',
-  description: 'Get in touch with Cameron Brady for research collaborations, consulting projects, or to discuss AI applications in healthcare and neuroscience.',
+  description: 'Get in touch with Cameron for tutoring or freelance work!',
 }
 
 export default function ContactLayout({
