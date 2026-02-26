@@ -10,7 +10,7 @@ const PricingContactSection = () => {
   const pricingFeatures = [
     "Single sessions available",
     "Weekly ongoing support", 
-    "Intensive exam prep packages",
+    // "Intensive exam prep packages",
     "Custom learning plans",
     "Progress tracking"
   ];
@@ -78,7 +78,7 @@ const PricingContactSection = () => {
                 {/* Rates */}
                 <div className="bg-linear-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-5 border border-blue-100 dark:border-blue-900/30">
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                    Rates vary based on subject complexity and session type. Reach out and we&apos;ll find an arrangement that works for your needs and budget.
+                    Rates vary based on subject complexity and session type, starting at $60/hour. Reach out and we&apos;ll find an arrangement that works for your needs and budget.
                   </p>
                 </div>
 

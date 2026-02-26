@@ -71,8 +71,8 @@ const HeroSection = () => {
                   priority
                 />
               </div>
-              <h3 className="text-2xl font-semibold text-slate-800 mb-2">6+ Years Experience</h3>
-              <p className="text-slate-600">Transforming student confidence since 2018</p>
+              <h3 className="text-2xl font-semibold text-slate-800 mb-2">8+ Years Experience</h3>
+              <p className="text-slate-600">Transforming student confidence and scores since 2018</p>
             </div>
           </div>
         </motion.div>

@@ -13,18 +13,18 @@ import { NavigationProvider } from '@/contexts/NavigationContext'
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Cameron Brady - ML Dev & Tutor',
-  description: 'Machine Learning Developer and Educator focused on early detection of neurological disorders and teaching others.',
-  keywords: ['machine learning', 'neuroscience', 'research', 'developer', 'AI', 'medical', 'tutor', 'education'],
+  title: 'Cameron Brady - Math, CS, & Science Tutor',
+  description: 'Educator, private tutor, and freelance developer',
+  keywords: ['machine learning', 'neuroscience', 'research', 'developer', 'AI', 'medical', 'tutor', 'education', 'math tutor', 'science tutor', 'calculus tutor', 'geometry tutor', 'advanced tutor', 'tutoring'],
   authors: [{ name: 'Cameron Brady' }],
   icons: {
     icon: '/brain-favicon.svg',
   },
   openGraph: {
-    title: 'Cameron Brady - ML Developer & Tutor',
-    description: 'Bridging AI research with clinical medicine to advance neurological disorder detection',
+    title: 'Cameron Brady - Math, CS, & Science Tutor',
+    description: 'Educator, private tutor, and freelance developer',
     url: 'https://cameronbrady.dev',
-    siteName: 'Cameron Brady Portfolio',
+    siteName: 'Cameron Brady Website',
     type: 'website',
   },
 }

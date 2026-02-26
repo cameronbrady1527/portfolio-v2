@@ -17,21 +17,21 @@ const SubjectsSection = () => {
       title: "Computer Science",
       description: "Programming & Web Development",
       icon: <Code className="h-8 w-8 text-green-500" />,
-      content: ["Python, Java, JavaScript/TypeScript", "HTML/CSS", "Web Development", "CS 1 & 2", "Data Structures & Algorithms", "Discrete Structures", "Machine Learning"],
+      content: ["AP Computer Science A & Principles", "Python, Java, JavaScript/TypeScript", "HTML/CSS", "Web Development", "CS 1 & 2", "Data Structures & Algorithms", "Discrete Structures", "Machine Learning"],
       className: "md:col-span-1"
     },
     {
       title: "Sciences",
       description: "Physics, Biology, & K-5 Sciences",
       icon: <FlaskConical className="h-8 w-8 text-red-500" />,
-      content: ["AP Physics 1, 2, & C", "AP Biology", "K-5 Sciences"],
+      content: ["AP Physics 1, 2, & C", "AP Biology", "Earth Science", "Chemistry", "K-5 Sciences"],
       className: "md:col-span-1"
     },
     {
       title: "Elementary & Middle School",
       description: "All core subjects + study skills",
       icon: <BookOpen className="h-8 w-8 text-yellow-500" />,
-      content: ["All core subjects", "Reading & Writing", "Math, Science, & Social Studies", "Study skills", "Test preparation"],
+      content: ["All core subjects", "Homework Help", "Reading & Writing", "Math, Science, & Social Studies", "Study skills", "Test preparation"],
       className: "md:col-span-1"
     },
     {
