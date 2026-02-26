@@ -12,8 +12,8 @@ export default function HeroSection() {
 
   const roles = [
     'Academic Tutor',
+    'Educator',
     'Fullstack Developer',
-    'ML Researcher',
   ];
 
   useEffect(() => {
@@ -51,45 +51,12 @@ export default function HeroSection() {
           
           {/* Value proposition */}
           <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Software engineer, educator, nonprofit founder, and researcher. Combining technical expertise
-            with a passion for making meaningful impact in healthcare, education, and community development.
+            Educator, tutor, nonprofit founder, and fullstack freelance developer. Combining educational experience
+            and technical expertise with a passion for making meaningful impact for students, clients, and communities.
           </p>
 
           {/* CTA links */}
           <div className="flex flex-col sm:flex-row gap-8 justify-center items-center">
-            <NavLink
-              href="/projects"
-              className="group relative text-slate-700 hover:text-slate-900 transition-colors"
-            >
-              <motion.div
-                className="flex items-center gap-3"
-                initial="initial"
-                whileHover="hover"
-              >
-                <span className="text-2xl font-light relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
-                                 after:w-full after:h-0.5 after:bg-slate-700 after:origin-right after:scale-x-0
-                                 hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out">
-                  View Projects
-                </span>
-                <motion.span
-                  variants={{
-                    initial: { x: 0 },
-                    hover: {
-                      x: [0, 5, 0],
-                      transition: {
-                        duration: 0.6,
-                        ease: "easeInOut",
-                        repeat: 1
-                      }
-                    }
-                  }}
-                  className="inline-block"
-                >
-                  <ArrowRight size={24} className="text-slate-500" />
-                </motion.span>
-              </motion.div>
-            </NavLink>
-
             <NavLink
               href="/services"
               className="group relative text-slate-700 hover:text-slate-900 transition-colors"
@@ -122,6 +89,39 @@ export default function HeroSection() {
                 </motion.span>
               </motion.div>
             </NavLink>
+
+            <NavLink
+              href="/about"
+              className="group relative text-slate-700 hover:text-slate-900 transition-colors"
+            >
+              <motion.div
+                className="flex items-center gap-3"
+                initial="initial"
+                whileHover="hover"
+              >
+                <span className="text-2xl font-light relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
+                                 after:w-full after:h-0.5 after:bg-slate-700 after:origin-right after:scale-x-0
+                                 hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out">
+                  About Me
+                </span>
+                <motion.span
+                  variants={{
+                    initial: { x: 0 },
+                    hover: {
+                      x: [0, 5, 0],
+                      transition: {
+                        duration: 0.6,
+                        ease: "easeInOut",
+                        repeat: 1
+                      }
+                    }
+                  }}
+                  className="inline-block"
+                >
+                  <ArrowRight size={24} className="text-slate-500" />
+                </motion.span>
+              </motion.div>
+            </NavLink>            
           </div>
         </div>
       </div>
