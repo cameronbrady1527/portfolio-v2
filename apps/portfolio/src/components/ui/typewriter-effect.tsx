@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 import { motion, stagger, useAnimate, useInView } from "motion/react";
 import { div } from "motion/react-client";
 import { useEffect } from "react";

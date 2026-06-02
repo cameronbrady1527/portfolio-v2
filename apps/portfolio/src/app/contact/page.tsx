@@ -2,7 +2,7 @@
 'use client'
 
 import { ContactForm } from '@/components/ui/contact-form'
-import { Accordion } from '@/components/ui/accordion'
+import { Accordion } from '@repo/ui'
 import { Mail, MapPin, Linkedin, Github, Clock, Phone } from 'lucide-react'
 import { motion } from 'motion/react'
 import Link from 'next/link'
