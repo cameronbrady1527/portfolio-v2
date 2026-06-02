@@ -7,3 +7,5 @@ export type {
   RotateParams,
 } from "./types";
 export { reflect, applyTransform } from "./reflect";
+export { translate } from "./translate";
+export { rotate } from "./rotate";

@@ -9,11 +9,8 @@
  *
  * Controls-first: any Param wrapped via slider()/choose() renders a native,
  * keyboard-operable labeled control that drives the figure live. The computed
- * image is produced by the pure geometry module (reflect/applyTransform).
- *
- * Slice #7: the `reflection` path is fully functional end-to-end. `translation`
- * and `rotation` render preimage-only with a small "coming soon" note (the
- * geometry dispatcher throws for those kinds).
+ * image is produced by the pure geometry module (applyTransform), which
+ * handles all three transform kinds (reflection/translation/rotation).
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Coordinates, Mafs, Point, Polygon, Line } from "mafs";
@@ -258,7 +255,6 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
   }, [spec.transform]);
 
   const showImage = spec.showImage !== false;
-  const isReflection = spec.transform.kind === "reflection";
   const captionId = "grapher-caption";
 
   return (
@@ -327,18 +323,6 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
             />
           ))}
         </div>
-      ) : null}
-
-      {!isReflection ? (
-        <p
-          style={{
-            marginTop: "0.5rem",
-            fontSize: "0.875rem",
-            color: "var(--muted-foreground, #43564b)",
-          }}
-        >
-          This transform is coming soon.
-        </p>
       ) : null}
 
       <figcaption

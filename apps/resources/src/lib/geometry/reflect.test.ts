@@ -179,23 +179,23 @@ describe("applyTransform — dispatcher", () => {
     ).toEqual({ type: "point", at: { x: 3, y: -2 } });
   });
 
-  it("throws for translation (deferred to slice #9)", () => {
-    expect(() =>
+  it("dispatches translation to translate()", () => {
+    expect(
       applyTransform(
         { type: "point", at: { x: 0, y: 0 } },
         "translation",
         { dx: 1, dy: 1 },
       ),
-    ).toThrow("not implemented in slice #7");
+    ).toEqual({ type: "point", at: { x: 1, y: 1 } });
   });
 
-  it("throws for rotation (deferred to slice #10)", () => {
-    expect(() =>
+  it("dispatches rotation to rotate()", () => {
+    expect(
       applyTransform(
-        { type: "point", at: { x: 0, y: 0 } },
+        { type: "point", at: { x: 1, y: 0 } },
         "rotation",
         { about: { x: 0, y: 0 }, angle: 90 },
       ),
-    ).toThrow("not implemented in slice #7");
+    ).toEqual({ type: "point", at: { x: 0, y: 1 } });
   });
 });
