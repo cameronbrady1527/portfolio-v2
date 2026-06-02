@@ -3,7 +3,7 @@
 import { useContext } from 'react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
-import { AboutContext } from '@/lib/utils';
+import { AboutContext } from '@/contexts/AppDataContext';
 
 export const PersonalInterestsSection = () => {
   const aboutData = useContext(AboutContext);

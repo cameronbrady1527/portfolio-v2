@@ -3,7 +3,7 @@
 import { useContext } from 'react';
 import { motion } from 'motion/react';
 import { GraduationCap, Brain, Code, Briefcase, BookOpen, TreePine, LucideIcon } from 'lucide-react';
-import { AboutContext } from '@/lib/utils';
+import { AboutContext } from '@/contexts/AppDataContext';
 
 const EXPERIENCE_GROUPS = [
   { header: "Teaching & Education", start: 0, end: 3 },

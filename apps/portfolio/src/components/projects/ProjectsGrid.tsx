@@ -10,7 +10,7 @@ import { Github, ExternalLink } from 'lucide-react'
 /* -------------------------------------------------------------------------- */
 /*                            Internal Dependencies                           */
 /* -------------------------------------------------------------------------- */
-import { ProjectsContext } from '@/lib/utils'
+import { ProjectsContext } from '@/contexts/AppDataContext'
 import Image from 'next/image'
 import ProjectDetailPanel from './ProjectDetailPanel'
 

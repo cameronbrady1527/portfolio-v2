@@ -6,7 +6,7 @@ import { useContext, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Github, ExternalLink, ArrowRight, X, Download } from 'lucide-react';
 
-import { ProjectsContext } from '@/lib/utils';
+import { ProjectsContext } from '@/contexts/AppDataContext';
 import NavLink from '@/components/NavLink';
 
 export default function FeaturedWork() {
