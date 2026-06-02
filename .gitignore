@@ -42,3 +42,9 @@ next-env.d.ts
 
 # db
 db/
+
+# briefs
+KICKOFF_BRIEF.md
+
+# claude
+.claude
