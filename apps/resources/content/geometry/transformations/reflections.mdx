@@ -3,6 +3,48 @@ title: Reflections
 order: 1
 ---
 
+import { choose } from "@/components/GrapherTypes";
+
+export const grapher = {
+  spec: {
+    preimage: {
+      type: "polygon",
+      vertices: [
+        { x: 1, y: 1 },
+        { x: 4, y: 1 },
+        { x: 1, y: 3 },
+      ],
+      label: "ABC",
+    },
+    transform: {
+      kind: "reflection",
+      over: { kind: "axis", axis: choose("y", ["x", "y"], "Reflect over") },
+    },
+  },
+};
+
+export const practice = [
+  {
+    id: "reflect-x-axis",
+    type: "mc",
+    prompt: "Reflecting the point (3, 2) over the x-axis gives which point?",
+    choices: ["(3, -2)", "(-3, 2)", "(2, 3)", "(-3, -2)"],
+    answer: 0,
+    hints: ["The x-axis reflection keeps the x-coordinate and negates y."],
+    explanation: "Over the x-axis, (x, y) ↦ (x, −y), so (3, 2) ↦ (3, −2).",
+  },
+  {
+    id: "reflect-y-axis-numeric",
+    type: "numeric",
+    prompt:
+      "Reflect the point (5, 1) over the y-axis. What is the new x-coordinate?",
+    answer: -5,
+    tolerance: 0,
+    hints: ["The y-axis reflection negates the x-coordinate and keeps y."],
+    explanation: "Over the y-axis, (x, y) ↦ (−x, y), so the new x-coordinate is −5.",
+  },
+];
+
 A **reflection** is a transformation that flips a figure across a line, called
 the _line of reflection_. The original figure and its image are mirror images:
 every point moves to the opposite side of the line, the same distance away.

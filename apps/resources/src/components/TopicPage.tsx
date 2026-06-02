@@ -1,5 +1,10 @@
 import Link from "next/link";
 import type { ContentIndex, Crumb, TopicSlug } from "@/lib/content/derive";
+import { Grapher } from "@/components/Grapher";
+import type { GrapherSpec } from "@/components/GrapherTypes";
+import { PracticeSet } from "@/components/PracticeSet";
+import { TopicProvider } from "@/lib/topic-context";
+import type { PracticeQuestion } from "@/lib/practice/grade";
 
 // The repeatable three-pillar topic page, in fixed order:
 //   breadcrumb -> title -> concept prose -> Grapher slot -> PracticeSet slot
@@ -10,15 +15,20 @@ export function TopicPage({
   title,
   crumbs,
   index,
+  grapher,
+  practice,
   children,
 }: {
   slug: TopicSlug;
   title: string;
   crumbs: Crumb[];
   index: ContentIndex;
+  grapher?: { spec: GrapherSpec };
+  practice?: PracticeQuestion[];
   children: React.ReactNode;
 }) {
   const subject = index.subjects.find((s) => s.slug === slug.subject);
+  const topicSlug = `${slug.subject}/${slug.unit}/${slug.topic}`;
 
   return (
     <div className="min-h-screen w-full">
@@ -87,19 +97,21 @@ export function TopicPage({
             {children}
           </section>
 
-          {/* Pillar 3: Grapher slot (placeholder until #7) */}
-          <section aria-label="Interactive figure">
-            <div className="graph-paper flex h-64 items-center justify-center rounded-lg border border-border text-sm text-muted-foreground">
-              Interactive grapher — coming in a later slice
-            </div>
-          </section>
+          {/* Pillar 3: interactive figure */}
+          {grapher && (
+            <section aria-label="Interactive figure">
+              <Grapher spec={grapher.spec} />
+            </section>
+          )}
 
-          {/* Pillar 4: PracticeSet slot (placeholder until #8) */}
-          <section aria-label="Practice">
-            <div className="flex h-32 items-center justify-center rounded-lg border border-dashed border-border text-sm text-muted-foreground">
-              Practice set — coming in a later slice
-            </div>
-          </section>
+          {/* Pillar 4: practice */}
+          {practice && practice.length > 0 && (
+            <section aria-label="Practice">
+              <TopicProvider slug={topicSlug}>
+                <PracticeSet questions={practice} />
+              </TopicProvider>
+            </section>
+          )}
 
           {/* Pillar 5: collapsible teacher section */}
           <details className="rounded-lg border border-border bg-card p-4">

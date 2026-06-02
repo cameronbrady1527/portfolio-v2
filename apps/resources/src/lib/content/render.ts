@@ -3,9 +3,17 @@
 // all content/**/*.mdx — adding a new .mdx requires no registry edit here.
 import type { TopicSlug } from "./derive";
 import type { ComponentType } from "react";
+import type { GrapherSpec } from "@/components/GrapherTypes";
+import type { PracticeQuestion } from "@/lib/practice/grade";
 
-type MDXModule = { default: ComponentType };
+// A compiled topic .mdx: the prose (default) plus optional typed named exports
+// the TopicPage shell renders in its dedicated pillar slots.
+export type TopicModule = {
+  default: ComponentType;
+  grapher?: { spec: GrapherSpec };
+  practice?: PracticeQuestion[];
+};
 
-export function importTopicContent(slug: TopicSlug): Promise<MDXModule> {
+export function importTopicContent(slug: TopicSlug): Promise<TopicModule> {
   return import(`../../../content/${slug.subject}/${slug.unit}/${slug.topic}.mdx`);
 }

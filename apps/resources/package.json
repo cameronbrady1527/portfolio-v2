@@ -7,8 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run",
-    "test:components": "vitest run --config vitest.components.config.ts"
+    "test": "vitest run"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

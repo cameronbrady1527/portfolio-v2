@@ -32,10 +32,17 @@ export default async function Page({ params }: { params: Params }) {
 
   const index = buildIndex(entries);
   const crumbs = getBreadcrumbs(index, slug);
-  const { default: Content } = await importTopicContent(slug);
+  const { default: Content, grapher, practice } = await importTopicContent(slug);
 
   return (
-    <TopicPage slug={slug} title={topic.title} crumbs={crumbs} index={index}>
+    <TopicPage
+      slug={slug}
+      title={topic.title}
+      crumbs={crumbs}
+      index={index}
+      grapher={grapher}
+      practice={practice}
+    >
       <Content />
     </TopicPage>
   );
