@@ -10,6 +10,8 @@ export type ContentEntry = {
   slug: TopicSlug;
   title: string;
   order: number;
+  /** Short summary from frontmatter; used for metadata / OpenGraph. */
+  description?: string;
 };
 
 export type Crumb = { label: string; href?: string };
@@ -19,6 +21,7 @@ export type TopicNode = {
   title: string;
   order: number;
   href: string;
+  description?: string;
 };
 export type UnitNode = { slug: string; label: string; topics: TopicNode[] };
 export type SubjectNode = { slug: string; label: string; units: UnitNode[] };
@@ -39,7 +42,13 @@ export function topicHref(slug: TopicSlug): string {
 }
 
 function toTopicNode(entry: ContentEntry): TopicNode {
-  return { slug: entry.slug, title: entry.title, order: entry.order, href: topicHref(entry.slug) };
+  return {
+    slug: entry.slug,
+    title: entry.title,
+    order: entry.order,
+    href: topicHref(entry.slug),
+    description: entry.description,
+  };
 }
 
 /** Look up a single topic's metadata by slug; null if it isn't in the tree. */

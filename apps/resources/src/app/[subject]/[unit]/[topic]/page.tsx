@@ -21,7 +21,23 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const slug = await params;
   const topic = resolveTopic(loadContentEntries(), slug);
   if (!topic) return {};
-  return { title: topic.title };
+  const description = topic.description;
+  return {
+    title: topic.title,
+    description,
+    openGraph: {
+      title: topic.title,
+      description,
+      url: topic.href,
+      siteName: "Math Resources Hub",
+      type: "article",
+    },
+    twitter: {
+      card: "summary",
+      title: topic.title,
+      description,
+    },
+  };
 }
 
 export default async function Page({ params }: { params: Params }) {

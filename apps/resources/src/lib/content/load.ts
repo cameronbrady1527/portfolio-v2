@@ -42,6 +42,8 @@ export function loadContentEntries(): ContentEntry[] {
           slug: { subject, unit, topic },
           title: typeof data.title === "string" ? data.title : humanize(topic),
           order: typeof data.order === "number" ? data.order : 0,
+          description:
+            typeof data.description === "string" ? data.description : undefined,
         });
       }
     }

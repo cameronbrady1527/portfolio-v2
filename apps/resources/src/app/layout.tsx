@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Fraunces, Spline_Sans, Spline_Sans_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -21,8 +22,16 @@ const splineSansMono = Spline_Sans_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Math Resources Hub",
+  metadataBase: new URL("https://resources.cameronbrady.dev"),
+  title: {
+    default: "Math Resources Hub",
+    template: "%s · Math Resources Hub",
+  },
   description: "A growing library of editorial-quality math resources.",
+  openGraph: {
+    siteName: "Math Resources Hub",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -36,6 +45,7 @@ export default function RootLayout({
         className={`${fraunces.variable} ${splineSans.variable} ${splineSansMono.variable} antialiased`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
