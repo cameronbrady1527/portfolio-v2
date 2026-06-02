@@ -1,0 +1,78 @@
+---
+title: Rotations
+order: 3
+---
+
+import { choose } from "@/components/GrapherTypes";
+
+export const grapher = {
+  spec: {
+    preimage: {
+      type: "polygon",
+      vertices: [
+        { x: 1, y: 1 },
+        { x: 3, y: 1 },
+        { x: 1, y: 2 },
+      ],
+      label: "ABC",
+    },
+    transform: {
+      kind: "rotation",
+      about: { x: 0, y: 0 },
+      angle: choose(90, [90, 180, 270], "Rotate (°)"),
+    },
+  },
+};
+
+export const practice = [
+  {
+    id: "rotate-90-ccw-origin",
+    type: "mc",
+    prompt:
+      "Rotating the point (1, 0) by 90° counter-clockwise about the origin gives which point?",
+    choices: ["(0, 1)", "(0, -1)", "(-1, 0)", "(1, 0)"],
+    answer: 0,
+    hints: [
+      "A 90° counter-clockwise rotation about the origin sends (x, y) to (−y, x).",
+    ],
+    explanation:
+      "With (x, y) ↦ (−y, x), the point (1, 0) maps to (−0, 1) = (0, 1).",
+  },
+  {
+    id: "rotate-180-origin-numeric",
+    type: "numeric",
+    prompt:
+      "Rotate the point (4, 3) by 180° about the origin. What is the new y-coordinate?",
+    answer: -3,
+    tolerance: 0,
+    hints: ["A 180° rotation about the origin sends (x, y) to (−x, −y)."],
+    explanation:
+      "Under (x, y) ↦ (−x, −y), the point (4, 3) maps to (−4, −3), so the new y-coordinate is −3.",
+  },
+];
+
+A **rotation** is a transformation that turns a figure about a fixed point,
+called the **center of rotation**, through a given **angle**. Every point of the
+figure travels along a circular arc centered at that point, so the distance from
+each point to the center never changes. Counter-clockwise angles are taken as
+positive, following the standard mathematical convention.
+
+## Rotating about the origin
+
+For the common quarter-turns about the origin, a rotation by an angle
+$\theta$ has clean coordinate rules. A $90^\circ$ counter-clockwise rotation
+sends a point to:
+
+$$
+(x, y) \mapsto (-y,\, x)
+$$
+
+The half-turn $180^\circ$ sends $(x, y) \mapsto (-x, -y)$, and the three-quarter
+turn $270^\circ$ (equivalently $-90^\circ$) sends $(x, y) \mapsto (y, -x)$.
+
+## Rotating about any center
+
+To rotate about an arbitrary center $(a, b)$ instead of the origin, first
+**translate** the figure so the center sits at the origin, apply the rotation
+above, then translate back. Because a rotation preserves distances and angles,
+the image is always **congruent** to the original figure.
