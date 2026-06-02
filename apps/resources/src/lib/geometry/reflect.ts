@@ -11,6 +11,8 @@ import type {
   TranslateParams,
   RotateParams,
 } from "./types";
+import { translate } from "./translate";
+import { rotate } from "./rotate";
 
 /** Reflect a single point across a line. */
 function reflectPt(p: Pt, line: ReflectLine): Pt {
@@ -73,9 +75,8 @@ export function reflect(shape: Shape, line: ReflectLine): Shape {
 }
 
 /**
- * Single dispatcher used by the Grapher. Only `reflection` is functional in
- * slice #7. `translation` and `rotation` throw — they are implemented in
- * slices #9 and #10 respectively.
+ * Single dispatcher used by the Grapher, routing each transform kind to its
+ * pure implementation (reflection #7, translation #9, rotation #10).
  *
  * The overloads keep the call type-safe per transform kind.
  */
@@ -102,8 +103,13 @@ export function applyTransform(
   switch (transform) {
     case "reflection":
       return reflect(shape, params as ReflectLine);
-    case "translation":
-    case "rotation":
-      throw new Error("not implemented in slice #7");
+    case "translation": {
+      const p = params as TranslateParams;
+      return translate(shape, p.dx, p.dy);
+    }
+    case "rotation": {
+      const p = params as RotateParams;
+      return rotate(shape, p.angle as 90 | 180 | 270 | -90, p.about);
+    }
   }
 }

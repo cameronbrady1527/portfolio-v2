@@ -86,19 +86,25 @@ export function resolveReflectLine(
 
 /**
  * Compute the image of the preimage under the spec's transform + live params.
- * Returns null when the transform is deferred (translation/rotation throw).
+ * Handles all three transform kinds (reflection/translation/rotation).
  */
 export function computeImage(
   spec: GrapherSpec,
   params: Readonly<Record<string, number | string>>,
 ): Shape | Shape[] | null {
   const { transform, preimage } = spec;
-  if (transform.kind !== "reflection") {
-    // Deferred to slices #9/#10 — do not crash the figure.
-    return null;
+  let apply: (s: Shape) => Shape;
+  if (transform.kind === "reflection") {
+    const line = resolveReflectLine(transform.over, params);
+    apply = (s) => applyTransform(s, "reflection", line);
+  } else if (transform.kind === "translation") {
+    const dx = resolveParam(transform.by.dx, "dx", params);
+    const dy = resolveParam(transform.by.dy, "dy", params);
+    apply = (s) => applyTransform(s, "translation", { dx, dy });
+  } else {
+    const angle = resolveParam(transform.angle, "angle", params);
+    apply = (s) => applyTransform(s, "rotation", { about: transform.about, angle });
   }
-  const line = resolveReflectLine(transform.over, params);
-  const apply = (s: Shape): Shape => applyTransform(s, "reflection", line);
   return Array.isArray(preimage) ? preimage.map(apply) : apply(preimage);
 }
 
@@ -191,7 +197,10 @@ export function autoCaption(
     return `A ${subject} reflected across ${describeLine(line)}.`;
   }
   if (t.kind === "translation") {
-    return `A ${subject} translated (coming soon).`;
+    const dx = resolveParam(t.by.dx, "dx", params);
+    const dy = resolveParam(t.by.dy, "dy", params);
+    return `A ${subject} translated by the vector (${dx}, ${dy}).`;
   }
-  return `A ${subject} rotated (coming soon).`;
+  const angle = resolveParam(t.angle, "angle", params);
+  return `A ${subject} rotated ${angle}° about (${t.about.x}, ${t.about.y}).`;
 }

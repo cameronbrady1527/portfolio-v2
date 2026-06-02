@@ -1,0 +1,75 @@
+---
+title: Translations
+order: 2
+---
+
+import { slider } from "@/components/GrapherTypes";
+
+export const grapher = {
+  spec: {
+    preimage: {
+      type: "polygon",
+      vertices: [
+        { x: 1, y: 1 },
+        { x: 3, y: 1 },
+        { x: 2, y: 3 },
+      ],
+      label: "ABC",
+    },
+    transform: {
+      kind: "translation",
+      by: {
+        dx: slider(3, -8, 8, { label: "Shift x" }),
+        dy: slider(-2, -8, 8, { label: "Shift y" }),
+      },
+    },
+  },
+};
+
+export const practice = [
+  {
+    id: "translate-point-vector",
+    type: "mc",
+    prompt:
+      "Translate the point (2, 5) by the vector ⟨4, -3⟩. Where does it land?",
+    choices: ["(6, 2)", "(-2, 8)", "(6, 8)", "(2, 2)"],
+    answer: 0,
+    hints: [
+      "A translation adds the vector's components to the point's coordinates.",
+      "Add 4 to the x-coordinate and add −3 to the y-coordinate.",
+    ],
+    explanation:
+      "Under the translation ⟨4, −3⟩, (x, y) ↦ (x + 4, y − 3), so (2, 5) ↦ (6, 2).",
+  },
+  {
+    id: "translate-vertex-y",
+    type: "numeric",
+    prompt:
+      "A vertex sits at (−1, 4). After translating by ⟨6, 2⟩, what is its new y-coordinate?",
+    answer: 6,
+    tolerance: 0,
+    hints: ["Only the y-component of the vector affects the y-coordinate."],
+    explanation:
+      "The translation adds 2 to the y-coordinate: 4 + 2 = 6.",
+  },
+];
+
+A **translation** is a transformation that slides every point of a figure the
+same distance in the same direction. Nothing rotates and nothing flips — the
+figure simply glides to a new position, so the image stays **congruent** to the
+original.
+
+## Translating by a vector
+
+The slide is described by a _translation vector_ $\langle a, b \rangle$, where
+$a$ is the horizontal shift and $b$ is the vertical shift. Applying it to a
+point adds the components coordinate-wise:
+
+$$
+(x, y) \mapsto (x + a,\, y + b)
+$$
+
+For example, translating the point $(1, 1)$ by $\langle 3, -2 \rangle$ moves it
+to $(4, -1)$. Because the **same** vector is applied to every vertex, the shape
+keeps its size, its orientation, and the order of its vertices — only its
+location changes.
