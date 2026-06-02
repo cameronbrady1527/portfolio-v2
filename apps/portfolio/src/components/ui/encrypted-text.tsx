@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "motion/react";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 
 type EncryptedTextProps = {
   text: string;

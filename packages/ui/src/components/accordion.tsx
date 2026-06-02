@@ -13,16 +13,16 @@ interface AccordionItemProps {
 
 function AccordionItem({ question, answer, isOpen, onToggle }: AccordionItemProps) {
   return (
-    <div className="border-b border-slate-200 last:border-b-0">
+    <div className="border-b border-border last:border-b-0">
       <button
         onClick={onToggle}
-        className="w-full py-5 px-1 flex items-start justify-between gap-4 text-left hover:bg-slate-50/50 transition-colors group"
+        className="w-full py-5 px-1 flex items-start justify-between gap-4 text-left hover:bg-muted/50 transition-colors group"
       >
-        <h3 className="font-semibold text-slate-700 group-hover:text-slate-900 transition-colors flex-1">
+        <h3 className="font-semibold text-foreground/80 group-hover:text-foreground transition-colors flex-1">
           {question}
         </h3>
         <ChevronDown
-          className={`text-slate-400 shrink-0 mt-1 transition-transform duration-200 ${
+          className={`text-muted-foreground shrink-0 mt-1 transition-transform duration-200 ${
             isOpen ? 'rotate-180' : ''
           }`}
           size={20}
@@ -37,7 +37,7 @@ function AccordionItem({ question, answer, isOpen, onToggle }: AccordionItemProp
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <p className="text-sm text-slate-600 pb-5 px-1 leading-relaxed">
+            <p className="text-sm text-muted-foreground pb-5 px-1 leading-relaxed">
               {answer}
             </p>
           </motion.div>

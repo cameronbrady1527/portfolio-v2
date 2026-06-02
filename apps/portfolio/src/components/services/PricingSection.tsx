@@ -2,7 +2,7 @@
 
 // components/sections/PricingContactSection.tsx
 import { motion } from "motion/react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
 import { Clock, MapPin, Globe, DollarSign, CheckCircle } from "lucide-react";
 import { ContactForm } from "@/components/ui/contact-form";
 

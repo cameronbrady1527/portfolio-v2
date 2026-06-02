@@ -3,7 +3,7 @@
 import { useContext } from 'react';
 import { motion } from 'motion/react';
 import { GraduationCap, Brain, Code, Stethoscope, Lightbulb, Briefcase, Heart, BookOpen, TreePine, Zap, LucideIcon } from 'lucide-react';
-import { AboutContext } from '@/lib/utils';
+import { AboutContext } from '@/contexts/AppDataContext';
 
 // Icon mapping function
 const getIcon = (iconName: string, className: string = "h-6 w-6") => {
