@@ -46,14 +46,14 @@ Live at [cameronbrady.dev](https://cameronbrady.dev).
 - **Framework:** Next.js 15 (App Router, Turbopack)
 - **Language:** TypeScript
 - **UI/Styling:** Tailwind CSS v4, Radix UI primitives
-- **Animations:** Framer Motion / Motion, react-type-animation
+- **Animations:** Motion, react-type-animation
 - **3D / Visuals:** Three.js, React Three Fiber, Cobe
 - **Forms:** React Hook Form + Zod validation
 - **Email:** Resend + React Email
 - **Notifications:** Sonner
 - **Icons:** Lucide React, Tabler Icons
 
-> Note: Page content currently lives as static data in `src/components/AppData/`. Supabase is installed for a planned data/admin layer (`src/db/`, `src/components/admin/`), but those modules are not yet wired up.
+> Note: Page content lives as static data in `apps/portfolio/src/components/AppData/`. The site is fully static with no database layer.
 
 ## Build
 
