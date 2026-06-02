@@ -3,7 +3,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { z } from 'zod';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Instantiate lazily, inside the request handler — never at module load.
+// next build imports route modules to collect page data, so a top-level
+// `new Resend(...)` would require the API key at BUILD time (and Turborepo
+// strips undeclared env vars from the build task). The key is only needed
+// when an email is actually sent, i.e. at request time.
+function getResendClient(): Resend {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY is not set');
+  }
+  return new Resend(apiKey);
+}
 
 // Base schema that all forms share
 const baseContactSchema = z.object({
@@ -192,8 +203,10 @@ const generateConfirmationEmail = (data: z.infer<typeof baseContactSchema> & { s
 
 export async function POST(request: NextRequest) {
   try {
+    const resend = getResendClient();
+
     const body = await request.json();
-    
+
     // Validate the form data based on variant
     const validatedData = validateFormData(body);
     
