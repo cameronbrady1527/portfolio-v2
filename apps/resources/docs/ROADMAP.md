@@ -20,6 +20,14 @@ same-night-fast. The interactive components are good enough to open-source.
 Navigation is effortless for everyone — including students with special needs,
 for whom virtual manipulatives are a first-class feature, not an afterthought.
 
+### Near-term focus
+
+1. **🔱 Open-source the component library (HIGH PRIORITY).** Extract the
+   interactive components into a published, installable package. Now a public
+   commitment in the README — see Epic 4.
+2. **Fill out 9–10 content** so the new landing pages and `_meta` intros have
+   real material to show.
+
 ---
 
 ## Where v1 landed ✅
@@ -72,22 +80,20 @@ The target subject set (more may be added as material accumulates):
 
 ## Epics
 
-### 1. Navigation & wayfinding ⬜  *(near-term, low complexity, high value)*
+### 1. Navigation & wayfinding ✅  *(shipped 2026-06-11, PRD #19)*
 
-The current site can only go *down* the tree (home → topic) and sideways
-(within-subject nav). You can't reliably go *up* or *out*.
+The hub now navigates up, down, sideways, and out.
 
-- ⬜ **Subject & unit landing pages.** Browsable index pages at `/<subject>` and
-  `/<subject>/<unit>`. *Prerequisite for linkable breadcrumbs.*
-- ⬜ **Linkable breadcrumbs.** Today subject/unit crumbs have no `href`
-  (`getBreadcrumbs` only sets it on the current topic) — they're inert because
-  there's nothing to point at yet. Wire them once landing pages exist.
-- ⬜ **Upstream access from any page.** Always reach: hub home, parent subject,
-  parent unit — from the topic page header.
-- ⬜ **Cross-domain link out:** resources → main site (cameronbrady.dev).
-- ⬜ **Cross-domain link in:** main site → resources. *The portfolio currently
-  has no UI entry point to the hub — needs fixing on the `apps/portfolio` side.*
-- 💭 Shared header/footer chrome across hub pages (consistent home/site links).
+- ✅ **Subject & unit landing pages** at `/<subject>` and `/<subject>/<unit>`
+  (auto-index, SSG, 404 on unknown), plus an optional `_meta` seam for editorial
+  intros/labels/order.
+- ✅ **Linkable breadcrumbs.** A level-aware `getBreadcrumbs` now links every
+  ancestor crumb to its landing page.
+- ✅ **Upstream access from any page** via a shared global header + breadcrumb
+  strip.
+- ✅ **Cross-domain link out:** resources → cameronbrady.dev (header + footer).
+- ✅ **Cross-domain link in:** cameronbrady.dev → resources (nav + footer).
+- ✅ Shared header/footer chrome across all hub pages.
 
 ### 2. Discovery & browse ⬜
 
@@ -109,14 +115,24 @@ Turn the placeholder "For teachers" section into authored, per-topic content.
 - 💭 Links out to lesson plans / slides hosted elsewhere (user-provided URLs).
 - 💭 Eventually host lesson materials on the subdomain itself.
 
-### 4. Component library (interactives) 🟡
+### 4. Component library (interactives) 🟡  *(open-source packaging = 🔱 HIGH PRIORITY, next-up)*
 
 - ✅ `<Grapher>`, `<PracticeSet>`.
+- ⬜ **🔱 Open-source the component library** — *high priority, next-up.* Now a
+  public commitment (see the README). Extract the educational components
+  (`Grapher`, `PracticeSet` + their pure geometry / grading / progress logic)
+  out of `apps/resources` into a publishable `packages/*` workspace and ship it
+  to npm. Concrete steps:
+  1. Extract components + pure deps into a new package (`apps/resources` becomes
+     its first consumer).
+  2. Make it publishable — `private: false`, a build (tsup → `dist` + types),
+     real `exports`, and `peerDependencies` (react, mafs).
+  3. Stabilize the public API (largely settled — interfaces were designed via
+     `/design-an-interface`).
+  4. Docs + runnable examples + a11y notes.
+  5. Wire up Changesets → `npm publish` (scope e.g. `@cameronbrady/*`).
 - ⬜ More practice types (expression / equation input).
 - 💭 Number line, data table, function plotter, step-throughs.
-- 💭 **Open-source the component library** as an installable package so other
-  educators/devs can use our educational components. Needs: stable public API,
-  docs, examples, license.
 
 ### 5. Virtual manipulatives ⬜  *(accessibility-first feature)*
 
