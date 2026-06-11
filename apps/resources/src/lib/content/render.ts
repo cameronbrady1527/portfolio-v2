@@ -4,7 +4,7 @@
 import type { TopicSlug } from "./derive";
 import type { ComponentType } from "react";
 import type { GrapherSpec } from "@/components/GrapherTypes";
-import type { PracticeQuestion } from "@/lib/practice/grade";
+import type { PracticeQuestion } from "@cameronbrady/math-components/logic";
 
 // A compiled topic .mdx: the prose (default) plus optional typed named exports
 // the TopicPage shell renders in its dedicated pillar slots.

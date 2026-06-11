@@ -15,7 +15,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Coordinates, Mafs, Point, Polygon, Line } from "mafs";
 import "mafs/core.css";
-import type { Pt, Shape } from "@/lib/geometry";
+import type { Pt, Shape } from "@cameronbrady/math-components/logic";
 import {
   isControl,
   type GrapherProps,

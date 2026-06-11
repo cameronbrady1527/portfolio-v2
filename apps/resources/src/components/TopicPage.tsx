@@ -5,7 +5,7 @@ import { Grapher } from "@/components/Grapher";
 import type { GrapherSpec } from "@/components/GrapherTypes";
 import { PracticeSet } from "@/components/PracticeSet";
 import { TopicProvider } from "@/lib/topic-context";
-import type { PracticeQuestion } from "@/lib/practice/grade";
+import type { PracticeQuestion } from "@cameronbrady/math-components/logic";
 
 // The repeatable three-pillar topic page, in fixed order:
 //   breadcrumb -> title -> concept prose -> Grapher slot -> PracticeSet slot

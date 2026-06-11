@@ -1,7 +1,6 @@
 // Practice progress: a PURE core (no DOM) plus a THIN localStorage adapter.
 
 export const PROGRESS_VERSION = 1 as const;
-export const PROGRESS_STORAGE_KEY = "resources:progress";
 
 export type AnswerRecord = { answered: true; correct: boolean };
 
@@ -114,11 +113,14 @@ function getStore(): Storage | null {
   }
 }
 
-export function loadProgress(): Progress {
+// The caller supplies the storage key, so a consuming app picks its own
+// namespace (the hub passes "resources:progress") and the package never
+// hardcodes one app's namespace into another's bundle.
+export function loadProgress(storageKey: string): Progress {
   const store = getStore();
   if (!store) return emptyProgress();
   try {
-    const raw = store.getItem(PROGRESS_STORAGE_KEY);
+    const raw = store.getItem(storageKey);
     if (!raw) return emptyProgress();
     return normalizeProgress(JSON.parse(raw));
   } catch {
@@ -126,11 +128,11 @@ export function loadProgress(): Progress {
   }
 }
 
-export function saveProgress(progress: Progress): void {
+export function saveProgress(storageKey: string, progress: Progress): void {
   const store = getStore();
   if (!store) return;
   try {
-    store.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+    store.setItem(storageKey, JSON.stringify(progress));
   } catch {
     // Quota / private-mode failures are non-fatal for an in-memory session.
   }
