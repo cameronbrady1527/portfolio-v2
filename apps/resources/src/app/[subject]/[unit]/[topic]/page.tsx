@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import "katex/dist/katex.min.css";
-import { loadContentEntries } from "@/lib/content/load";
+import { loadContentEntries, loadContentMeta } from "@/lib/content/load";
 import { buildIndex, getBreadcrumbs, resolveTopic, type TopicSlug } from "@/lib/content/derive";
 import { importTopicContent } from "@/lib/content/render";
 import { TopicPage } from "@/components/TopicPage";
@@ -46,7 +46,7 @@ export default async function Page({ params }: { params: Params }) {
   const topic = resolveTopic(entries, slug);
   if (!topic) notFound();
 
-  const index = buildIndex(entries);
+  const index = buildIndex(entries, loadContentMeta());
   const crumbs = getBreadcrumbs(index, slug);
   const { default: Content, grapher, practice } = await importTopicContent(slug);
 

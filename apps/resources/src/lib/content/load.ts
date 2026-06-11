@@ -4,7 +4,14 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import matter from "gray-matter";
-import { buildIndex, humanize, type ContentEntry, type ContentIndex } from "./derive";
+import {
+  buildIndex,
+  humanize,
+  type ContentEntry,
+  type ContentIndex,
+  type ContentMeta,
+  type NodeMeta,
+} from "./derive";
 
 // content/<subject>/<unit>/<topic>.mdx, relative to the app root (cwd at build).
 const CONTENT_DIR = join(process.cwd(), "content");
@@ -51,7 +58,39 @@ export function loadContentEntries(): ContentEntry[] {
   return entries;
 }
 
+// Read an optional `_meta.json` (subject- or unit-level). Absent or malformed
+// files are the normal case and silently yield no overrides — never throw.
+function readNodeMeta(path: string): NodeMeta | undefined {
+  try {
+    const data = JSON.parse(readFileSync(path, "utf8"));
+    const meta: NodeMeta = {
+      label: typeof data.label === "string" ? data.label : undefined,
+      description: typeof data.description === "string" ? data.description : undefined,
+      intro: typeof data.intro === "string" ? data.intro : undefined,
+      order: typeof data.order === "number" ? data.order : undefined,
+    };
+    return meta;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Scan the tree for optional `_meta.json` overrides on subjects and units. */
+export function loadContentMeta(): ContentMeta {
+  const subjects: Record<string, NodeMeta> = {};
+  const units: Record<string, NodeMeta> = {};
+  for (const subject of subdirs(CONTENT_DIR)) {
+    const sMeta = readNodeMeta(join(CONTENT_DIR, subject, "_meta.json"));
+    if (sMeta) subjects[subject] = sMeta;
+    for (const unit of subdirs(join(CONTENT_DIR, subject))) {
+      const uMeta = readNodeMeta(join(CONTENT_DIR, subject, unit, "_meta.json"));
+      if (uMeta) units[`${subject}/${unit}`] = uMeta;
+    }
+  }
+  return { subjects, units };
+}
+
 /** The derived index for the whole site (nav, breadcrumbs, resolution). */
 export function getContentIndex(): ContentIndex {
-  return buildIndex(loadContentEntries());
+  return buildIndex(loadContentEntries(), loadContentMeta());
 }

@@ -23,9 +23,38 @@ export type TopicNode = {
   href: string;
   description?: string;
 };
-export type UnitNode = { slug: string; label: string; topics: TopicNode[] };
-export type SubjectNode = { slug: string; label: string; units: UnitNode[] };
+export type UnitNode = {
+  slug: string;
+  label: string;
+  description?: string;
+  intro?: string;
+  topics: TopicNode[];
+};
+export type SubjectNode = {
+  slug: string;
+  label: string;
+  description?: string;
+  intro?: string;
+  units: UnitNode[];
+};
 export type ContentIndex = { subjects: SubjectNode[] };
+
+/** Optional editorial overrides for a subject or unit (the `_meta` seam). */
+export type NodeMeta = { label?: string; description?: string; intro?: string; order?: number };
+/**
+ * Optional per-subject / per-unit metadata folded into the index. Subjects are
+ * keyed by subject slug; units by `"<subject>/<unit>"`. Entirely optional —
+ * absent metadata yields humanized labels and alphabetical order (no-registry
+ * authoring stays intact).
+ */
+export type ContentMeta = {
+  subjects?: Record<string, NodeMeta>;
+  units?: Record<string, NodeMeta>;
+};
+
+// Subjects/units without an explicit meta order sort after ordered ones, then
+// alphabetically among themselves.
+const ORDER_DEFAULT = Number.MAX_SAFE_INTEGER;
 
 /** "linear-equations" -> "Linear Equations" */
 export function humanize(slug: string): string {
@@ -41,6 +70,16 @@ export function topicHref(slug: TopicSlug): string {
   return `/${slug.subject}/${slug.unit}/${slug.topic}`;
 }
 
+/** Canonical route for a subject landing page. */
+export function subjectHref(subject: string): string {
+  return `/${subject}`;
+}
+
+/** Canonical route for a unit landing page. */
+export function unitHref(subject: string, unit: string): string {
+  return `/${subject}/${unit}`;
+}
+
 function toTopicNode(entry: ContentEntry): TopicNode {
   return {
     slug: entry.slug,
@@ -49,6 +88,21 @@ function toTopicNode(entry: ContentEntry): TopicNode {
     href: topicHref(entry.slug),
     description: entry.description,
   };
+}
+
+/** Look up a subject node in the index by slug; null if absent. */
+export function resolveSubject(index: ContentIndex, subjectSlug: string): SubjectNode | null {
+  return index.subjects.find((s) => s.slug === subjectSlug) ?? null;
+}
+
+/** Look up a unit node in the index by subject + unit slug; null if absent. */
+export function resolveUnit(
+  index: ContentIndex,
+  subjectSlug: string,
+  unitSlug: string,
+): UnitNode | null {
+  const subject = resolveSubject(index, subjectSlug);
+  return subject?.units.find((u) => u.slug === unitSlug) ?? null;
 }
 
 /** Look up a single topic's metadata by slug; null if it isn't in the tree. */
@@ -64,8 +118,13 @@ function byOrderThenTitle(a: TopicNode, b: TopicNode): number {
   return a.order - b.order || a.title.localeCompare(b.title);
 }
 
-/** Group flat entries into a subject -> unit -> topic tree (alpha subjects/units, ordered topics). */
-export function buildIndex(entries: ContentEntry[]): ContentIndex {
+/**
+ * Group flat entries into a subject -> unit -> topic tree. Labels and ordering
+ * come from optional `_meta` (see ContentMeta); absent meta falls back to
+ * humanized labels and alphabetical subject/unit order. Topics always order by
+ * their frontmatter `order`.
+ */
+export function buildIndex(entries: ContentEntry[], meta: ContentMeta = {}): ContentIndex {
   const subjects = new Map<string, Map<string, TopicNode[]>>();
 
   for (const entry of entries) {
@@ -76,36 +135,72 @@ export function buildIndex(entries: ContentEntry[]): ContentIndex {
     units.get(unit)!.push(toTopicNode(entry));
   }
 
-  return {
-    subjects: [...subjects.entries()]
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([subjectSlug, units]) => ({
-        slug: subjectSlug,
-        label: humanize(subjectSlug),
-        units: [...units.entries()]
-          .sort(([a], [b]) => a.localeCompare(b))
-          .map(([unitSlug, topics]) => ({
-            slug: unitSlug,
-            label: humanize(unitSlug),
-            topics: [...topics].sort(byOrderThenTitle),
-          })),
-      })),
-  };
+  const subjectOrder = (slug: string) => meta.subjects?.[slug]?.order ?? ORDER_DEFAULT;
+  const unitOrder = (subject: string, unit: string) =>
+    meta.units?.[`${subject}/${unit}`]?.order ?? ORDER_DEFAULT;
+
+  const subjectNodes: SubjectNode[] = [...subjects.entries()].map(([subjectSlug, units]) => {
+    const sMeta = meta.subjects?.[subjectSlug];
+
+    const unitNodes: UnitNode[] = [...units.entries()]
+      .map(([unitSlug, topics]) => {
+        const uMeta = meta.units?.[`${subjectSlug}/${unitSlug}`];
+        return {
+          slug: unitSlug,
+          label: uMeta?.label ?? humanize(unitSlug),
+          description: uMeta?.description,
+          intro: uMeta?.intro,
+          topics: [...topics].sort(byOrderThenTitle),
+        };
+      })
+      .sort(
+        (a, b) =>
+          unitOrder(subjectSlug, a.slug) - unitOrder(subjectSlug, b.slug) ||
+          a.label.localeCompare(b.label),
+      );
+
+    return {
+      slug: subjectSlug,
+      label: sMeta?.label ?? humanize(subjectSlug),
+      description: sMeta?.description,
+      intro: sMeta?.intro,
+      units: unitNodes,
+    };
+  });
+
+  subjectNodes.sort(
+    (a, b) => subjectOrder(a.slug) - subjectOrder(b.slug) || a.label.localeCompare(b.label),
+  );
+
+  return { subjects: subjectNodes };
 }
 
+/** A location anywhere in the content tree: a subject, a unit, or a topic. */
+export type ContentLocation = { subject: string; unit?: string; topic?: string };
+
 /**
- * Breadcrumb trail for a topic: [Subject, Unit, Topic]. Subject/Unit are labels
- * only (no listing pages in v1); the final topic crumb links to itself.
- * Returns [] for an unknown topic.
+ * Breadcrumb trail for any level of the tree. Every crumb (including the leaf)
+ * carries the href of its landing page; the Breadcrumbs component decides not
+ * to link the current (leaf) crumb. Returns [] if any segment is unknown.
+ *
+ *   { subject }                 -> [Subject]
+ *   { subject, unit }           -> [Subject, Unit]
+ *   { subject, unit, topic }    -> [Subject, Unit, Topic]
  */
-export function getBreadcrumbs(index: ContentIndex, slug: TopicSlug): Crumb[] {
-  const subject = index.subjects.find((s) => s.slug === slug.subject);
-  const unit = subject?.units.find((u) => u.slug === slug.unit);
-  const topic = unit?.topics.find((t) => t.slug.topic === slug.topic);
-  if (!subject || !unit || !topic) return [];
-  return [
-    { label: subject.label },
-    { label: unit.label },
-    { label: topic.title, href: topic.href },
-  ];
+export function getBreadcrumbs(index: ContentIndex, location: ContentLocation): Crumb[] {
+  const subject = resolveSubject(index, location.subject);
+  if (!subject) return [];
+  const crumbs: Crumb[] = [{ label: subject.label, href: subjectHref(subject.slug) }];
+
+  if (location.unit === undefined) return crumbs;
+  const unit = subject.units.find((u) => u.slug === location.unit);
+  if (!unit) return [];
+  crumbs.push({ label: unit.label, href: unitHref(subject.slug, unit.slug) });
+
+  if (location.topic === undefined) return crumbs;
+  const topic = unit.topics.find((t) => t.slug.topic === location.topic);
+  if (!topic) return [];
+  crumbs.push({ label: topic.title, href: topic.href });
+
+  return crumbs;
 }
