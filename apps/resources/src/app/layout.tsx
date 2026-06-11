@@ -2,6 +2,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Fraunces, Spline_Sans, Spline_Sans_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -44,7 +46,11 @@ export default function RootLayout({
       <body
         className={`${fraunces.variable} ${splineSans.variable} ${splineSansMono.variable} antialiased`}
       >
-        {children}
+        <div className="flex min-h-screen flex-col">
+          <SiteHeader />
+          <div className="flex flex-1 flex-col">{children}</div>
+          <SiteFooter />
+        </div>
         <Analytics />
       </body>
     </html>

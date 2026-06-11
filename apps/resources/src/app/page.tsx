@@ -11,7 +11,7 @@ export default function Home() {
   const firstTopic = subjects[0]?.units[0]?.topics[0];
 
   return (
-    <main className="graph-paper min-h-screen w-full px-6 py-24">
+    <main className="graph-paper w-full flex-1 px-6 py-24">
       <section className="mx-auto flex w-full max-w-3xl flex-col items-center gap-8 text-center">
         <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
           Math Resources Hub
