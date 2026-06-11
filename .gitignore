@@ -51,3 +51,6 @@ KICKOFF_BRIEF.md
 
 # claude
 .claude
+
+# local MCP server config (not shared via repo)
+.mcp.json
