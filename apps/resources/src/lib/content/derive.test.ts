@@ -2,10 +2,15 @@ import { describe, it, expect } from "vitest";
 import {
   buildIndex,
   resolveTopic,
+  resolveSubject,
+  resolveUnit,
   getBreadcrumbs,
   humanize,
   topicHref,
+  subjectHref,
+  unitHref,
   type ContentEntry,
+  type ContentMeta,
 } from "./derive";
 
 // Fixture tree (intentionally out of order to prove ordering is by frontmatter):
@@ -35,6 +40,15 @@ describe("topicHref", () => {
   });
 });
 
+describe("subjectHref / unitHref", () => {
+  it("builds a 1-level subject path", () => {
+    expect(subjectHref("geometry")).toBe("/geometry");
+  });
+  it("builds a 2-level unit path", () => {
+    expect(unitHref("geometry", "transformations")).toBe("/geometry/transformations");
+  });
+});
+
 describe("resolveTopic", () => {
   it("returns metadata for a known slug", () => {
     const topic = resolveTopic(fixture, { subject: "geometry", unit: "transformations", topic: "reflections" });
@@ -45,6 +59,33 @@ describe("resolveTopic", () => {
   it("returns null for a missing slug", () => {
     expect(resolveTopic(fixture, { subject: "geometry", unit: "transformations", topic: "dilations" })).toBeNull();
     expect(resolveTopic(fixture, { subject: "nope", unit: "nope", topic: "nope" })).toBeNull();
+  });
+});
+
+describe("resolveSubject / resolveUnit", () => {
+  const index = buildIndex(fixture);
+
+  it("returns the subject node for a known subject slug", () => {
+    const subject = resolveSubject(index, "geometry");
+    expect(subject).not.toBeNull();
+    expect(subject!.label).toBe("Geometry");
+    expect(subject!.units.map((u) => u.slug)).toEqual(["transformations"]);
+  });
+
+  it("returns null for an unknown subject slug", () => {
+    expect(resolveSubject(index, "chemistry")).toBeNull();
+  });
+
+  it("returns the unit node for a known subject/unit pair", () => {
+    const unit = resolveUnit(index, "geometry", "transformations");
+    expect(unit).not.toBeNull();
+    expect(unit!.label).toBe("Transformations");
+    expect(unit!.topics).toHaveLength(3);
+  });
+
+  it("returns null for an unknown unit (or unknown subject)", () => {
+    expect(resolveUnit(index, "geometry", "circles")).toBeNull();
+    expect(resolveUnit(index, "chemistry", "transformations")).toBeNull();
   });
 });
 
@@ -73,6 +114,50 @@ describe("buildIndex (nav derivation + ordering)", () => {
   });
 });
 
+describe("buildIndex (_meta merge)", () => {
+  const meta: ContentMeta = {
+    subjects: {
+      geometry: { label: "Geometry & Space", description: "Shapes and motion.", order: 1 },
+      // algebra intentionally has no meta -> falls back to humanize + default order
+    },
+    units: {
+      "geometry/transformations": { label: "Rigid Motions" },
+    },
+  };
+
+  it("uses a meta label override instead of the humanized slug", () => {
+    const index = buildIndex(fixture, meta);
+    const geometry = index.subjects.find((s) => s.slug === "geometry")!;
+    expect(geometry.label).toBe("Geometry & Space");
+  });
+
+  it("surfaces meta description on the subject node", () => {
+    const index = buildIndex(fixture, meta);
+    const geometry = index.subjects.find((s) => s.slug === "geometry")!;
+    expect(geometry.description).toBe("Shapes and motion.");
+  });
+
+  it("applies a meta label override to a unit", () => {
+    const index = buildIndex(fixture, meta);
+    const geometry = index.subjects.find((s) => s.slug === "geometry")!;
+    expect(geometry.units.find((u) => u.slug === "transformations")!.label).toBe("Rigid Motions");
+  });
+
+  it("orders subjects by meta order ahead of unordered (alphabetical) ones", () => {
+    // Alphabetically Algebra precedes Geometry; meta gives geometry order 1,
+    // algebra no order, so geometry should now sort first.
+    const index = buildIndex(fixture, meta);
+    expect(index.subjects.map((s) => s.slug)).toEqual(["geometry", "algebra"]);
+  });
+
+  it("falls back to humanized labels and alphabetical order when meta is absent", () => {
+    const index = buildIndex(fixture);
+    expect(index.subjects.map((s) => s.label)).toEqual(["Algebra", "Geometry"]);
+    const geometry = index.subjects.find((s) => s.slug === "geometry")!;
+    expect(geometry.description).toBeUndefined();
+  });
+});
+
 describe("getBreadcrumbs", () => {
   const index = buildIndex(fixture);
 
@@ -88,5 +173,29 @@ describe("getBreadcrumbs", () => {
 
   it("returns an empty array for an unknown topic", () => {
     expect(getBreadcrumbs(index, { subject: "x", unit: "y", topic: "z" })).toEqual([]);
+  });
+
+  it("links the ancestor (subject, unit) crumbs to their landing pages", () => {
+    const crumbs = getBreadcrumbs(index, { subject: "geometry", unit: "transformations", topic: "reflections" });
+    expect(crumbs[0]).toMatchObject({ label: "Geometry", href: "/geometry" });
+    expect(crumbs[1]).toMatchObject({ label: "Transformations", href: "/geometry/transformations" });
+  });
+
+  it("derives a subject-level trail (single crumb) linking to the subject page", () => {
+    const crumbs = getBreadcrumbs(index, { subject: "geometry" });
+    expect(crumbs.map((c) => c.label)).toEqual(["Geometry"]);
+    expect(crumbs[0].href).toBe("/geometry");
+  });
+
+  it("derives a unit-level trail with the subject crumb linked", () => {
+    const crumbs = getBreadcrumbs(index, { subject: "geometry", unit: "transformations" });
+    expect(crumbs.map((c) => c.label)).toEqual(["Geometry", "Transformations"]);
+    expect(crumbs[0].href).toBe("/geometry");
+    expect(crumbs[1].href).toBe("/geometry/transformations");
+  });
+
+  it("returns an empty array for an unknown subject or unit", () => {
+    expect(getBreadcrumbs(index, { subject: "chemistry" })).toEqual([]);
+    expect(getBreadcrumbs(index, { subject: "geometry", unit: "circles" })).toEqual([]);
   });
 });
