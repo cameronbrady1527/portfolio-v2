@@ -1,0 +1,67 @@
+{
+  "name": "@cameronbrady/math-components",
+  "version": "0.1.0",
+  "description": "Accessible, interactive math components — a coordinate-plane transformations Grapher plus framework-agnostic geometry, grading, and progress logic.",
+  "license": "MIT",
+  "private": false,
+  "author": "Cameron Brady",
+  "homepage": "https://resources.cameronbrady.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cameronbrady1527/portfolio-v2.git",
+    "directory": "packages/math-components"
+  },
+  "keywords": [
+    "math",
+    "education",
+    "interactive",
+    "geometry",
+    "transformations",
+    "mafs",
+    "react",
+    "accessible"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./logic": {
+      "types": "./dist/logic/index.d.ts",
+      "import": "./dist/logic/index.js",
+      "require": "./dist/logic/index.cjs"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint . --max-warnings 0 || true",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "lucide-react": "^0.546.0",
+    "mafs": "^0.21.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tsup": "^8.5.0",
+    "typescript": "^5"
+  }
+}
