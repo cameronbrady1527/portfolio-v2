@@ -61,6 +61,12 @@ export default function RootLayout({
                 <p className="text-slate-600">
                   © 2025 Cameron Brady
                 </p>
+                <Link
+                  href="https://resources.cameronbrady.dev"
+                  className="font-medium text-slate-600 transition-colors hover:text-blue-600"
+                >
+                  Math Resources Hub
+                </Link>
                 <div className="flex gap-4">
                   <Link
                     href="https://www.linkedin.com/in/cameron-brady-5770431b5/"
