@@ -1,6 +1,6 @@
 {
   "name": "@cameronbrady/math-components",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Accessible, interactive math components — a coordinate-plane transformations Grapher plus framework-agnostic geometry, grading, and progress logic.",
   "license": "MIT",
   "private": false,
@@ -8,8 +8,11 @@
   "homepage": "https://resources.cameronbrady.dev",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cameronbrady1527/portfolio-v2.git",
+    "url": "git+https://github.com/cameronbrady1527/portfolio-v2.git",
     "directory": "packages/math-components"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "keywords": [
     "math",
@@ -30,14 +33,24 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./logic": {
-      "types": "./dist/logic/index.d.ts",
-      "import": "./dist/logic/index.js",
-      "require": "./dist/logic/index.cjs"
+      "import": {
+        "types": "./dist/logic/index.d.ts",
+        "default": "./dist/logic/index.js"
+      },
+      "require": {
+        "types": "./dist/logic/index.d.cts",
+        "default": "./dist/logic/index.cjs"
+      }
     },
     "./styles.css": "./dist/styles.css"
   },
@@ -48,7 +61,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "lint": "eslint . --max-warnings 0 || true",
-    "test": "vitest run"
+    "test": "tsup && vitest run"
   },
   "dependencies": {
     "lucide-react": "^0.546.0",
