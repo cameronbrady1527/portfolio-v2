@@ -1,4 +1,5 @@
 import "./globals.css";
+import "@cameronbrady/math-components/styles.css";
 import type { Metadata } from "next";
 import { Fraunces, Spline_Sans, Spline_Sans_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";

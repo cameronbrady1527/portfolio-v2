@@ -1,7 +1,33 @@
 /*
  * @cameronbrady/math-components — self-contained component styles.
  *
- * The scoped, themeable Grapher stylesheet (CSS variables with sane defaults,
- * no consumer Tailwind, no global utility leakage) lands here in slice #30.
- * Placeholder so `./styles.css` resolves from a fresh install.
+ * Import once in your app:  import "@cameronbrady/math-components/styles.css";
+ *
+ * Everything here is namespaced under the `cbmc-` prefix — no global utility
+ * classes, nothing that can collide with your app's styles. The Grapher renders
+ * correctly even without this stylesheet (every value has an inline fallback);
+ * importing it just provides the graph-paper background and a single, tidy
+ * theming surface.
+ *
+ * THEMING — set any of these custom properties on an ancestor (or :root) to
+ * re-theme the figure. Defaults match the Math Resources Hub's warm-paper look:
+ *
+ *   --cbmc-paper-bg        plane background            (default #f7f5ef)
+ *   --cbmc-grid-line       graph-paper grid color      (default #d8d2c2)
+ *   --cbmc-grid-size       graph-paper cell size       (default 26px)
+ *   --cbmc-preimage-color  the original figure         (default #16231c)
+ *   --cbmc-image-color     the transformed image       (default #1f8a5b)
+ *   --cbmc-line-color      line of reflection          (default #43564b)
+ *   --cbmc-caption-color   the a11y caption text        (default #43564b)
+ *   --cbmc-radius          plane corner radius         (default 0.5rem)
+ *   --cbmc-font            label font family    (default: inherits, else sans)
  */
+
+/* Scoped graph-paper background for the Grapher's coordinate plane. */
+.cbmc-graph-paper {
+  background-color: var(--cbmc-paper-bg, #f7f5ef);
+  background-image:
+    linear-gradient(to right, var(--cbmc-grid-line, #d8d2c2) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--cbmc-grid-line, #d8d2c2) 1px, transparent 1px);
+  background-size: var(--cbmc-grid-size, 26px) var(--cbmc-grid-size, 26px);
+}

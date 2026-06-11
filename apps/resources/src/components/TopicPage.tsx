@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { ContentIndex, Crumb, TopicSlug } from "@/lib/content/derive";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { Grapher } from "@/components/Grapher";
-import type { GrapherSpec } from "@/components/GrapherTypes";
+import { Grapher } from "@cameronbrady/math-components";
+import type { GrapherSpec } from "@cameronbrady/math-components";
 import { PracticeSet } from "@/components/PracticeSet";
 import { TopicProvider } from "@/lib/topic-context";
 import type { PracticeQuestion } from "@cameronbrady/math-components/logic";
