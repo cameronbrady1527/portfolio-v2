@@ -7,6 +7,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { usePathname } from 'next/navigation';
 import { useNavigation } from '@/contexts/NavigationContext';
 
+// The Math Resources Hub lives on a sibling subdomain; same-tab, one family.
+const HUB_URL = 'https://resources.cameronbrady.dev';
+
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -15,6 +18,7 @@ export default function Navigation() {
   
   const navItems = [
     { href: '/', label: 'Home' },
+    // (Resources is rendered separately — it's an external subdomain link.)
     { href: '/about', label: 'About' },
     { href: '/projects', label: 'Projects' },
     { href: '/services', label: 'Services' },
@@ -104,8 +108,21 @@ export default function Navigation() {
                 </div>
               )
             )}
+            {/* Cross-domain link to the Math Resources Hub (external subdomain,
+                so it sits outside the pathname-driven active-state machinery). */}
+            <a
+              href={HUB_URL}
+              className="font-medium text-slate-600 transition-colors hover:text-slate-800"
+            >
+              <span className="relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0
+                             after:w-full after:h-0.5 after:bg-blue-600 after:origin-right after:scale-x-0
+                             hover:after:origin-left hover:after:scale-x-100 after:transition-transform
+                             after:duration-300 after:ease-out">
+                Resources
+              </span>
+            </a>
           </div>
-          
+
           {/* Mobile menu button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -134,6 +151,15 @@ export default function Navigation() {
                   </Link>
                 </div>
               ))}
+              <div className="px-4">
+                <a
+                  href={HUB_URL}
+                  className="block w-full rounded-lg px-4 py-3 text-center font-medium text-slate-700 transition-colors hover:bg-slate-100"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Resources
+                </a>
+              </div>
             </div>
           </div>
         )}
