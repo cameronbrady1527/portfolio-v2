@@ -89,6 +89,8 @@ Supported `transform` kinds:
 | `reflection` | `{ kind: "reflection", over }` where `over` is `{ kind:"axis", axis:"x"\|"y" }`, `{ kind:"diagonal", slope:1\|-1 }`, or `{ kind:"linear", m, b }` | `axis` / `slope` via `choose(...)` |
 | `translation` | `{ kind: "translation", by: { dx, dy } }` | `dx` / `dy` via `slider(...)` |
 | `rotation` | `{ kind: "rotation", about: {x,y}, angle }` | `angle` via `choose(90, [90,180,270], "Rotate (°)")` |
+| `dilation` | `{ kind: "dilation", about: {x,y}, factor }` | `factor` via `slider(...)` |
+| `stretch` | `{ kind: "stretch", axis: "x"\|"y", factor }` (non-rigid, for contrast) | `axis` via `choose(...)`, `factor` via `slider(...)` |
 
 Helpers:
 
@@ -97,7 +99,9 @@ Helpers:
 
 The image is computed by the pure geometry module; the figure shows the
 preimage + image and a text caption for accessibility. Bounds auto-fit by
-default (override with `spec.bounds`).
+default (override with `spec.bounds`). Add `showMeasurements: true` to the
+spec to label every side with its length on both preimage and image — the
+clearest way to show which transforms preserve distance.
 
 ## 5. (Optional) Add a practice set — `<PracticeSet>`
 

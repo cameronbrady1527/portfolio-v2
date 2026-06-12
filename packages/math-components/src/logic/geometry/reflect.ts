@@ -13,6 +13,8 @@ import type {
 } from "./types";
 import { translate } from "./translate";
 import { rotate } from "./rotate";
+import { dilate, type DilateParams } from "./dilate";
+import { stretch, type StretchParams } from "./stretch";
 
 /** Reflect a single point across a line. */
 function reflectPt(p: Pt, line: ReflectLine): Pt {
@@ -97,8 +99,18 @@ export function applyTransform(
 ): Shape;
 export function applyTransform(
   shape: Shape,
+  transform: "dilation",
+  params: DilateParams,
+): Shape;
+export function applyTransform(
+  shape: Shape,
+  transform: "stretch",
+  params: StretchParams,
+): Shape;
+export function applyTransform(
+  shape: Shape,
   transform: Transform,
-  params: ReflectLine | TranslateParams | RotateParams,
+  params: ReflectLine | TranslateParams | RotateParams | DilateParams | StretchParams,
 ): Shape {
   switch (transform) {
     case "reflection":
@@ -111,5 +123,9 @@ export function applyTransform(
       const p = params as RotateParams;
       return rotate(shape, p.angle as 90 | 180 | 270 | -90, p.about);
     }
+    case "dilation":
+      return dilate(shape, params as DilateParams);
+    case "stretch":
+      return stretch(shape, params as StretchParams);
   }
 }

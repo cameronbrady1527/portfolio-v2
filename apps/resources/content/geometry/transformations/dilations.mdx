@@ -1,0 +1,100 @@
+---
+title: Dilations
+order: 4
+description: Resize a figure from a center point by a scale factor and discover what a dilation preserves — and what it doesn't.
+---
+
+import { slider } from "@cameronbrady/math-components";
+
+export const grapher = {
+  spec: {
+    preimage: {
+      type: "polygon",
+      vertices: [
+        { x: 1, y: 1 },
+        { x: 3, y: 1 },
+        { x: 1, y: 2 },
+      ],
+      label: "ABC",
+    },
+    transform: {
+      kind: "dilation",
+      about: { x: 0, y: 0 },
+      factor: slider(2, 0.5, 3, { step: 0.5, label: "Scale factor" }),
+    },
+    showMeasurements: true,
+  },
+};
+
+export const practice = [
+  {
+    id: "dilate-origin-k2",
+    type: "mc",
+    prompt:
+      "A dilation centered at the origin with scale factor 2 sends the point (2, 3) to which point?",
+    choices: ["(4, 6)", "(4, 5)", "(2, 6)", "(6, 9)"],
+    answer: 0,
+    hints: [
+      "A dilation about the origin multiplies BOTH coordinates by the scale factor.",
+    ],
+    explanation:
+      "About the origin, (x, y) ↦ (kx, ky). With k = 2: (2, 3) ↦ (4, 6). Adding 2 to each coordinate gives (4, 5) — but that's a translation idea, not a dilation.",
+  },
+  {
+    id: "dilate-segment-length",
+    type: "numeric",
+    prompt:
+      "A segment has length 5. After a dilation with scale factor 3, what is the length of its image?",
+    answer: 15,
+    tolerance: 0,
+    hints: ["A dilation multiplies every length by the scale factor."],
+    explanation:
+      "The image of a segment under a dilation is longer or shorter in the ratio given by the scale factor: 3 × 5 = 15.",
+  },
+  {
+    id: "dilate-preserves",
+    type: "mc",
+    prompt: "A dilation with scale factor 2 preserves which of the following?",
+    choices: ["Angle measures", "Side lengths", "Perimeter"],
+    answer: 0,
+    hints: [
+      "The image is the same shape, just a different size. Which measurement doesn't depend on size?",
+    ],
+    explanation:
+      "Dilations preserve angle measures — the image is similar to the preimage. Side lengths and the perimeter are both multiplied by the scale factor (here, doubled), so they are not preserved.",
+  },
+];
+
+A **dilation** resizes a figure from a fixed point, called the **center of
+dilation**, by a **scale factor** $k$. Every point moves along the ray from the
+center, so its distance from the center is multiplied by $k$. A dilation must
+always be described with *both* pieces: the center and the scale factor.
+
+## Dilating about the origin
+
+When the center is the origin, the rule is simply
+
+$$
+(x, y) \mapsto (kx,\, ky)
+$$
+
+With $k = 2$, the point $(2, 3)$ lands on $(4, 6)$ — twice as far from the
+origin, in the same direction. A factor $k > 1$ **enlarges** the figure; a
+factor between $0$ and $1$ **reduces** it.
+
+Watch the side lengths in the figure above as you drag the scale factor: every
+length is multiplied by $k$, so with $k = 2$ each side of the image is exactly
+twice its preimage side.
+
+## What a dilation preserves
+
+A dilation is **not** a rigid motion: unless $k = 1$, distances change, so the
+image is not congruent to the preimage. But the image is always the **same
+shape** — every angle keeps its measure — which makes the image **similar** to
+the original.
+
+Two more facts you can check experimentally on the figure:
+
+- A line that passes **through the center** of dilation maps onto itself.
+- A line that does **not** pass through the center maps to a **parallel**
+  line.

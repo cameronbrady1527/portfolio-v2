@@ -89,7 +89,9 @@ export type ReflectLineSpec =
 export type TransformSpec =
   | { kind: "reflection"; over: ReflectLineSpec }
   | { kind: "translation"; by: { dx: Param<number>; dy: Param<number> } }
-  | { kind: "rotation"; about: Pt; angle: Param<90 | 180 | 270 | -90> };
+  | { kind: "rotation"; about: Pt; angle: Param<90 | 180 | 270 | -90> }
+  | { kind: "dilation"; about: Pt; factor: Param<number> }
+  | { kind: "stretch"; axis: Param<"x" | "y">; factor: Param<number> };
 
 /** A full Grapher specification. */
 export type GrapherSpec = {
@@ -101,6 +103,8 @@ export type GrapherSpec = {
   caption?: string;
   /** Whether to render the computed image. Default true. */
   showImage?: boolean;
+  /** Render side-length labels on preimage and image. Default false. */
+  showMeasurements?: boolean;
   /** Optional enhancement: allow dragging the preimage. Default false. */
   draggablePreimage?: boolean;
 };

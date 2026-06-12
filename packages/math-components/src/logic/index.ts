@@ -16,6 +16,8 @@ export type {
   RotateParams,
 } from "./geometry/types";
 export { reflect, applyTransform } from "./geometry/reflect";
+export { dilate, type DilateParams } from "./geometry/dilate";
+export { stretch, type StretchParams } from "./geometry/stretch";
 export { translate } from "./geometry/translate";
 export { rotate } from "./geometry/rotate";
 
