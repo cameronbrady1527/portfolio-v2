@@ -16,6 +16,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Coordinates, Mafs, Point, Polygon, Line, Text } from "mafs";
 import "mafs/core.css";
 import type { Pt, Shape } from "./logic";
+import { applySequence } from "./logic";
 import {
   isControl,
   type GrapherProps,
@@ -31,12 +32,14 @@ import {
   edgeMeasurements,
   forEachControl,
   initialParams,
+  stepCaption,
 } from "./grapherLogic";
 
 // Colors come from the package's themeable CSS variables (see styles.css),
 // each with a sane default so the figure renders correctly with no stylesheet.
 const PREIMAGE_COLOR = "var(--cbmc-preimage-color, #16231c)";
 const IMAGE_COLOR = "var(--cbmc-image-color, #1f8a5b)"; // resources green accent
+const GHOST_COLOR = "var(--cbmc-ghost-color, #9aa89f)"; // faded intermediates
 
 function toShapes(s: Shape | Shape[]): Shape[] {
   return Array.isArray(s) ? s : [s];
@@ -213,20 +216,40 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
 
   const preimageShapes = useMemo(() => toShapes(spec.preimage), [spec.preimage]);
 
-  const image = useMemo(
-    () => computeImage(spec, params),
-    [spec, params],
+  // Sequence mode: an array transform is played step by step (0 = start).
+  const sequence = Array.isArray(spec.transform) ? spec.transform : null;
+  const [stepIndex, setStepIndex] = useState(0);
+  const sequenceTrails = useMemo(
+    () =>
+      sequence
+        ? preimageShapes.map((s) => applySequence(s, sequence))
+        : null,
+    [sequence, preimageShapes],
   );
+
+  const image = useMemo(() => {
+    if (sequenceTrails) {
+      if (stepIndex === 0) return null;
+      return sequenceTrails.map((trail) => trail[stepIndex - 1]);
+    }
+    return computeImage(spec, params);
+  }, [spec, params, sequenceTrails, stepIndex]);
 
   const bounds = useMemo(() => {
     if (spec.bounds) return spec.bounds;
-    const all = image ? [...preimageShapes, ...toShapes(image)] : preimageShapes;
+    const all = sequenceTrails
+      ? [...preimageShapes, ...sequenceTrails.flat()]
+      : image
+        ? [...preimageShapes, ...toShapes(image)]
+        : preimageShapes;
     return autoBounds(all);
-  }, [spec.bounds, preimageShapes, image]);
+  }, [spec.bounds, preimageShapes, image, sequenceTrails]);
 
   const caption = useMemo(
-    () => spec.caption ?? autoCaption(spec, params),
-    [spec, params],
+    () =>
+      spec.caption ??
+      (sequence ? stepCaption(spec, stepIndex) : autoCaption(spec, params)),
+    [spec, params, sequence, stepIndex],
   );
 
   const setParam = useCallback((key: string, value: number | string) => {
@@ -283,7 +306,8 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
             xAxis={{ lines: 1, labels: () => "" }}
             yAxis={{ lines: 1, labels: () => "" }}
           />
-          {spec.transform.kind === "reflection" ? (
+          {!Array.isArray(spec.transform) &&
+          spec.transform.kind === "reflection" ? (
             <ReflectLineView over={spec.transform.over} />
           ) : null}
 
@@ -296,6 +320,20 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
               primeLabel={false}
             />
           ))}
+
+          {sequenceTrails && stepIndex > 1
+            ? sequenceTrails.flatMap((trail, ti) =>
+                trail.slice(0, stepIndex - 1).map((s, i) => (
+                  <ShapeView
+                    key={`ghost-${ti}-${i}`}
+                    shape={{ ...s, label: undefined }}
+                    color={GHOST_COLOR}
+                    dashed
+                    primeLabel={false}
+                  />
+                )),
+              )
+            : null}
 
           {showImage && image
             ? toShapes(image).map((s, i) => (
@@ -331,6 +369,35 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
             : null}
         </Mafs>
       </div>
+
+      {sequence ? (
+        <div
+          role="group"
+          aria-label="Sequence steps"
+          style={{
+            display: "flex",
+            gap: "0.5rem",
+            marginTop: "0.75rem",
+          }}
+        >
+          <button
+            type="button"
+            disabled={stepIndex === 0}
+            onClick={() => setStepIndex((k) => Math.max(0, k - 1))}
+          >
+            Back
+          </button>
+          <button
+            type="button"
+            disabled={stepIndex >= sequence.length}
+            onClick={() =>
+              setStepIndex((k) => Math.min(sequence.length, k + 1))
+            }
+          >
+            Next step
+          </button>
+        </div>
+      ) : null}
 
       {controls.length > 0 ? (
         <div

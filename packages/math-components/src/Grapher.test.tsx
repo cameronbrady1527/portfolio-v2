@@ -126,3 +126,37 @@ describe("<Grapher> — dilation with measurements", () => {
     // pinned by the pure edgeMeasurements tests and the SSG build.
   });
 });
+
+describe("<Grapher> — transformation sequence", () => {
+  function sequenceSpec(): GrapherSpec {
+    return {
+      preimage: triangle,
+      transform: [
+        { kind: "translation", by: { dx: 3, dy: 0 } },
+        { kind: "rotation", about: { x: 0, y: 0 }, angle: 90 },
+      ],
+    };
+  }
+
+  it("steps through the sequence with a narrated caption", async () => {
+    const user = userEvent.setup();
+    render(<Grapher spec={sequenceSpec()} />);
+
+    const caption = () =>
+      document.getElementById("grapher-caption")?.textContent ?? "";
+    expect(caption()).toContain("before any of the 2 steps");
+
+    const next = screen.getByRole("button", { name: "Next step" });
+    expect(screen.getByRole("button", { name: "Back" })).toBeDisabled();
+
+    await user.click(next);
+    expect(caption()).toBe("Step 1 of 2: translated by the vector (3, 0).");
+
+    await user.click(next);
+    expect(caption()).toBe("Step 2 of 2: rotated 90° about (0, 0).");
+    expect(next).toBeDisabled();
+
+    await user.click(screen.getByRole("button", { name: "Back" }));
+    expect(caption()).toBe("Step 1 of 2: translated by the vector (3, 0).");
+  });
+});

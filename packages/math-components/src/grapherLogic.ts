@@ -2,8 +2,8 @@
  * Pure helpers behind <Grapher>: param resolution, image computation, bounds
  * auto-fit, and a11y caption generation. No React, no mafs.
  */
-import type { Pt, ReflectLine, Shape } from "./logic";
-import { applyTransform } from "./logic";
+import type { Pt, ReflectLine, Shape, TransformStep } from "./logic";
+import { applyTransform, applySequence } from "./logic";
 import {
   isControl,
   type GrapherSpec,
@@ -37,7 +37,7 @@ export function resolveParam<T extends string | number>(
 
 /** Collect the initial params record (defaults) from every Control in a spec. */
 export function initialParams(
-  transform: TransformSpec,
+  transform: TransformSpec | TransformStep[],
 ): Record<string, number | string> {
   const out: Record<string, number | string> = {};
   forEachControl(transform, (path, ctrl) => {
@@ -48,12 +48,14 @@ export function initialParams(
 
 /** Visit every interactive Control in a transform spec with its path. */
 export function forEachControl(
-  transform: TransformSpec,
+  transform: TransformSpec | TransformStep[],
   visit: (
     path: string,
     ctrl: { value: number | string; label?: string },
   ) => void,
 ): void {
+  // A sequence is fixed data in v1 — it exposes no interactive controls.
+  if (Array.isArray(transform)) return;
   if (transform.kind === "reflection") {
     const over = transform.over;
     if (over.kind === "axis" && isControl(over.axis)) {
@@ -99,7 +101,9 @@ export function computeImage(
 ): Shape | Shape[] | null {
   const { transform, preimage } = spec;
   let apply: (s: Shape) => Shape;
-  if (transform.kind === "reflection") {
+  if (Array.isArray(transform)) {
+    apply = (s) => applySequence(s, transform).at(-1) ?? s;
+  } else if (transform.kind === "reflection") {
     const line = resolveReflectLine(transform.over, params);
     apply = (s) => applyTransform(s, "reflection", line);
   } else if (transform.kind === "translation") {
@@ -204,6 +208,9 @@ export function autoCaption(
       : `${shapes.length} shapes`;
 
   const t = spec.transform;
+  if (Array.isArray(t)) {
+    return stepCaption(spec, t.length);
+  }
   if (t.kind === "reflection") {
     const line = resolveReflectLine(t.over, params);
     return `A ${subject} reflected across ${describeLine(line)}.`;
@@ -252,4 +259,37 @@ export function edgeMeasurements(shape: Shape): EdgeMeasurement[] {
         measureEdge(v, shape.vertices[(i + 1) % shape.vertices.length]),
       );
   }
+}
+
+/** Human-readable description of one resolved sequence step. */
+export function describeStep(step: TransformStep): string {
+  switch (step.kind) {
+    case "reflection":
+      return `reflected across ${describeLine(step.over)}`;
+    case "translation":
+      return `translated by the vector (${step.by.dx}, ${step.by.dy})`;
+    case "rotation":
+      return `rotated ${step.angle}\u00b0 about (${step.about.x}, ${step.about.y})`;
+    case "dilation":
+      return `dilated about (${step.about.x}, ${step.about.y}) by a scale factor of ${step.factor}`;
+    case "stretch":
+      return `stretched ${step.axis === "x" ? "horizontally" : "vertically"} by a factor of ${step.factor}`;
+  }
+}
+
+/**
+ * Caption for a sequence spec at step k (0 = before any steps). Falls back to
+ * the regular caption for non-sequence specs.
+ */
+export function stepCaption(spec: GrapherSpec, k: number): string {
+  const t = spec.transform;
+  if (!Array.isArray(t)) return autoCaption(spec, initialParams(t));
+  const shapes = Array.isArray(spec.preimage) ? spec.preimage : [spec.preimage];
+  const subject =
+    shapes.length === 1 ? describeShape(shapes[0]) : `${shapes.length} shapes`;
+  if (k <= 0) {
+    return `A ${subject} before any of the ${t.length} steps.`;
+  }
+  const step = t[Math.min(k, t.length) - 1];
+  return `Step ${Math.min(k, t.length)} of ${t.length}: ${describeStep(step)}.`;
 }
