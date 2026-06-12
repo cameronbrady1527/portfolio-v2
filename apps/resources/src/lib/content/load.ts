@@ -16,10 +16,12 @@ import {
 // content/<subject>/<unit>/<topic>.mdx, relative to the app root (cwd at build).
 const CONTENT_DIR = join(process.cwd(), "content");
 
+// Underscore-prefixed dirs are support-content libraries (see support.ts),
+// never subjects/units — exclude them from the topic scan.
 function subdirs(dir: string): string[] {
   try {
     return readdirSync(dir, { withFileTypes: true })
-      .filter((d) => d.isDirectory())
+      .filter((d) => d.isDirectory() && !d.name.startsWith("_"))
       .map((d) => d.name);
   } catch {
     return [];

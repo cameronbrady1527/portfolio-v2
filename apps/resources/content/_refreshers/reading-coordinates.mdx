@@ -1,0 +1,22 @@
+---
+title: Reading coordinates
+---
+
+export const check = {
+  id: "refresher-reading-coordinates",
+  type: "mc",
+  prompt: "Which point is 4 units left of the origin and 1 unit up?",
+  choices: ["(−4, 1)", "(1, −4)", "(4, 1)"],
+  answer: 0,
+  hints: ["Across first, then up/down: left means a negative x."],
+  explanation:
+    "Left 4 makes the x-coordinate −4; up 1 makes the y-coordinate 1. The point is (−4, 1).",
+};
+
+A point's address is **(x, y)**: how far **across** first, then how far
+**up or down** — always in that order.
+
+- Right is positive x; **left is negative x**.
+- Up is positive y; **down is negative y**.
+
+So (3, −2) means: from the origin, go right 3, then down 2.

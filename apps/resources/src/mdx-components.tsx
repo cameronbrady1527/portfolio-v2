@@ -1,7 +1,10 @@
 import type { MDXComponents } from "mdx/types";
+import { Refresher } from "@/components/Refresher";
 
 // Required by @next/mdx in the App Router. Topic prose inherits the global
 // typographic styles from globals.css; per-element overrides can be added here.
+// Support components are registered globally so topic authors use them as
+// bare tags with zero import boilerplate (same-night authoring).
 export function useMDXComponents(components: MDXComponents): MDXComponents {
-  return { ...components };
+  return { Refresher, ...components };
 }
