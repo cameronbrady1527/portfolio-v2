@@ -180,6 +180,24 @@ Everything below either **extends** these or stands beside them in
 - **Effort:** XL. Tier 4, but it's the signature piece — nothing on the open
   web does this well *and* accessibly.
 
+#### 💭 C18. Proof Builder *(spans G.CO, G.SRT, G.GPE — listed here with its densest cluster)*
+- **Standards:** GEO-G.CO.9, G.CO.10, G.CO.11, G.SRT.4, G.SRT.5b, G.GPE.4 —
+  every "prove and apply" standard, all carrying "include multi-step proofs"
+  notes. Proofs are a Regents staple and **super important** (SME's words).
+- **What:** students *construct* proofs instead of reading them: a
+  drag-and-drop two-column (and/or flowchart) builder with a bank of
+  statements and reasons, machine-checked logical validity, and
+  misconception-aware distractors in the bank. Peak inquiry pedagogy —
+  building the argument is the discovery.
+- **Interim path (until built):** explorers (C4/C6/C7) supply the *why*;
+  X2 stepper supplies proof *reading*; PracticeSet supplies proof *fragments*
+  as MC ("which reason justifies step 3?") — cheap, machine-checkable, and
+  close to what Regents partial credit rewards.
+- **Why deferred:** XL build (validity engine, statement banks, drag-drop
+  a11y). When the **Proofs subject** (roadmap ⬜) spins up, this graduates to
+  its own PRD as that subject's foundation component.
+- **Effort:** XL. Tier 4.
+
 ### 4.2 Similarity, Right Triangles & Trigonometry (G.SRT)
 
 #### 🆕 C9. Similarity Lab
@@ -366,20 +384,20 @@ A light wrapper tying a one-question prediction (MC) to an interactive reveal
 | GEO-G.CO.5 (draw images; sequences) | Grapher ✅ + C2 | 🔧 |
 | GEO-G.CO.6 (congruence via rigid motions) | C2 + C5 | 🆕 |
 | GEO-G.CO.7–8 (criteria ASA/SAS/SSS/AAS/HL) | C5 | 🆕 |
-| GEO-G.CO.9 (lines & angles theorems) | C4 | 🆕 |
-| GEO-G.CO.10 (triangle theorems) | C6 | 🆕 |
-| GEO-G.CO.11 (parallelogram theorems) | C7 | 🆕 |
+| GEO-G.CO.9 (lines & angles theorems) | C4 · C18 later | 🆕 |
+| GEO-G.CO.10 (triangle theorems) | C6 · C18 later | 🆕 |
+| GEO-G.CO.11 (parallelogram theorems) | C7 · C18 later | 🆕 |
 | GEO-G.CO.12–13 (constructions, fluency) | C8 | 💭 |
 | GEO-G.SRT.1a/1b (dilation properties) | C1 | 🔧 |
 | GEO-G.SRT.2–3 (similarity; AA~/SAS~/SSS~) | C9 | 🆕 |
-| GEO-G.SRT.4–5 (similarity theorems; fluency) | C9 + X2 | 🆕 |
+| GEO-G.SRT.4–5 (similarity theorems; fluency) | C9 + X2 · C18 later | 🆕 |
 | GEO-G.SRT.6–8 (trig ratios, special rt △s ★) | C10 | 🆕 |
 | GEO-G.SRT.9 (A = ½ab·sin C) | C10 | 🆕 |
 | GEO-G.C.1 (all circles similar) | C1 + C11 | 🆕 |
 | GEO-G.C.2a/2b (angles, arcs, chords, tangents) | C11 | 🆕 |
 | GEO-G.C.5 (sector proportionality) | C12 | 🆕 |
 | GEO-G.GPE.1a/1b (circle equations) | C14 + X2 | 🆕 |
-| GEO-G.GPE.4 (coordinate proofs, fluency) | C13 | 🆕 |
+| GEO-G.GPE.4 (coordinate proofs, fluency) | C13 · C18 later | 🆕 |
 | GEO-G.GPE.5a/b/c (slopes ‖/⟂, fluency) | C13 | 🆕 |
 | GEO-G.GPE.6 (partition a segment) | C15 | 🆕 |
 | GEO-G.GPE.7 (perimeter/area ★, fluency) | C13 | 🆕 |
@@ -420,7 +438,8 @@ with the larger labs.*
 
 **Tier 4 — signature ambitions**
 C8 construction canvas (manipulatives epic flagship) · C16 volume visualizer ·
-C17 3D cross-sections
+C17 3D cross-sections · C18 proof builder (graduates to the Proofs subject's
+own PRD when that subject spins up)
 *Rationale: highest effort, highest distinctiveness; each has an interim
 content-only path so coverage never blocks on them.*
 
@@ -446,3 +465,40 @@ content-only path so coverage never blocks on them.*
 - **Next step:** grilling session (`/grill-me`) on Tier 1 to pressure-test
   granularity, then `/to-prd` → `/to-issues` → `/tdd` per the established
   workflow.
+
+---
+
+## 9. Grill decisions (2026-06-11, ratified by SME)
+
+1. **Two-track Tier 1.** Track A (content support layer) first — unblocked;
+   Track B (Grapher extensions C1–C3) blocked until the package slice stack
+   (#28–#31) is pushed and merged.
+2. **Track A roster = X1 + X2 + X3 + X5**, all new files in `apps/resources`
+   on `main`. X2 pulled forward from Tier 2 (same character, no conflicts).
+   **X4 (expression input) explicitly deferred** — it edits `PracticeSet`,
+   which the unpushed stack also edits; building it now manufactures a
+   merge conflict.
+3. **Refreshers: slug library** (`content/_refreshers/<slug>.mdx`,
+   `<Refresher id="…" />`) with inline-children escape hatch. Seed library:
+   one-/two-step equations, square roots, ratios & proportions, negatives,
+   reading coordinates, fraction ↔ decimal.
+4. **Refresher self-checks are untracked** — graded with pure `grade()`,
+   nothing written to the progress store. Product principle behind it:
+   the hub is a **supplemental tool, not an AI tutor**; keep tracking minimal.
+5. **Inquiry/discovery is an editorial convention, not a component (for now).**
+   Document the pattern (explore → conjecture → test → formalize) in
+   `adding-a-topic.md`; revisit a dedicated component after 2–3 discovery
+   topics exist. SME favors inquiry tasks selectively — "some, not all."
+6. **Term (X3): explicit marking only** (no auto-linking), entries in
+   `content/_glossary/<slug>.mdx` (plain language first, formal second),
+   click/keyboard popovers (never hover-only), plus a `/glossary` page.
+7. **C18 Proof Builder added** (Tier 4): proofs are super important —
+   important enough to be its own dedicated build when the Proofs subject
+   spins up, not a corner of this plan. Interim path documented in §4.1.
+8. **X5 gate is soft** — default-hidden reveal with a de-emphasized skip
+   affordance (teachers projecting mid-lesson need the bypass).
+9. **Test surface (Track A):** slug-library loaders (build-time failure on
+   unknown slug) · Refresher (id render, escape hatch, untracked guarantee
+   asserted) · Stepper (ordered reveal, self-check gating, keyboard) ·
+   Term (popover a11y) · X5 (default-hidden, prediction persists after
+   reveal). Behavior-only, RTL, no snapshots.
