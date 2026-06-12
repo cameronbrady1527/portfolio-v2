@@ -12,6 +12,7 @@ import { humanize } from "./derive";
 
 const LIBRARY_DIRS = {
   refreshers: "_refreshers",
+  glossary: "_glossary",
 } as const;
 
 export type SupportLibrary = keyof typeof LIBRARY_DIRS;
@@ -35,6 +36,8 @@ export function listSupportSlugs(library: SupportLibrary): string[] {
 export type SupportEntryMeta = {
   slug: string;
   title: string;
+  /** Glossary grouping (e.g. "geometry"); absent entries group under "general". */
+  subject?: string;
 };
 
 /**
@@ -63,5 +66,6 @@ export function loadSupportEntryMeta(
   return {
     slug,
     title: typeof data.title === "string" ? data.title : humanize(slug),
+    subject: typeof data.subject === "string" ? data.subject : undefined,
   };
 }

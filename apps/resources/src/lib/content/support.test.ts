@@ -16,6 +16,12 @@ describe("support-content library", () => {
     ).toThrowError(/Unknown refreshers slug "raitos".*<Refresher id="raitos">.*ratios/);
   });
 
+  it("resolves a glossary slug to its term title and subject", () => {
+    const meta = loadSupportEntryMeta("glossary", "preimage", '<Term id="preimage">');
+    expect(meta.title).toBe("preimage");
+    expect(meta.subject).toBe("geometry");
+  });
+
   it("never lets underscore-prefixed library dirs appear in the topic index", () => {
     // Plant a topic-shaped file inside the library: it must still be ignored.
     const fixtureDir = join(process.cwd(), "content", "_refreshers", "fixture-unit");
