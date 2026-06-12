@@ -19,6 +19,7 @@ export { reflect, applyTransform } from "./geometry/reflect";
 export { dilate, type DilateParams } from "./geometry/dilate";
 export { stretch, type StretchParams } from "./geometry/stretch";
 export { applySequence, applyStep, type TransformStep } from "./geometry/sequence";
+export { pointsCoincide, shapesCoincide } from "./geometry/coincide";
 export { translate } from "./geometry/translate";
 export { rotate } from "./geometry/rotate";
 
