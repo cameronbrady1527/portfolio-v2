@@ -1,0 +1,104 @@
+---
+title: Symmetry
+order: 6
+description: Hunt for the rotations and reflections that carry a shape exactly onto itself — and meet shapes that have many, few, or none.
+---
+
+import { SymmetryExplorer } from "@cameronbrady/math-components";
+
+export const practice = [
+  {
+    id: "sym-hexagon-lines",
+    type: "mc",
+    prompt: "How many lines of symmetry does a regular hexagon have?",
+    choices: ["6", "3", "12"],
+    answer: 0,
+    hints: [
+      "Count two kinds of axes: through opposite vertices, and through midpoints of opposite sides.",
+    ],
+    explanation:
+      "A regular hexagon has 3 axes through opposite vertices and 3 through midpoints of opposite sides: 6 lines of symmetry in total.",
+  },
+  {
+    id: "sym-square-min-rotation",
+    type: "numeric",
+    prompt:
+      "What is the smallest positive rotation, in degrees, that carries a square onto itself?",
+    answer: 90,
+    tolerance: 0,
+    hints: ["A full turn is 360°, and a square has 4 identical 'positions'."],
+    explanation:
+      "Rotating by 360° ÷ 4 = 90° sends each vertex to the next one, so the square lands exactly on itself.",
+  },
+  {
+    id: "sym-rotation-no-reflection",
+    type: "mc",
+    prompt:
+      "Which shape has rotation symmetry but NO line of symmetry?",
+    choices: [
+      "A parallelogram that is not a rectangle or a rhombus",
+      "An isosceles triangle",
+      "A regular pentagon",
+    ],
+    answer: 0,
+    hints: [
+      "Try folding each shape in half in your head — and try spinning each one half a turn.",
+    ],
+    explanation:
+      "A generic parallelogram maps onto itself under a 180° rotation about its center, but no fold line works. An isosceles triangle is the opposite (one fold, no turn), and a regular pentagon has both kinds.",
+  },
+];
+
+A shape has **symmetry** when some rigid motion — other than just leaving it
+alone — carries it **exactly onto itself**. There are two kinds to hunt for:
+
+- **Rotation symmetry:** spinning the shape about its center by some angle
+  less than $360^\circ$ lands it back on itself.
+- **Line (reflection) symmetry:** flipping the shape across some line through
+  its center lands it back on itself.
+
+## Hunt: the square
+
+A square is a symmetry jackpot. Try every proposal below — the explorer
+checks each one exactly and keeps count. Can you find **all 7**?
+
+<SymmetryExplorer
+  polygon={{
+    type: "polygon",
+    vertices: [
+      { x: 1, y: 1 },
+      { x: 3, y: 1 },
+      { x: 3, y: 3 },
+      { x: 1, y: 3 },
+    ],
+    label: "Square",
+  }}
+/>
+
+## Hunt: the isosceles triangle
+
+Not every shape is so generous. This isosceles triangle has exactly **one**
+symmetry — and it isn't a rotation. (And a scalene triangle would have none
+at all: "irregular" shapes are part of the standard too.)
+
+<SymmetryExplorer
+  polygon={{
+    type: "polygon",
+    vertices: [
+      { x: 0, y: 0 },
+      { x: 4, y: 0 },
+      { x: 2, y: 3 },
+    ],
+    label: "Isosceles",
+  }}
+/>
+
+## Counting symmetries
+
+For a **regular polygon** with $n$ sides, the pattern is beautiful: $n - 1$
+rotations (by multiples of $360^\circ / n$) and $n$ lines of symmetry. The
+square fits perfectly: $3$ rotations $+$ $4$ lines $= 7$ symmetries.
+
+Irregular shapes break the pattern in interesting ways — a rectangle keeps
+only the half-turn and two of the four lines, and a generic parallelogram
+keeps the half-turn but **no** lines at all.

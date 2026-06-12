@@ -20,6 +20,16 @@ export { dilate, type DilateParams } from "./geometry/dilate";
 export { stretch, type StretchParams } from "./geometry/stretch";
 export { applySequence, applyStep, type TransformStep } from "./geometry/sequence";
 export { pointsCoincide, shapesCoincide } from "./geometry/coincide";
+export {
+  allSymmetries,
+  applyProposal,
+  checkSymmetry,
+  reflectPtAcross,
+  rotatePtBy,
+  vertexCentroid,
+  type PolygonShape,
+  type SymmetryProposal,
+} from "./geometry/symmetry";
 export { translate } from "./geometry/translate";
 export { rotate } from "./geometry/rotate";
 

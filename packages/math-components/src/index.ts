@@ -12,6 +12,10 @@
  */
 export { Grapher, slider, choose } from "./Grapher";
 export {
+  SymmetryExplorer,
+  type SymmetryExplorerProps,
+} from "./SymmetryExplorer";
+export {
   SequenceBuilder,
   type SequenceBuilderProps,
   type SequencePuzzle,
