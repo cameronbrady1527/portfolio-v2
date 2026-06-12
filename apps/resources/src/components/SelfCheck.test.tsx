@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
-import { RefresherCheck } from "./RefresherCheck";
+import { SelfCheck } from "./SelfCheck";
 import type { PracticeQuestion } from "@/lib/practice/grade";
 
 const mcQuestion: PracticeQuestion = {
@@ -21,10 +21,10 @@ afterEach(() => {
   window.localStorage.clear();
 });
 
-describe("RefresherCheck", () => {
+describe("SelfCheck", () => {
   it("gives encouraging feedback on a correct answer and records nothing", async () => {
     const user = userEvent.setup();
-    render(<RefresherCheck question={mcQuestion} />);
+    render(<SelfCheck question={mcQuestion} />);
 
     await user.click(screen.getByLabelText("6 : 9"));
     await user.click(screen.getByRole("button", { name: "Check" }));
@@ -39,7 +39,7 @@ describe("RefresherCheck", () => {
 
   it("supports retry after a wrong answer, with a hint and no storage writes", async () => {
     const user = userEvent.setup();
-    render(<RefresherCheck question={mcQuestion} />);
+    render(<SelfCheck question={mcQuestion} />);
 
     await user.click(screen.getByLabelText("6 : 7"));
     await user.click(screen.getByRole("button", { name: "Check" }));

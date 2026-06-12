@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { loadSupportEntryMeta } from "@/lib/content/support";
 import { importRefresherEntry } from "@/lib/content/render";
-import { RefresherCheck } from "./RefresherCheck";
+import { SelfCheck } from "./SelfCheck";
 
 export interface RefresherProps {
   /** Slug of a library entry in content/_refreshers/. */
@@ -36,7 +36,7 @@ export async function Refresher({ id, title, children }: RefresherProps) {
     const Prose = entry.default;
     body = <Prose />;
     if (entry.check) {
-      check = <RefresherCheck question={entry.check} className="mt-4" />;
+      check = <SelfCheck question={entry.check} className="mt-4" />;
     }
   }
 

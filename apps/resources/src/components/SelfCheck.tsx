@@ -5,15 +5,24 @@ import { Check } from "lucide-react";
 import { Button, cn } from "@repo/ui";
 import { grade, type PracticeQuestion } from "@/lib/practice/grade";
 
-export interface RefresherCheckProps {
+export interface SelfCheckProps {
+  /** Lead-in label before the prompt. */
+  label?: string;
+  /** Notified after each graded attempt; the check itself records nothing. */
+  onResult?: (result: { correct: boolean }) => void;
   question: PracticeQuestion;
   className?: string;
 }
 
-// The refresher self-check is deliberately zero-stakes: it grades with the
+// A zero-stakes self-check (refreshers, worked-example gates): it grades with the
 // pure grade() and records nothing — no progress imports, no storage. A
 // student asking for help is never being measured.
-export function RefresherCheck({ question, className }: RefresherCheckProps) {
+export function SelfCheck({
+  question,
+  label = "Try it:",
+  onResult,
+  className,
+}: SelfCheckProps) {
   const [response, setResponse] = useState("");
   const [result, setResult] = useState<{ correct: boolean } | undefined>();
 
@@ -25,13 +34,15 @@ export function RefresherCheck({ question, className }: RefresherCheckProps) {
         ? Number.parseInt(response, 10)
         : Number.parseFloat(response);
     if (Number.isNaN(parsed)) return;
-    setResult(grade(question, parsed));
+    const graded = grade(question, parsed);
+    setResult(graded);
+    onResult?.(graded);
   };
 
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       <p className="text-sm font-medium text-foreground">
-        Try it: {question.prompt}
+        {label} {question.prompt}
       </p>
 
       {question.type === "mc" ? (
@@ -47,7 +58,7 @@ export function RefresherCheck({ question, className }: RefresherCheckProps) {
             >
               <input
                 type="radio"
-                name={`refresher-${question.id}`}
+                name={`selfcheck-${question.id}`}
                 value={ci}
                 checked={response === String(ci)}
                 onChange={() => setResponse(String(ci))}
