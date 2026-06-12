@@ -137,7 +137,160 @@ Question shapes:
 Keep the exports plain JavaScript (no TypeScript type annotations inside the
 `.mdx`).
 
-## 6. Preview locally
+## 6. (Optional) Use the support components
+
+Four scaffolding components are registered globally — use them as bare tags in
+any topic `.mdx`, **no imports needed**. They share two hard rules:
+
+- **Zero-stakes.** Self-checks grade and give feedback but record *nothing* —
+  no progress writes, ever. A student asking for help is never being measured.
+  Don't wire these into tracking.
+- **Low floor.** Plain language first; the formal layer comes second.
+
+### `<Refresher>` — just-in-time foundations
+
+A collapsed "Need a refresher?" panel. Reference a library entry by slug:
+
+```mdx
+<Refresher id="negative-numbers" />
+```
+
+Library slugs: `fractions-decimals`, `negative-numbers`, `ratios`,
+`reading-coordinates`, `solving-equations`, `square-roots` (and growing — see
+below). A misspelled id **fails the build** with an error listing the valid
+slugs, so typos never reach a student.
+
+Escape hatch for a bespoke one-off (children win over `id`):
+
+```mdx
+<Refresher title="Square roots, the quick version">
+  The square root of 49 is 7, because 7 × 7 = 49.
+</Refresher>
+```
+
+**Adding a library entry:** drop a file at `content/_refreshers/<slug>.mdx` —
+frontmatter `title`, one short idea + tiny example as prose, and optionally a
+zero-stakes self-check:
+
+```mdx
+---
+title: Ratios and proportions
+---
+
+export const check = {
+  id: "refresher-ratios",
+  type: "mc",                       // or "numeric" (same shapes as practice)
+  prompt: "…",
+  choices: ["…", "…"],
+  answer: 0,
+  hints: ["…"],
+  explanation: "…",
+};
+
+A ratio compares two amounts. …
+```
+
+Keep entries to one idea. Verify the math like topic content — these render on
+many pages.
+
+### `<WorkedExample>` — multi-step solutions without the wall
+
+Steps reveal one at a time. A step with a `check` gates the **Next step**
+button until the student attempts it (a wrong attempt gives feedback and still
+unlocks — it never dead-ends):
+
+```mdx
+<WorkedExample title="Rotate (2, 5) by 90° counter-clockwise about the origin">
+  <Step
+    check={{
+      id: "we-rotation-rule",
+      type: "mc",
+      prompt: "Which rule applies?",
+      choices: ["(x, y) ↦ (−y, x)", "(x, y) ↦ (y, −x)"],
+      answer: 0,
+      hints: ["CCW sends (1, 0) up to (0, 1)."],
+      explanation: "A 90° CCW rotation uses (x, y) ↦ (−y, x).",
+    }}
+  >
+    Pick the rule for a 90° counter-clockwise rotation.
+  </Step>
+  <Step>Substitute x = 2 and y = 5: (2, 5) ↦ (−5, 2).</Step>
+</WorkedExample>
+```
+
+### `<PredictThenCheck>` — commit before you see
+
+The reveal (any children: prose, a figure) stays hidden until the student locks
+in a prediction. Their prediction remains displayed beside the outcome — that
+juxtaposition is the point. A de-emphasized **Skip to the answer** always
+exists, so a teacher projecting mid-lesson controls pacing.
+
+```mdx
+<PredictThenCheck
+  prompt="The point (3, 1) is reflected over the y-axis. Where does it land?"
+  choices={["(−3, 1)", "(3, −1)", "(−3, −1)"]}
+>
+  <p>The image is (−3, 1): the x-coordinate flips, the y stays.</p>
+</PredictThenCheck>
+```
+
+### `<Term>` — precise vocabulary on tap
+
+Wrap the *teaching occurrence* of a term (usually first use on the page — mark
+deliberately, not every mention). Click/keyboard opens a popover with the
+definition, plain language first:
+
+```mdx
+… called the <Term id="line-of-reflection">line of reflection</Term> …
+```
+
+**Adding a glossary entry:** drop `content/_glossary/<slug>.mdx` with
+frontmatter `title` (the canonical term) and `subject` (for grouping on the
+automatic `/glossary` page), then a plain-language paragraph followed by
+`**Formal definition.** …`. Bad ids fail the build, same as refreshers.
+
+## 7. The inquiry topic pattern (use selectively)
+
+Some topics teach best when the student **discovers the result instead of
+being told it**. Use this shape when the math has a discoverable payoff — an
+invariance, a surprising constant, a rule that emerges from examples
+(rotation distance-preservation, triangle angle sum, trig-ratio invariance).
+Don't force it on definitional or procedural topics; "some, not all."
+
+Four stages, composed from pieces you already have:
+
+1. **Explore** — open with the `<Grapher>` (or a figure) and an invitation to
+   play: "drag the angle through 90°, 180°, 270°. What changes? What doesn't?"
+2. **Conjecture** — a `<PredictThenCheck>` makes the student commit:
+   "rotate the triangle 180°. What happens to its side lengths?" The
+   choices should include the tempting wrong answers.
+3. **Test** — prose that sends them back to the interactive to hunt for a
+   counterexample: "try to find any rotation that changes a side length."
+4. **Formalize** — only now state the theorem, with a `<WorkedExample>`
+   walking one concrete case and `<Term>` marking the vocabulary that names
+   what they just found.
+
+Worked outline — *"Rotations preserve distance"*:
+
+```mdx
+{/* 1 Explore: grapher with angle choose() control, prose invites play */}
+{/* 2 Conjecture */}
+<PredictThenCheck
+  prompt="Rotate the triangle by 180°. What happens to the length of side AB?"
+  choices={["It stays exactly the same", "It doubles", "It flips sign", "It depends on the center"]}
+>
+  <p>It stays exactly the same — rotations move points along circles around
+  the center, and circles never change a shape's internal distances.</p>
+</PredictThenCheck>
+{/* 3 Test: "try to break it" prose */}
+{/* 4 Formalize: the rigid-motion statement + a WorkedExample computing one
+      image point and checking 2² + 5² = (−5)² + 2² */}
+```
+
+The practice set then asks for the *property* ("which measurements survive a
+rotation?"), not just coordinates.
+
+## 8. Preview locally
 
 ```bash
 pnpm --filter resources dev      # http://localhost:3000/<subject>/<unit>/<topic>
@@ -147,7 +300,7 @@ pnpm --filter resources build    # production build (KaTeX renders at build time
 
 The new topic appears in the nav automatically, in `order` position.
 
-## 7. Deploy
+## 9. Deploy
 
 Commit the file and push to `main`. Vercel auto-deploys the resources project
 (it rebuilds only when `apps/resources` or `packages/ui` change). The page goes
@@ -162,5 +315,8 @@ from the file you just wrote.
 - [ ] Prose (KaTeX with `$…$` / `$$…$$` as needed)
 - [ ] Optional `export const grapher = { spec: … }`
 - [ ] Optional `export const practice = [ … ]` with unique `id`s
+- [ ] Optional support components (`<Refresher>`, `<WorkedExample>`,
+      `<PredictThenCheck>`, `<Term>`) — no imports needed
+- [ ] Considered the inquiry pattern if the topic has a discoverable payoff
 - [ ] `pnpm --filter resources build` is green
 - [ ] Push to `main`
