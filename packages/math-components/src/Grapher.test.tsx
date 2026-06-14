@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi, beforeAll } from "vitest";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
-import { Grapher, choose } from "./Grapher";
+import { Grapher, choose, slider } from "./Grapher";
 import type { GrapherSpec, GrapherChange } from "./Grapher";
 import type { Shape } from "./logic";
 
@@ -84,5 +84,45 @@ describe("<Grapher> — reflection", () => {
         { x: -2, y: 4 },
       ]);
     }
+  });
+});
+
+describe("<Grapher> — dilation with measurements", () => {
+  const rightTriangle: Shape = {
+    type: "polygon",
+    label: "R",
+    vertices: [
+      { x: 0, y: 0 },
+      { x: 3, y: 0 },
+      { x: 3, y: 4 },
+    ],
+  };
+
+  it("renders a factor slider, a dilation caption, and side lengths on pre/image", () => {
+    render(
+      <Grapher
+        spec={{
+          preimage: rightTriangle,
+          transform: {
+            kind: "dilation",
+            about: { x: 0, y: 0 },
+            factor: slider(2, 1, 4, { step: 1, label: "Scale factor" }),
+          },
+          showMeasurements: true,
+        }}
+      />,
+    );
+
+    const range = screen.getByLabelText(/Scale factor/);
+    expect(range).toHaveAttribute("type", "range");
+
+    const caption = document.getElementById("grapher-caption");
+    expect(caption?.textContent).toContain(
+      "dilated about (0, 0) by a scale factor of 2",
+    );
+
+    // The side-length labels themselves render inside the mafs SVG plane,
+    // which jsdom never mounts (zero-size container) — their values are
+    // pinned by the pure edgeMeasurements tests and the SSG build.
   });
 });

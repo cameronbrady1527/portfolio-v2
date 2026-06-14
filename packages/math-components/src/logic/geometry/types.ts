@@ -27,7 +27,12 @@ export type ReflectLine =
  * functional in slice #7; `translation` and `rotation` are reserved for
  * slices #9/#10 and throw when applied.
  */
-export type Transform = "reflection" | "translation" | "rotation";
+export type Transform =
+  | "reflection"
+  | "translation"
+  | "rotation"
+  | "dilation"
+  | "stretch";
 
 /** Parameters for a translation (slice #9). */
 export type TranslateParams = { dx: number; dy: number };

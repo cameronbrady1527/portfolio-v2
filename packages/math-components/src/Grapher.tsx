@@ -13,7 +13,7 @@
  * handles all three transform kinds (reflection/translation/rotation).
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Coordinates, Mafs, Point, Polygon, Line } from "mafs";
+import { Coordinates, Mafs, Point, Polygon, Line, Text } from "mafs";
 import "mafs/core.css";
 import type { Pt, Shape } from "./logic";
 import {
@@ -28,6 +28,7 @@ import {
   autoCaption,
   computeImage,
   controlKey,
+  edgeMeasurements,
   forEachControl,
   initialParams,
 } from "./grapherLogic";
@@ -306,6 +307,27 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
                   primeLabel
                 />
               ))
+            : null}
+
+          {spec.showMeasurements
+            ? [
+                ...preimageShapes.map((s, i) => ({ s, color: PREIMAGE_COLOR, k: `mp-${i}` })),
+                ...(showImage && image
+                  ? toShapes(image).map((s, i) => ({ s, color: IMAGE_COLOR, k: `mi-${i}` }))
+                  : []),
+              ].flatMap(({ s, color, k }) =>
+                edgeMeasurements(s).map((m, j) => (
+                  <Text
+                    key={`${k}-${j}`}
+                    x={m.at.x}
+                    y={m.at.y}
+                    size={14}
+                    color={color}
+                  >
+                    {m.text}
+                  </Text>
+                )),
+              )
             : null}
         </Mafs>
       </div>

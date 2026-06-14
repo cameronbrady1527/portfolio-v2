@@ -9,6 +9,8 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   reflect,
+  dilate,
+  stretch,
   translate,
   rotate,
   applyTransform,
@@ -31,6 +33,10 @@ describe("/logic — resolves and computes", () => {
       .toEqual({ type: "point", at: { x: -1, y: 0 } });
     expect(translate({ type: "point", at: { x: 1, y: 1 } }, 3, -2))
       .toEqual({ type: "point", at: { x: 4, y: -1 } });
+    expect(dilate({ type: "point", at: { x: 2, y: 3 } }, { about: { x: 0, y: 0 }, factor: 2 }))
+      .toEqual({ type: "point", at: { x: 4, y: 6 }, label: undefined });
+    expect(stretch({ type: "point", at: { x: 2, y: 3 } }, { axis: "x", factor: 3 }))
+      .toEqual({ type: "point", at: { x: 6, y: 3 }, label: undefined });
     expect(rotate({ type: "point", at: { x: 1, y: 0 } }, 90, { x: 0, y: 0 }))
       .toEqual({ type: "point", at: { x: 0, y: 1 } });
   });

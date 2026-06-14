@@ -67,6 +67,11 @@ export function forEachControl(
     if (isControl(transform.by.dy)) visit("dy", transform.by.dy);
   } else if (transform.kind === "rotation") {
     if (isControl(transform.angle)) visit("angle", transform.angle);
+  } else if (transform.kind === "dilation") {
+    if (isControl(transform.factor)) visit("factor", transform.factor);
+  } else if (transform.kind === "stretch") {
+    if (isControl(transform.axis)) visit("axis", transform.axis);
+    if (isControl(transform.factor)) visit("factor", transform.factor);
   }
 }
 
@@ -101,9 +106,16 @@ export function computeImage(
     const dx = resolveParam(transform.by.dx, "dx", params);
     const dy = resolveParam(transform.by.dy, "dy", params);
     apply = (s) => applyTransform(s, "translation", { dx, dy });
-  } else {
+  } else if (transform.kind === "rotation") {
     const angle = resolveParam(transform.angle, "angle", params);
     apply = (s) => applyTransform(s, "rotation", { about: transform.about, angle });
+  } else if (transform.kind === "dilation") {
+    const factor = resolveParam(transform.factor, "factor", params);
+    apply = (s) => applyTransform(s, "dilation", { about: transform.about, factor });
+  } else {
+    const axis = resolveParam(transform.axis, "axis", params);
+    const factor = resolveParam(transform.factor, "factor", params);
+    apply = (s) => applyTransform(s, "stretch", { axis, factor });
   }
   return Array.isArray(preimage) ? preimage.map(apply) : apply(preimage);
 }
@@ -201,6 +213,43 @@ export function autoCaption(
     const dy = resolveParam(t.by.dy, "dy", params);
     return `A ${subject} translated by the vector (${dx}, ${dy}).`;
   }
-  const angle = resolveParam(t.angle, "angle", params);
-  return `A ${subject} rotated ${angle}° about (${t.about.x}, ${t.about.y}).`;
+  if (t.kind === "rotation") {
+    const angle = resolveParam(t.angle, "angle", params);
+    return `A ${subject} rotated ${angle}° about (${t.about.x}, ${t.about.y}).`;
+  }
+  if (t.kind === "dilation") {
+    const factor = resolveParam(t.factor, "factor", params);
+    return `A ${subject} dilated about (${t.about.x}, ${t.about.y}) by a scale factor of ${factor}.`;
+  }
+  const axis = resolveParam(t.axis, "axis", params);
+  const factor = resolveParam(t.factor, "factor", params);
+  const direction = axis === "x" ? "horizontally" : "vertically";
+  return `A ${subject} stretched ${direction} by a factor of ${factor}.`;
+}
+
+/** One edge's measurement: midpoint anchor, exact length, display text. */
+export type EdgeMeasurement = { at: Pt; length: number; text: string };
+
+function measureEdge(a: Pt, b: Pt): EdgeMeasurement {
+  const length = Math.hypot(b.x - a.x, b.y - a.y);
+  // Trim to 2 decimals for display, dropping trailing zeros ("3", "1.41").
+  const text = String(Number(length.toFixed(2)));
+  return { at: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }, length, text };
+}
+
+/**
+ * Side-length measurements for a shape (the opt-in `showMeasurements` layer):
+ * one entry per edge, anchored at the edge midpoint. Points have no edges.
+ */
+export function edgeMeasurements(shape: Shape): EdgeMeasurement[] {
+  switch (shape.type) {
+    case "point":
+      return [];
+    case "segment":
+      return [measureEdge(shape.from, shape.to)];
+    case "polygon":
+      return shape.vertices.map((v, i) =>
+        measureEdge(v, shape.vertices[(i + 1) % shape.vertices.length]),
+      );
+  }
 }
