@@ -3,7 +3,7 @@
 // all content/**/*.mdx — adding a new .mdx requires no registry edit here.
 import type { TopicSlug } from "./derive";
 import type { ComponentType } from "react";
-import type { GrapherSpec } from "@/components/GrapherTypes";
+import type { GrapherSpec } from "@cameronbrady/math-components";
 import type { PracticeQuestion } from "@cameronbrady/math-components/logic";
 
 // A compiled topic .mdx: the prose (default) plus optional typed named exports

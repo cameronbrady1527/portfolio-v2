@@ -15,7 +15,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Coordinates, Mafs, Point, Polygon, Line } from "mafs";
 import "mafs/core.css";
-import type { Pt, Shape } from "@cameronbrady/math-components/logic";
+import type { Pt, Shape } from "./logic";
 import {
   isControl,
   type GrapherProps,
@@ -32,8 +32,10 @@ import {
   initialParams,
 } from "./grapherLogic";
 
-const PREIMAGE_COLOR = "var(--mafs-fg, #16231c)";
-const IMAGE_COLOR = "#1f8a5b"; // resources green accent
+// Colors come from the package's themeable CSS variables (see styles.css),
+// each with a sane default so the figure renders correctly with no stylesheet.
+const PREIMAGE_COLOR = "var(--cbmc-preimage-color, #16231c)";
+const IMAGE_COLOR = "var(--cbmc-image-color, #1f8a5b)"; // resources green accent
 
 function toShapes(s: Shape | Shape[]): Shape[] {
   return Array.isArray(s) ? s : [s];
@@ -104,7 +106,10 @@ function PointLabel({
       fill={color}
       fontSize={0.5}
       transform={`translate(0.2, -0.2)`}
-      style={{ pointerEvents: "none", fontFamily: "var(--font-sans, sans-serif)" }}
+      style={{
+        pointerEvents: "none",
+        fontFamily: "var(--cbmc-font, var(--font-sans, sans-serif))",
+      }}
     >
       {text}
     </text>
@@ -174,7 +179,7 @@ function ControlField({
 
 /** The line of reflection drawn on the plane (so the symmetry is visible). */
 function ReflectLineView({ over }: { over: ReflectLineSpec }) {
-  const lineColor = "var(--mafs-grid-line, #43564b)";
+  const lineColor = "var(--cbmc-line-color, #43564b)";
   if (over.kind === "axis") {
     // axes are already drawn by Coordinates; emphasise nothing extra.
     return null;
@@ -259,11 +264,14 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
 
   return (
     <figure
-      className={className}
+      className={["cbmc-grapher", className].filter(Boolean).join(" ")}
       style={{ margin: 0 }}
       aria-describedby={captionId}
     >
-      <div className="graph-paper" style={{ borderRadius: "var(--radius, 0.5rem)" }}>
+      <div
+        className="cbmc-graph-paper"
+        style={{ borderRadius: "var(--cbmc-radius, 0.5rem)" }}
+      >
         <Mafs
           viewBox={{ x: bounds.x, y: bounds.y }}
           preserveAspectRatio="contain"
@@ -330,7 +338,7 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
         style={{
           marginTop: "0.5rem",
           fontSize: "0.875rem",
-          color: "var(--muted-foreground, #43564b)",
+          color: "var(--cbmc-caption-color, #43564b)",
         }}
       >
         {caption}
@@ -349,4 +357,6 @@ export type {
   ReflectLineSpec,
   Control,
   Param,
+  Pt,
+  Shape,
 } from "./GrapherTypes";

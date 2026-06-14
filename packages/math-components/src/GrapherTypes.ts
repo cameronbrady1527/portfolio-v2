@@ -5,7 +5,7 @@
  * `Shape`/`Pt`/`ReflectLine` and exposes a small `Control<T>` DSL so a spec can
  * declare which parameters are interactive.
  */
-import type { Pt, Shape } from "@cameronbrady/math-components/logic";
+import type { Pt, Shape } from "./logic";
 
 export type { Pt, Shape };
 

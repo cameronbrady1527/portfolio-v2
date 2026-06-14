@@ -8,6 +8,11 @@ export default defineConfig({
       runtime: "automatic",
     },
   },
+  // Component tests assert on DOM/behaviour, not styles — let mafs' core.css
+  // import through harmlessly without a PostCSS pipeline.
+  css: {
+    postcss: { plugins: [] },
+  },
   test: {
     // Pure logic runs in node; tests that need a DOM (the progress adapter,
     // and the Grapher) opt into jsdom via a per-file
