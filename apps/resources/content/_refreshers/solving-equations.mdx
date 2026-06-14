@@ -1,0 +1,24 @@
+---
+title: Solving one- and two-step equations
+---
+
+export const check = {
+  id: "refresher-solving-equations",
+  type: "numeric",
+  prompt: "Solve 3x − 5 = 10. What is x?",
+  answer: 5,
+  tolerance: 0,
+  hints: ["First undo the −5 by adding 5 to both sides."],
+  explanation:
+    "Add 5 to both sides: 3x = 15. Divide both sides by 3: x = 5. Check: 3 × 5 − 5 = 10. ✓",
+};
+
+An equation stays true as long as you do **the same thing to both sides**. To
+find the unknown, undo what was done to it — in reverse order.
+
+For example, solve 2x + 3 = 11:
+
+1. Undo the "+ 3": subtract 3 from both sides → 2x = 8.
+2. Undo the "× 2": divide both sides by 2 → x = 4.
+
+Check by substituting back: 2 × 4 + 3 = 11. ✓

@@ -47,10 +47,23 @@ export const practice = [
 ];
 
 A **reflection** is a transformation that flips a figure across a line, called
-the _line of reflection_. The original figure and its image are mirror images:
+the <Term id="line-of-reflection">line of reflection</Term>. The original
+figure and its <Term id="image">image</Term> are mirror images:
 every point moves to the opposite side of the line, the same distance away.
 
 ## Reflecting over the axes
+
+<PredictThenCheck
+  prompt="The point (3, 1) is reflected over the y-axis. Where does its image land?"
+  choices={["(−3, 1)", "(3, −1)", "(−3, −1)", "(1, 3)"]}
+>
+  <p>
+    The image is <strong>(−3, 1)</strong>. The y-axis acts as the mirror, so
+    the point hops to the other side: the x-coordinate flips sign, and the
+    y-coordinate doesn't move. Try it on the grapher below — reflect over the
+    y-axis and watch which coordinate changes.
+  </p>
+</PredictThenCheck>
 
 Reflecting a point over the **x-axis** keeps its $x$-coordinate and negates its
 $y$-coordinate:
@@ -66,6 +79,6 @@ $$
 (x, y) \mapsto (-x, y)
 $$
 
-Because a reflection preserves distances and angles, the image is **congruent**
-to the original. So a segment $\overline{AB}$ and its image $\overline{A'B'}$
+Because a reflection preserves distances and angles, the image is{" "}
+<Term id="congruent">congruent</Term> to the original. So a segment $\overline{AB}$ and its image $\overline{A'B'}$
 always have the same length.
