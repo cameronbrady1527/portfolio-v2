@@ -1,0 +1,98 @@
+---
+title: Sequences of Transformations
+order: 5
+description: Chain transformations together, watch each step leave its trace, and discover that the order of the steps matters.
+---
+
+export const grapher = {
+  spec: {
+    preimage: {
+      type: "polygon",
+      vertices: [
+        { x: 1, y: 1 },
+        { x: 3, y: 1 },
+        { x: 1, y: 2 },
+      ],
+      label: "ABC",
+    },
+    transform: [
+      { kind: "translation", by: { dx: 3, dy: 0 } },
+      { kind: "rotation", about: { x: 0, y: 0 }, angle: 90 },
+    ],
+  },
+};
+
+export const practice = [
+  {
+    id: "seq-translate-then-rotate",
+    type: "mc",
+    prompt:
+      "The point (1, 2) is translated by ⟨2, 0⟩ and THEN rotated 90° counter-clockwise about the origin. Where does it end up?",
+    choices: ["(−2, 3)", "(0, 1)", "(3, 2)", "(2, −3)"],
+    answer: 0,
+    hints: [
+      "Do the steps in order: first (1, 2) + ⟨2, 0⟩, then apply (x, y) ↦ (−y, x) to the result.",
+    ],
+    explanation:
+      "Translate first: (1, 2) ↦ (3, 2). Then rotate: (3, 2) ↦ (−2, 3). Doing the rotation first and the translation second gives (0, 1) instead — order matters.",
+  },
+  {
+    id: "seq-reflect-then-translate",
+    type: "numeric",
+    prompt:
+      "The point (4, 1) is reflected over the y-axis, then translated by ⟨0, 3⟩. What is the x-coordinate of the final image?",
+    answer: -4,
+    tolerance: 0,
+    hints: [
+      "The reflection changes x; the vertical translation doesn't touch it.",
+    ],
+    explanation:
+      "Reflecting over the y-axis: (4, 1) ↦ (−4, 1). Translating by ⟨0, 3⟩ moves it to (−4, 4), so the x-coordinate is −4.",
+  },
+  {
+    id: "seq-order-matters",
+    type: "mc",
+    prompt:
+      "A triangle is rotated 90° about the origin and then translated by ⟨5, 0⟩. Compared with translating first and rotating second, the final images are…",
+    choices: [
+      "Usually in different positions — order matters",
+      "Always identical",
+      "Identical, but only for triangles",
+    ],
+    answer: 0,
+    hints: [
+      "Try it with one point, like (1, 0), and compare the two results.",
+    ],
+    explanation:
+      "Composition of transformations is not commutative in general. For (1, 0): rotate-then-translate gives (0, 1) ↦ (5, 1), while translate-then-rotate gives (6, 0) ↦ (0, 6). Same steps, different order, different landing spot.",
+  },
+];
+
+One transformation moves a figure once. A **sequence of transformations**
+applies several moves **in order**: the image of the first step becomes the
+preimage of the second, and so on. Use **Next step** on the figure above to
+play the sequence — each earlier position stays behind as a faded ghost so you
+can trace the whole journey.
+
+## Order matters
+
+Try this with the point $(1, 2)$:
+
+- **Translate by $\langle 2, 0 \rangle$, then rotate $90^\circ$:**
+  $(1, 2) \mapsto (3, 2) \mapsto (-2, 3)$
+- **Rotate $90^\circ$, then translate by $\langle 2, 0 \rangle$:**
+  $(1, 2) \mapsto (-2, 1) \mapsto (0, 1)$
+
+Same two moves, different order — different result. In the language of
+functions, composition of transformations is **not commutative** in general.
+
+## Sequences and congruence
+
+If every step of a sequence is a **rigid motion** (a translation, reflection,
+or rotation), then distances and angles survive every step, so the final image
+is **congruent** to the original figure. In fact, that is the definition:
+two figures are congruent exactly when some sequence of rigid motions carries
+one onto the other.
+
+Sneak one **dilation** into the sequence, though, and lengths get scaled —
+the final image is **similar** to the original instead.

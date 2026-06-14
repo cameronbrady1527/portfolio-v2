@@ -5,7 +5,9 @@
  * `Shape`/`Pt`/`ReflectLine` and exposes a small `Control<T>` DSL so a spec can
  * declare which parameters are interactive.
  */
-import type { Pt, Shape } from "./logic";
+import type { Pt, Shape, TransformStep } from "./logic";
+
+export type { TransformStep };
 
 export type { Pt, Shape };
 
@@ -96,7 +98,8 @@ export type TransformSpec =
 /** A full Grapher specification. */
 export type GrapherSpec = {
   preimage: Shape | Shape[];
-  transform: TransformSpec;
+  /** One transform (params may be interactive) or a FIXED ordered sequence. */
+  transform: TransformSpec | TransformStep[];
   /** Coordinate bounds; defaults to an auto-fit around pre/image. */
   bounds?: { x: [number, number]; y: [number, number] };
   /** Override the auto-generated a11y caption. */
