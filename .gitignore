@@ -23,6 +23,9 @@ out/
 # production
 build/
 
+# package build outputs (tsup)
+dist/
+
 # misc
 .DS_Store
 *.pem
