@@ -4,6 +4,8 @@ order: 5
 description: Chain transformations together, watch each step leave its trace, and discover that the order of the steps matters.
 ---
 
+import { SequenceBuilder } from "@cameronbrady/math-components";
+
 export const grapher = {
   spec: {
     preimage: {
@@ -96,3 +98,49 @@ one onto the other.
 
 Sneak one **dilation** into the sequence, though, and lengths get scaled —
 the final image is **similar** to the original instead.
+
+## Puzzle: get the triangle onto the target
+
+Build a sequence that carries $\triangle ABC$ exactly onto the dashed target.
+Two moves are enough — but the **order** is up to you to discover.
+
+<SequenceBuilder
+  puzzle={{
+    preimage: {
+      type: "polygon",
+      vertices: [
+        { x: 1, y: 1 },
+        { x: 3, y: 1 },
+        { x: 1, y: 2 },
+      ],
+      label: "ABC",
+    },
+    target: {
+      type: "polygon",
+      vertices: [
+        { x: -1, y: 4 },
+        { x: -1, y: 6 },
+        { x: -2, y: 4 },
+      ],
+      label: "Target",
+    },
+    palette: [
+      {
+        id: "translate",
+        label: "Translate by ⟨3, 0⟩",
+        step: { kind: "translation", by: { dx: 3, dy: 0 } },
+      },
+      {
+        id: "rotate",
+        label: "Rotate 90° about the origin",
+        step: { kind: "rotation", about: { x: 0, y: 0 }, angle: 90 },
+      },
+      {
+        id: "reflect",
+        label: "Reflect over the y-axis",
+        step: { kind: "reflection", over: { kind: "axis", axis: "y" } },
+      },
+    ],
+    maxSteps: 3,
+  }}
+/>

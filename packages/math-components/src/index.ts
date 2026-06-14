@@ -11,6 +11,13 @@
  * subpath and carries no React or mafs.
  */
 export { Grapher, slider, choose } from "./Grapher";
+export {
+  SequenceBuilder,
+  type SequenceBuilderProps,
+  type SequencePuzzle,
+  type PaletteMove,
+} from "./SequenceBuilder";
+export type { TransformStep } from "./GrapherTypes";
 export type {
   GrapherSpec,
   GrapherProps,
