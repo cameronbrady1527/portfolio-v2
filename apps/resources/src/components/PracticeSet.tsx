@@ -3,15 +3,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { Check, Lightbulb, X } from "lucide-react";
 import { Button, Card, CardContent, CardHeader, CardTitle, cn } from "@repo/ui";
-import { grade, type PracticeQuestion } from "@/lib/practice/grade";
 import {
+  grade,
   getTopic,
   loadProgress,
   recordAnswer,
   saveProgress,
+  type PracticeQuestion,
   type Progress,
-} from "@/lib/practice/progress";
+} from "@cameronbrady/math-components/logic";
 import { useTopicSlug } from "@/lib/topic-context";
+
+// The hub's localStorage namespace. The package's progress adapter is
+// key-agnostic; the hub owns and passes this key to preserve existing data.
+const RESOURCES_PROGRESS_KEY = "resources:progress";
 
 export interface PracticeSetProps {
   questions: PracticeQuestion[];
@@ -42,7 +47,7 @@ export function PracticeSet({ questions, topic, className }: PracticeSetProps) {
   // Restore answered state from storage on mount (refresh-safe).
   useEffect(() => {
     if (!slug) return;
-    const progress = loadProgress();
+    const progress = loadProgress(RESOURCES_PROGRESS_KEY);
     const stored = getTopic(progress, slug);
     setUi((prev) => {
       const next = { ...prev };
@@ -101,7 +106,7 @@ export function PracticeSet({ questions, topic, className }: PracticeSetProps) {
 
     // Persist this answer (and completion) under the topic slug.
     if (slug) {
-      const progress: Progress = loadProgress();
+      const progress: Progress = loadProgress(RESOURCES_PROGRESS_KEY);
       const next = recordAnswer(
         progress,
         slug,
@@ -109,7 +114,7 @@ export function PracticeSet({ questions, topic, className }: PracticeSetProps) {
         result.correct,
         questions.length,
       );
-      saveProgress(next);
+      saveProgress(RESOURCES_PROGRESS_KEY, next);
     }
   };
 

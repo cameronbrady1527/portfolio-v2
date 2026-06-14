@@ -8,7 +8,7 @@
  * so there is no floating-point drift and four 90° turns are exactly the
  * identity.
  */
-import type { Pt, Shape } from "@/lib/geometry";
+import type { Pt, Shape } from "./types";
 
 /** Supported quarter-turn angles, in degrees, CCW positive. */
 type QuarterTurn = 90 | 180 | 270 | -90;

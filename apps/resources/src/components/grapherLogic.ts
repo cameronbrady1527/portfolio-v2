@@ -2,8 +2,8 @@
  * Pure helpers behind <Grapher>: param resolution, image computation, bounds
  * auto-fit, and a11y caption generation. No React, no mafs.
  */
-import type { Pt, ReflectLine, Shape } from "@/lib/geometry";
-import { applyTransform } from "@/lib/geometry";
+import type { Pt, ReflectLine, Shape } from "@cameronbrady/math-components/logic";
+import { applyTransform } from "@cameronbrady/math-components/logic";
 import {
   isControl,
   type GrapherSpec,

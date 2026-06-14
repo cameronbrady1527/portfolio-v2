@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { rotate } from "@/lib/geometry/rotate";
-import type { Shape } from "@/lib/geometry";
+import { rotate } from "./rotate";
+import type { Shape } from "./types";
 
 const origin = { x: 0, y: 0 } as const;
 

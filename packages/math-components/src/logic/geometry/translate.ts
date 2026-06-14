@@ -10,7 +10,7 @@
  * (that integration belongs to the lead). This module only exports the pure
  * function + its tests.
  */
-import type { Pt, Shape } from "@/lib/geometry";
+import type { Pt, Shape } from "./types";
 
 /** Slide a single point by (dx, dy). */
 function translatePt(p: Pt, dx: number, dy: number): Pt {

@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import { Grapher, choose } from "./Grapher";
 import type { GrapherSpec, GrapherChange } from "./Grapher";
-import type { Shape } from "@/lib/geometry";
+import type { Shape } from "@cameronbrady/math-components/logic";
 
 // mafs measures its container with ResizeObserver; jsdom lacks it.
 beforeAll(() => {

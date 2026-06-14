@@ -4,7 +4,7 @@ import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import { PracticeSet } from "./PracticeSet";
-import type { PracticeQuestion } from "@/lib/practice/grade";
+import type { PracticeQuestion } from "@cameronbrady/math-components/logic";
 
 const mcQuestion: PracticeQuestion = {
   id: "mc1",
