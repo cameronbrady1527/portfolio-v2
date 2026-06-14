@@ -149,7 +149,7 @@ accessible.
 
 ### 6. Contribution & community ⬜
 
-Two distinct paths by contributor type:
+Three distinct paths by contributor type:
 
 - ⬜ **Developers → GitHub.** Direct technical contributors to **GitHub issue
   forms** (request topics/components, report issues) and a fork + PR flow for
@@ -158,7 +158,12 @@ Two distinct paths by contributor type:
   on the portfolio's contact form, but specific to this hub: request
   topics/subjects, suggest additions/tweaks, propose component ideas, give an
   ideal timeline.
-- 💭 `CONTRIBUTING.md` + component-authoring guide (linked from both paths).
+- ⬜ **Students → request a topic.** A **low-friction, minors-safe** "what do
+  you want to learn / can't find?" request — no account, no PII beyond the
+  request itself. Likely Resend-backed like the teacher form but lighter. Should
+  surface right where a student hits a dead end: offered inline from the
+  **Discovery & browse** epic when a search returns nothing.
+- 💭 `CONTRIBUTING.md` + component-authoring guide (linked from the developer path).
 
 ### 7. Data & persistence 💭  *(on the radar, deliberately deprioritized)*
 
@@ -186,7 +191,8 @@ Two distinct paths by contributor type:
   top-level section and inline topic/subject nav.
 - **Contribution** = split by contributor: developers → GitHub issue forms;
   teachers → a Resend-backed on-site form (like the portfolio contact form,
-  hub-specific).
+  hub-specific); **students → a low-friction, minors-safe "request a topic"**
+  (no account/PII, surfaced inline when a search finds nothing).
 - **Standards** = hand-written text + link, brought in per topic as needed; no
   upfront dataset. NYS first.
 - **Open-source packaging** = develop the components in-monorepo as a
