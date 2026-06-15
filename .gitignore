@@ -57,3 +57,8 @@ KICKOFF_BRIEF.md
 
 # local MCP server config (not shared via repo)
 .mcp.json
+
+# playwright (e2e smoke) artifacts
+test-results/
+playwright-report/
+playwright/.cache/

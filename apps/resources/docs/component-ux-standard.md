@@ -182,9 +182,12 @@ A click-through of the live topics surfaced three concrete issues, now addressed
 
 ## 4. Enforcement
 - **The §2 checklist is the primary gate** (in the PR template for component work).
-- **One automated guard now:** a Playwright smoke test that loads a topic and asserts the
-  rendered `.MafsView` background is paper (not black) and that shapes were drawn — the
-  single assertion that would have caught the black-box bug automatically.
+- **One automated guard now:** a Playwright smoke test (`apps/resources/e2e/
+  render.smoke.spec.ts`, run with `pnpm --filter resources test:e2e`) loads the Grapher
+  and both bespoke-widget topics and asserts each `.MafsView` background is paper (not
+  black) and that shapes were drawn — the single assertion that would have caught the
+  black-box bug automatically. Uses the bundled Chromium (no system Chrome); CI runs
+  `pnpm exec playwright install chromium` first, then serves the build and tests it.
 - **Full visual-regression screenshot diffing is deferred.** It adds ~3–5 hrs over the
   smoke test up front (mostly cross-environment rendering determinism — baselines must be
   pinned to an identical container or they flake), plus a permanent tax on every
