@@ -4,30 +4,49 @@
  * Import once in your app:  import "@cameronbrady/math-components/styles.css";
  *
  * Everything here is namespaced under the `cbmc-` prefix — no global utility
- * classes, nothing that can collide with your app's styles. The Grapher renders
- * correctly even without this stylesheet (every value has an inline fallback);
- * importing it just provides the graph-paper background and a single, tidy
- * theming surface.
+ * classes, nothing that can collide with your app's styles. The package owns its
+ * own look: import it and the figure renders finished, on warm paper, with no
+ * configuration from the host app. It harmonizes with any host by good defaults
+ * plus font inheritance — it never reaches into host tokens.
  *
  * THEMING — set any of these custom properties on an ancestor (or :root) to
  * re-theme the figure. Defaults match the Math Resources Hub's warm-paper look:
  *
- *   --cbmc-paper-bg        plane background            (default #f7f5ef)
- *   --cbmc-grid-line       graph-paper grid color      (default #d8d2c2)
- *   --cbmc-grid-size       graph-paper cell size       (default 26px)
- *   --cbmc-preimage-color  the original figure         (default #16231c)
- *   --cbmc-image-color     the transformed image       (default #1f8a5b)
- *   --cbmc-line-color      line of reflection          (default #43564b)
- *   --cbmc-caption-color   the a11y caption text        (default #43564b)
- *   --cbmc-radius          plane corner radius         (default 0.5rem)
- *   --cbmc-font            label font family    (default: inherits, else sans)
+ *   --cbmc-paper-bg          plane background           (default #f7f5ef)
+ *   --cbmc-grid-line         major graph-paper grid     (default #b8ae9c)
+ *   --cbmc-grid-line-subtle  minor grid subdivisions    (default #e6e0d4)
+ *   --cbmc-axis-color        default ink / axis text    (default #43564b)
+ *   --cbmc-origin-color      the bold x- and y-axes      (default #8a7f6c)
+ *   --cbmc-grid-size         CSS-fallback cell size      (default 26px)
+ *   --cbmc-preimage-color    the original figure         (default #16231c)
+ *   --cbmc-image-color       the transformed image       (default #1f8a5b)
+ *   --cbmc-line-color        line of reflection          (default #43564b)
+ *   --cbmc-caption-color     the a11y caption text        (default #43564b)
+ *   --cbmc-radius            plane corner radius         (default 0.5rem)
+ *   --cbmc-font              label font family    (default: inherits, else sans)
+ *
+ * To re-theme dark, override --cbmc-paper-bg / --cbmc-axis-color / the grid vars.
  */
 
-/* Scoped graph-paper background for the Grapher's coordinate plane. */
+/*
+ * The Grapher's coordinate plane.
+ *
+ * mafs (the rendering substrate) declares `--mafs-bg: black` ON `.MafsView`
+ * itself, so it paints opaque black over any background set on this wrapper.
+ * We override mafs's own variables on the `.cbmc-graph-paper .MafsView` scope —
+ * two classes outrank mafs's single-class declaration, so no `!important` is
+ * needed. The wrapper's own background-color is only a pre-mount fallback (shown
+ * for the instant before mafs renders); mafs itself draws the visible grid.
+ */
 .cbmc-graph-paper {
   background-color: var(--cbmc-paper-bg, #f7f5ef);
-  background-image:
-    linear-gradient(to right, var(--cbmc-grid-line, #d8d2c2) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--cbmc-grid-line, #d8d2c2) 1px, transparent 1px);
-  background-size: var(--cbmc-grid-size, 26px) var(--cbmc-grid-size, 26px);
+  border-radius: var(--cbmc-radius, 0.5rem);
+}
+
+.cbmc-graph-paper .MafsView {
+  --mafs-bg: var(--cbmc-paper-bg, #f7f5ef);
+  --mafs-fg: var(--cbmc-axis-color, #43564b);
+  --mafs-line-color: var(--cbmc-grid-line, #b8ae9c);
+  --grid-line-subdivision-color: var(--cbmc-grid-line-subtle, #e6e0d4);
+  --mafs-origin-color: var(--cbmc-origin-color, #8a7f6c);
 }
