@@ -50,3 +50,203 @@
   --grid-line-subdivision-color: var(--cbmc-grid-line-subtle, #e6e0d4);
   --mafs-origin-color: var(--cbmc-origin-color, #8a7f6c);
 }
+
+/* ── Interactive controls ───────────────────────────────────────────────────
+ * A small, self-contained control set shared by every widget (chips, buttons,
+ * icon buttons, the sequence build area). Goals: obviously clickable, AA
+ * contrast, ≥40px touch targets, a clearly visible :focus-visible ring, and
+ * motion that respects prefers-reduced-motion. Re-theme via the tokens below.
+ *
+ *   --cbmc-control-bg / -hover / -border / -border-hover / -fg
+ *   --cbmc-accent / -accent-hover   action + selected accent (AA on white)
+ *   --cbmc-found-bg / -found-fg     discovered/selected tint
+ *   --cbmc-muted                    secondary text
+ *   --cbmc-focus-ring               focus outline color
+ */
+.cbmc-instruction {
+  font-weight: 500;
+  margin: 0 0 0.6rem;
+}
+
+.cbmc-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.cbmc-chip,
+.cbmc-btn {
+  font: inherit;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.5rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--cbmc-control-border, #cfc7b5);
+  background: var(--cbmc-control-bg, #fffdf7);
+  color: var(--cbmc-control-fg, #2c3a32);
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    transform 60ms ease;
+}
+
+.cbmc-chip:hover,
+.cbmc-btn:hover {
+  background: var(--cbmc-control-bg-hover, #f1ebda);
+  border-color: var(--cbmc-control-border-hover, #b3a98f);
+}
+
+.cbmc-chip:active,
+.cbmc-btn:active {
+  transform: translateY(1px);
+}
+
+.cbmc-chip:focus-visible,
+.cbmc-btn:focus-visible,
+.cbmc-icon-btn:focus-visible {
+  outline: 3px solid var(--cbmc-focus-ring, #176844);
+  outline-offset: 2px;
+}
+
+.cbmc-chip:disabled,
+.cbmc-btn:disabled,
+.cbmc-icon-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* A leading "+" marks a chip that adds something. Decorative (not in the name). */
+.cbmc-chip-add::before {
+  content: "+";
+  font-weight: 700;
+  font-size: 1.05em;
+  color: var(--cbmc-accent, #176844);
+}
+
+/* The discovered / selected state — a tint with AA-contrast dark-green text. */
+.cbmc-chip-found {
+  background: var(--cbmc-found-bg, #e3f1e9);
+  border-color: var(--cbmc-accent, #176844);
+  color: var(--cbmc-found-fg, #14603f);
+  font-weight: 600;
+}
+.cbmc-chip-found::before {
+  content: "✓";
+  font-weight: 700;
+  color: var(--cbmc-accent, #176844);
+}
+
+/* The primary action (e.g. "Test my sequence"). */
+.cbmc-btn-primary {
+  background: var(--cbmc-accent, #176844);
+  border-color: var(--cbmc-accent, #176844);
+  color: #fff;
+  font-weight: 600;
+}
+.cbmc-btn-primary:hover {
+  background: var(--cbmc-accent-hover, #114e33);
+  border-color: var(--cbmc-accent-hover, #114e33);
+}
+
+/* Square icon buttons (reorder / remove). */
+.cbmc-icon-btn {
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--cbmc-control-border, #cfc7b5);
+  background: var(--cbmc-control-bg, #fffdf7);
+  color: var(--cbmc-control-fg, #2c3a32);
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+.cbmc-icon-btn:hover {
+  background: var(--cbmc-control-bg-hover, #f1ebda);
+}
+
+/* The "Your sequence" build area. */
+.cbmc-build {
+  margin-top: 0.85rem;
+  border: 1px dashed var(--cbmc-control-border, #cfc7b5);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+.cbmc-build-head {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cbmc-muted, #6b6353);
+  margin: 0 0 0.5rem;
+}
+.cbmc-build-empty {
+  color: var(--cbmc-muted, #6b6353);
+  font-size: 0.875rem;
+  margin: 0;
+}
+.cbmc-step-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.cbmc-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 0.4rem;
+  background: var(--cbmc-control-bg, #fffdf7);
+  border: 1px solid var(--cbmc-control-border, #cfc7b5);
+}
+.cbmc-step-num {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--cbmc-accent, #176844);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.cbmc-step-label {
+  flex: 1;
+}
+
+/* Grouped control sections (e.g. Rotations / Reflections) + progress readout. */
+.cbmc-group-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cbmc-muted, #6b6353);
+  margin: 0.75rem 0 0.4rem;
+}
+.cbmc-progress {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cbmc-muted, #6b6353);
+  margin: 0 0 0.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cbmc-chip,
+  .cbmc-btn,
+  .cbmc-icon-btn {
+    transition: none;
+  }
+  .cbmc-chip:active,
+  .cbmc-btn:active {
+    transform: none;
+  }
+}
