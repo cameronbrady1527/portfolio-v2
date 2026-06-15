@@ -91,11 +91,17 @@ export function PracticeSet({ questions, topic, className }: PracticeSetProps) {
 
   const check = (question: PracticeQuestion) => {
     const state = getState(question.id);
-    const response =
-      question.type === "mc"
-        ? Number.parseInt(state.response, 10)
-        : Number.parseFloat(state.response);
-    if (Number.isNaN(response)) return;
+    // mc/numeric grade on a number; expression/equation grade on the raw text.
+    let response: number | string;
+    if (question.type === "mc") {
+      response = Number.parseInt(state.response, 10);
+    } else if (question.type === "numeric") {
+      response = Number.parseFloat(state.response);
+    } else {
+      response = state.response;
+    }
+    if (typeof response === "number" && Number.isNaN(response)) return;
+    if (typeof response === "string" && response.trim() === "") return;
 
     const result = grade(question, response);
 
@@ -212,7 +218,7 @@ function QuestionCard({
               </label>
             ))}
           </fieldset>
-        ) : (
+        ) : question.type === "numeric" ? (
           <div className="flex items-center gap-2">
             <label
               htmlFor={`input-${question.id}`}
@@ -235,6 +241,35 @@ function QuestionCard({
                 {question.unit}
               </span>
             ) : null}
+          </div>
+        ) : (
+          // expression | equation: free-form input, judged by equivalence.
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor={`input-${question.id}`}
+              className="text-sm text-muted-foreground"
+            >
+              Your answer
+            </label>
+            <input
+              id={`input-${question.id}`}
+              type="text"
+              inputMode="text"
+              autoComplete="off"
+              autoCapitalize="off"
+              spellCheck={false}
+              disabled={answered}
+              value={state.response}
+              onChange={(e) => onResponse(e.target.value)}
+              placeholder={
+                question.type === "equation" ? "e.g. y = 2x + 1" : "e.g. 2x + 3"
+              }
+              className="w-full max-w-sm rounded-md border border-border bg-background px-3 py-2 font-mono text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:opacity-50"
+            />
+            <p className="text-xs text-muted-foreground">
+              Any equivalent form is accepted. Use <code>^</code> for powers and{" "}
+              <code>*</code> for multiply (or just write <code>2x</code>).
+            </p>
           </div>
         )}
 

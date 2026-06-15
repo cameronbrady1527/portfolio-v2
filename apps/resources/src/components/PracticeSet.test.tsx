@@ -27,6 +27,24 @@ const numericQuestion: PracticeQuestion = {
   explanation: "sqrt(100) = 10.",
 };
 
+const expressionQuestion: PracticeQuestion = {
+  id: "expr1",
+  type: "expression",
+  prompt: "Simplify 2x + 3x.",
+  answer: "5x",
+  hints: ["Combine like terms."],
+  explanation: "2x + 3x = 5x.",
+};
+
+const equationQuestion: PracticeQuestion = {
+  id: "eqn1",
+  type: "equation",
+  prompt: "Write the line through (0, 1) with slope 2.",
+  answer: "y = 2x + 1",
+  hints: ["Use slope-intercept form."],
+  explanation: "y = 2x + 1.",
+};
+
 beforeEach(() => {
   window.localStorage.clear();
 });
@@ -71,6 +89,42 @@ describe("PracticeSet", () => {
     await user.click(screen.getByRole("button", { name: "Check" }));
 
     expect(within(screen.getByTestId("feedback")).getByText("Correct")).toBeInTheDocument();
+  });
+
+  it("accepts an equivalent (non-string-match) expression answer", async () => {
+    const user = userEvent.setup();
+    render(<PracticeSet questions={[expressionQuestion]} topic="t/expr" />);
+
+    await user.type(screen.getByLabelText("Your answer"), "x + 4x");
+    await user.click(screen.getByRole("button", { name: "Check" }));
+
+    expect(
+      within(screen.getByTestId("feedback")).getByText("Correct"),
+    ).toBeInTheDocument();
+  });
+
+  it("marks a wrong expression as incorrect", async () => {
+    const user = userEvent.setup();
+    render(<PracticeSet questions={[expressionQuestion]} topic="t/expr-x" />);
+
+    await user.type(screen.getByLabelText("Your answer"), "6x");
+    await user.click(screen.getByRole("button", { name: "Check" }));
+
+    expect(
+      within(screen.getByTestId("feedback")).getByText("Incorrect"),
+    ).toBeInTheDocument();
+  });
+
+  it("accepts a rearranged equivalent equation answer", async () => {
+    const user = userEvent.setup();
+    render(<PracticeSet questions={[equationQuestion]} topic="t/eqn" />);
+
+    await user.type(screen.getByLabelText("Your answer"), "2y = 4x + 2");
+    await user.click(screen.getByRole("button", { name: "Check" }));
+
+    expect(
+      within(screen.getByTestId("feedback")).getByText("Correct"),
+    ).toBeInTheDocument();
   });
 
   it("reveals a hint on request, one at a time", async () => {
