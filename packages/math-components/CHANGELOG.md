@@ -1,5 +1,16 @@
 # @cameronbrady/math-components
 
+## 0.1.1
+
+### Patch Changes
+
+- 689cbce: Docs: expand the README to document the full published surface — the
+  `SequenceBuilder` and `SymmetryExplorer` components, all five Grapher transform
+  kinds plus step-through sequences, and the complete `/logic` API (dilation /
+  stretch, sequence composition, symmetry detection, coincidence helpers, the
+  `expression`/`equation` grading types, and the machine-checkable
+  expression/equation equivalence engine).
+
 ## 0.1.0
 
 ### Minor Changes
@@ -8,7 +19,6 @@
   framework-agnostic logic core that carries no React and no mafs.
 
   **Components** (main entry):
-
   - `Grapher` — a controls-first coordinate-plane transformations visualizer
     (reflection / translation / rotation / dilation / stretch) with an
     auto-generated a11y caption, a stable viewport, vertex labels, an optional
@@ -22,7 +32,6 @@
   - A self-contained, scoped, themeable stylesheet (`/styles.css`).
 
   **`/logic` subpath** — framework-agnostic, dependency-free:
-
   - Pure geometry: `reflect` / `translate` / `rotate` / `dilate` / `stretch`,
     the `applyTransform` dispatcher, `applySequence` / `applyStep`, symmetry
     detection (`checkSymmetry` / `allSymmetries`), and tolerance-based
