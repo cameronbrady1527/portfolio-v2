@@ -250,15 +250,28 @@ function describeLine(line: ReflectLine): string {
 
 /** Human-readable description of a single shape. */
 function describeShape(shape: Shape): string {
-  const name = shape.label ? `${shape.label} ` : "";
   switch (shape.type) {
     case "point":
-      return `${name}point (${shape.at.x}, ${shape.at.y})`;
+      return shape.label
+        ? `point ${shape.label}`
+        : `point (${shape.at.x}, ${shape.at.y})`;
     case "segment":
-      return `${name}segment`;
-    case "polygon":
-      return `${name}polygon with ${shape.vertices.length} vertices`;
+      return shape.label ? `segment ${shape.label}` : "segment";
+    case "polygon": {
+      const n = shape.vertices.length;
+      const kind = n === 3 ? "triangle" : n === 4 ? "quadrilateral" : `${n}-gon`;
+      return shape.label ? `${kind} ${shape.label}` : kind;
+    }
   }
+}
+
+/** Prime every letter of a label: "ABC" → "A′B′C′". */
+const PRIME = "′";
+function primedLabel(label: string): string {
+  return label
+    .split("")
+    .map((c) => `${c}${PRIME}`)
+    .join("");
 }
 
 /** Auto-generate an a11y caption for the current figure. */
@@ -274,31 +287,40 @@ export function autoCaption(
       ? describeShape(shapes[0])
       : `${shapes.length} shapes`;
 
+  // Name the image with primed labels ("triangle ABC … → triangle A′B′C′"),
+  // when the figure is a single labeled polygon.
+  const first = shapes[0];
+  const imageSubject =
+    shapes.length === 1 && first.type === "polygon" && first.label
+      ? describeShape({ ...first, label: primedLabel(first.label) })
+      : null;
+  const arrow = imageSubject ? ` → ${imageSubject}` : "";
+
   const t = spec.transform;
   if (Array.isArray(t)) {
     return stepCaption(spec, t.length);
   }
   if (t.kind === "reflection") {
     const line = resolveReflectLine(t.over, params);
-    return `A ${subject} reflected across ${describeLine(line)}.`;
+    return `A ${subject} reflected across ${describeLine(line)}${arrow}.`;
   }
   if (t.kind === "translation") {
     const dx = resolveParam(t.by.dx, "dx", params);
     const dy = resolveParam(t.by.dy, "dy", params);
-    return `A ${subject} translated by the vector (${dx}, ${dy}).`;
+    return `A ${subject} translated by the vector (${dx}, ${dy})${arrow}.`;
   }
   if (t.kind === "rotation") {
     const angle = resolveParam(t.angle, "angle", params);
-    return `A ${subject} rotated ${angle}° about (${t.about.x}, ${t.about.y}).`;
+    return `A ${subject} rotated ${angle}° about (${t.about.x}, ${t.about.y})${arrow}.`;
   }
   if (t.kind === "dilation") {
     const factor = resolveParam(t.factor, "factor", params);
-    return `A ${subject} dilated about (${t.about.x}, ${t.about.y}) by a scale factor of ${factor}.`;
+    return `A ${subject} dilated about (${t.about.x}, ${t.about.y}) by a scale factor of ${factor}${arrow}.`;
   }
   const axis = resolveParam(t.axis, "axis", params);
   const factor = resolveParam(t.factor, "factor", params);
   const direction = axis === "x" ? "horizontally" : "vertically";
-  return `A ${subject} stretched ${direction} by a factor of ${factor}.`;
+  return `A ${subject} stretched ${direction} by a factor of ${factor}${arrow}.`;
 }
 
 /** One edge's measurement: midpoint anchor, exact length, display text. */

@@ -260,12 +260,39 @@
   color: var(--cbmc-control-fg, #2c3a32);
 }
 
-/* A segmented choose: the active option takes the accent tint (no ✓ glyph). */
-.cbmc-segmented .cbmc-chip[aria-pressed="true"] {
+/* A pressed/selected chip (segmented option, or a toggle like "Show side
+ * lengths") takes the accent tint. The symmetry "found" chip adds a ✓ on top. */
+.cbmc-chip[aria-pressed="true"] {
   background: var(--cbmc-found-bg, #e3f1e9);
   border-color: var(--cbmc-accent, #176844);
   color: var(--cbmc-found-fg, #14603f);
   font-weight: 600;
+}
+
+/* Original-vs-image legend. */
+.cbmc-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--cbmc-muted, #6b6353);
+}
+.cbmc-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.cbmc-swatch {
+  width: 1.1rem;
+  height: 0.8rem;
+  border-radius: 0.15rem;
+  border: 2px solid transparent;
+  opacity: 0.85;
+}
+.cbmc-swatch-dashed {
+  background: transparent !important;
+  border-style: dashed;
 }
 
 /* Themed range slider — track + thumb, keyboard-focusable. */

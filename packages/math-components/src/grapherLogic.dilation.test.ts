@@ -47,7 +47,7 @@ describe("Grapher spec: dilation", () => {
 
   it("captions the dilation with center and factor", () => {
     expect(autoCaption(spec, { "Scale factor": 2 })).toBe(
-      "A ABCD polygon with 4 vertices dilated about (0, 0) by a scale factor of 2.",
+      "A quadrilateral ABCD dilated about (0, 0) by a scale factor of 2 → quadrilateral A′B′C′D′.",
     );
   });
 });
@@ -78,7 +78,7 @@ describe("Grapher spec: stretch", () => {
     expect(
       autoCaption(spec, { "Stretch direction": "x", "Stretch factor": 3 }),
     ).toBe(
-      "A ABCD polygon with 4 vertices stretched horizontally by a factor of 3.",
+      "A quadrilateral ABCD stretched horizontally by a factor of 3 → quadrilateral A′B′C′D′.",
     );
   });
 });

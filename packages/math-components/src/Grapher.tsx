@@ -272,6 +272,9 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
   // Sequence mode: an array transform is played step by step (0 = start).
   const sequence = Array.isArray(spec.transform) ? spec.transform : null;
   const [stepIndex, setStepIndex] = useState(0);
+
+  // Student-controlled side-length labels; the spec sets the initial state.
+  const [showMeasure, setShowMeasure] = useState(spec.showMeasurements ?? false);
   const sequenceTrails = useMemo(
     () =>
       sequence
@@ -331,6 +334,8 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
   }, [spec.transform]);
 
   const showImage = spec.showImage !== false;
+  const showLegend = spec.showLegend !== false && showImage;
+  const canMeasure = preimageShapes.some((s) => s.type !== "point");
   const captionId = "grapher-caption";
 
   return (
@@ -339,6 +344,10 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
       style={{ margin: 0 }}
       aria-describedby={captionId}
     >
+      {spec.instruction ? (
+        <p className="cbmc-instruction">{spec.instruction}</p>
+      ) : null}
+
       <div
         className="cbmc-graph-paper"
         style={{ borderRadius: "var(--cbmc-radius, 0.5rem)" }}
@@ -395,7 +404,7 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
               ))
             : null}
 
-          {spec.showMeasurements
+          {showMeasure
             ? [
                 ...preimageShapes.map((s, i) => ({ s, color: PREIMAGE_COLOR, k: `mp-${i}` })),
                 ...(showImage && image
@@ -417,6 +426,25 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
             : null}
         </Mafs>
       </div>
+
+      {showLegend ? (
+        <div className="cbmc-legend" aria-hidden="true">
+          <span className="cbmc-legend-item">
+            <span
+              className="cbmc-swatch"
+              style={{ background: PREIMAGE_COLOR, borderColor: PREIMAGE_COLOR }}
+            />
+            Original
+          </span>
+          <span className="cbmc-legend-item">
+            <span
+              className="cbmc-swatch cbmc-swatch-dashed"
+              style={{ borderColor: IMAGE_COLOR }}
+            />
+            Image
+          </span>
+        </div>
+      ) : null}
 
       {sequence ? (
         <div
@@ -467,6 +495,19 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
               onValue={(v) => setParam(key, v)}
             />
           ))}
+        </div>
+      ) : null}
+
+      {canMeasure ? (
+        <div className="cbmc-controls" style={{ marginTop: "0.6rem" }}>
+          <button
+            type="button"
+            className="cbmc-chip"
+            aria-pressed={showMeasure}
+            onClick={() => setShowMeasure((v) => !v)}
+          >
+            {showMeasure ? "Hide side lengths" : "Show side lengths"}
+          </button>
         </div>
       ) : null}
 

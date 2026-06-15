@@ -22,7 +22,7 @@ describe("Grapher spec: sequence", () => {
 
   it("captions each step of the sequence, including the start state", () => {
     expect(stepCaption(spec, 0)).toBe(
-      "A P point (1, 2) before any of the 2 steps.",
+      "A point P before any of the 2 steps.",
     );
     expect(stepCaption(spec, 1)).toBe(
       "Step 1 of 2: translated by the vector (2, 0).",
