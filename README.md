@@ -21,13 +21,24 @@ It's also designed to grow: an author drops in a single file and a new topic sho
 |------|------------|
 | `apps/resources` | The Math Resources Hub (resources.cameronbrady.dev) |
 | `apps/portfolio` | The personal portfolio site (cameronbrady.dev) |
+| `packages/math-components` | The open component library, published on npm as [`@cameronbrady/math-components`](https://www.npmjs.com/package/@cameronbrady/math-components) |
 | `packages/ui` | Shared design system — tokens + a few UI primitives both apps use |
 
 Under the hood: a [Turborepo](https://turbo.build/) monorepo on Next.js 15 (App Router) and TypeScript, with Tailwind v4, file-based MDX content, and the math interactives built on [mafs](https://mafs.dev). 100+ unit tests and counting. See the [full roadmap](./apps/resources/docs/ROADMAP.md) for where it's headed.
 
-## Where this is going: an open component library
+## An open component library
 
-The interactive pieces — the coordinate-plane **Grapher**, the **PracticeSet**, and the virtual manipulatives still to come — are being shaped into a standalone, installable package so any educator or developer can drop accessible math interactives into their *own* site. That's the real open-source goal here, and it's actively in progress. ⭐ Star or watch the repo to follow along.
+The interactive pieces behind the Hub are open source and **published on npm**, so any educator or developer can drop accessible math interactives into their *own* site:
+
+[![npm version](https://img.shields.io/npm/v/@cameronbrady/math-components.svg)](https://www.npmjs.com/package/@cameronbrady/math-components)
+
+```bash
+npm install @cameronbrady/math-components
+```
+
+[`@cameronbrady/math-components`](https://www.npmjs.com/package/@cameronbrady/math-components) ships the controls-first coordinate-plane **Grapher**, a transformation-sequence puzzle (**SequenceBuilder**), and a **SymmetryExplorer** — plus a framework-agnostic **`/logic`** entry (geometry, answer-grading, and a machine-checkable expression/equation engine) that carries no React or rendering dependency. More manipulatives are on the way. ⭐ Star or watch the repo to follow along.
+
+See the [package README](./packages/math-components/README.md) for the full API.
 
 ## Contributing
 
