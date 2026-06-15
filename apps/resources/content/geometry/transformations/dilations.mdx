@@ -64,6 +64,20 @@ export const practice = [
     explanation:
       "Dilations preserve angle measures — the image is similar to the preimage. Side lengths and the perimeter are both multiplied by the scale factor (here, doubled), so they are not preserved.",
   },
+  {
+    id: "dilate-image-x-expression",
+    type: "expression",
+    prompt:
+      "A dilation about the origin with scale factor k sends the point (a, b) to (ka, kb). Write an expression for the image's x-coordinate in terms of k and a.",
+    answer: "k*a",
+    variables: ["k", "a"],
+    hints: [
+      "About the origin, every coordinate is multiplied by the scale factor.",
+      "You can write it as ka, k*a, or a*k — any equivalent form is accepted.",
+    ],
+    explanation:
+      "About the origin, (x, y) ↦ (kx, ky), so the x-coordinate a becomes ka. Order and notation don't matter: ka, a·k, and k*a are all the same expression.",
+  },
 ];
 
 A **dilation** resizes a figure from a fixed point, called the

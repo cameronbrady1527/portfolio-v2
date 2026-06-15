@@ -77,3 +77,62 @@ describe("grade — mc", () => {
     expect(grade(mc(), 2).correct).toBe(false);
   });
 });
+
+const expression = (
+  overrides: Partial<Extract<PracticeQuestion, { type: "expression" }>> = {},
+): Extract<PracticeQuestion, { type: "expression" }> => ({
+  id: "e1",
+  type: "expression",
+  prompt: "Simplify 2x + 3x",
+  answer: "5x",
+  hints: [],
+  explanation: "Combine like terms.",
+  ...overrides,
+});
+
+const equation = (
+  overrides: Partial<Extract<PracticeQuestion, { type: "equation" }>> = {},
+): Extract<PracticeQuestion, { type: "equation" }> => ({
+  id: "q1",
+  type: "equation",
+  prompt: "Write the equation of the line through (0,1) with slope 2",
+  answer: "y = 2x + 1",
+  hints: [],
+  explanation: "Slope-intercept form.",
+  ...overrides,
+});
+
+describe("grade — expression", () => {
+  it("accepts an algebraically-equal form, not just a string match", () => {
+    expect(grade(expression(), "x + 4x").correct).toBe(true);
+    expect(grade(expression(), "5*x").correct).toBe(true);
+  });
+
+  it("rejects a different expression", () => {
+    expect(grade(expression(), "6x").correct).toBe(false);
+  });
+
+  it("treats unparseable input as incorrect, not an error", () => {
+    expect(grade(expression(), "5x +").correct).toBe(false);
+    expect(grade(expression(), "%%%").correct).toBe(false);
+  });
+
+  it("treats blank input as incorrect", () => {
+    expect(grade(expression(), "   ").correct).toBe(false);
+  });
+});
+
+describe("grade — equation", () => {
+  it("accepts a rearranged/rescaled equivalent equation", () => {
+    expect(grade(equation(), "2y = 4x + 2").correct).toBe(true);
+    expect(grade(equation(), "y - 2x - 1 = 0").correct).toBe(true);
+  });
+
+  it("rejects a different line", () => {
+    expect(grade(equation(), "y = 2x + 3").correct).toBe(false);
+  });
+
+  it("treats input lacking an '=' as incorrect", () => {
+    expect(grade(equation(), "2x + 1").correct).toBe(false);
+  });
+});

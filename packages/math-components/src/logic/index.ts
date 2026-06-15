@@ -37,6 +37,24 @@ export { rotate } from "./geometry/rotate";
 export { grade } from "./practice/grade";
 export type { PracticeQuestion, GradeResult } from "./practice/grade";
 
+// Practice — expression/equation parsing & equivalence (machine-checkable,
+// dependency-free). Exposed for authors/tooling that want to validate content.
+export {
+  parseExpression,
+  parseEquation,
+  evaluate,
+  expressionsEquivalent,
+  equationsEquivalent,
+  checkExpressionAnswer,
+  checkEquationAnswer,
+  ParseError,
+  TokenizeError,
+} from "./practice/expression";
+export type {
+  Node as ExpressionNode,
+  Equation as ParsedEquation,
+} from "./practice/expression";
+
 // Practice — progress: a key-agnostic pure core plus a storage-key-parameterized
 // localStorage adapter. Callers supply their own storage key.
 export {
