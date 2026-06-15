@@ -49,15 +49,28 @@ export const practice = [
   },
 ];
 
-A shape has **symmetry** when some rigid motion — other than just leaving it
-alone — carries it **exactly onto itself**. There are two kinds to hunt for:
+A shape has **symmetry** when some <Term id="rigid-motion">rigid motion</Term> —
+other than just leaving it alone — carries it **exactly onto itself**. There are
+two kinds to hunt for:
 
-- **Rotation symmetry:** spinning the shape about its center by some angle
-  less than $360^\circ$ lands it back on itself.
-- **Line (reflection) symmetry:** flipping the shape across some line through
-  its center lands it back on itself.
+- **<Term id="rotation-symmetry">Rotation symmetry</Term>:** spinning the shape
+  about its center by some angle less than $360^\circ$ lands it back on itself.
+- **<Term id="line-of-symmetry">Line (reflection) symmetry</Term>:** flipping
+  the shape across some line through its center lands it back on itself.
 
 ## Hunt: the square
+
+<PredictThenCheck
+  prompt="Before you start hunting: how many symmetries does a square have — counting every rotation and every reflection, but not the do-nothing move?"
+  choices={["4", "7", "8", "Infinitely many"]}
+>
+  <p>
+    A square has <strong>7</strong>: three nontrivial rotations (90°, 180°, and
+    270° about its center) and four lines of symmetry (the two diagonals plus
+    the horizontal and vertical lines through the center). Knowing the count is
+    the easy part — now hunt down <em>which</em> moves they are.
+  </p>
+</PredictThenCheck>
 
 A square is a symmetry jackpot. Try every proposal below — the explorer
 checks each one exactly and keeps count. Can you find **all 7**?
@@ -98,6 +111,30 @@ at all: "irregular" shapes are part of the standard too.)
 For a **regular polygon** with $n$ sides, the pattern is beautiful: $n - 1$
 rotations (by multiples of $360^\circ / n$) and $n$ lines of symmetry. The
 square fits perfectly: $3$ rotations $+$ $4$ lines $= 7$ symmetries.
+
+<WorkedExample title="Count the symmetries of a regular pentagon">
+  <Step
+    check={{
+      id: "we-pentagon-lines",
+      type: "mc",
+      prompt: "How many lines of symmetry does a regular n-gon have?",
+      choices: ["n", "n − 1", "2n"],
+      answer: 0,
+      hints: ["Each line runs through one vertex and the midpoint of the opposite side."],
+      explanation:
+        "A regular n-gon has exactly n lines of symmetry. For odd n each line joins a vertex to the midpoint of the opposite side.",
+    }}
+  >
+    Start with the lines: how many does a regular n-gon have?
+  </Step>
+  <Step>
+    A pentagon has n = 5, so it has 5 lines of symmetry.
+  </Step>
+  <Step>
+    It also has n − 1 = 4 nontrivial rotations — by 72°, 144°, 216°, and 288°
+    (each a multiple of 360° ÷ 5). Total: 4 + 5 = 9 symmetries.
+  </Step>
+</WorkedExample>
 
 Irregular shapes break the pattern in interesting ways — a rectangle keeps
 only the half-turn and two of the four lines, and a generic parallelogram

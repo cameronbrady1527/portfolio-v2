@@ -66,14 +66,18 @@ export const practice = [
   },
 ];
 
-A **dilation** resizes a figure from a fixed point, called the **center of
-dilation**, by a **scale factor** $k$. Every point moves along the ray from the
-center, so its distance from the center is multiplied by $k$. A dilation must
-always be described with *both* pieces: the center and the scale factor.
+A **dilation** resizes a figure from a fixed point, called the
+<Term id="center-of-dilation">center of dilation</Term>, by a **scale factor**
+$k$. Every point moves along the ray from the center, so its distance from the
+center is multiplied by $k$. A dilation must always be described with *both*
+pieces: the center and the scale factor.
 
 ## Dilating about the origin
 
-When the center is the origin, the rule is simply
+<Refresher id="ratios" />
+
+A scale factor behaves like a ratio: it **multiplies**, it never adds. When the
+center is the origin, the rule is simply
 
 $$
 (x, y) \mapsto (kx,\, ky)
@@ -83,16 +87,54 @@ With $k = 2$, the point $(2, 3)$ lands on $(4, 6)$ — twice as far from the
 origin, in the same direction. A factor $k > 1$ **enlarges** the figure; a
 factor between $0$ and $1$ **reduces** it.
 
+<WorkedExample title="Dilate (6, 4) about the origin by a scale factor of ½">
+  <Step
+    check={{
+      id: "we-dilation-rule",
+      type: "mc",
+      prompt: "Which rule applies for a dilation about the origin?",
+      choices: ["(x, y) ↦ (kx, ky)", "(x, y) ↦ (x + k, y + k)", "(x, y) ↦ (kx, y)"],
+      answer: 0,
+      hints: ["A dilation multiplies a distance — it scales, it doesn't shift."],
+      explanation:
+        "About the origin every coordinate is multiplied by the same factor: (x, y) ↦ (kx, ky). Adding k would be a translation idea, not a dilation.",
+    }}
+  >
+    Pick the rule for a dilation centered at the origin.
+  </Step>
+  <Step>
+    Substitute k = ½: (6, 4) ↦ (½ · 6, ½ · 4) = (3, 2).
+  </Step>
+  <Step>
+    Check the direction: (3, 2) sits on the same ray from the origin as (6, 4),
+    just half as far out. A factor between 0 and 1 pulls every point toward the
+    center.
+  </Step>
+</WorkedExample>
+
 Watch the side lengths in the figure above as you drag the scale factor: every
 length is multiplied by $k$, so with $k = 2$ each side of the image is exactly
 twice its preimage side.
 
 ## What a dilation preserves
 
-A dilation is **not** a rigid motion: unless $k = 1$, distances change, so the
-image is not congruent to the preimage. But the image is always the **same
-shape** — every angle keeps its measure — which makes the image **similar** to
-the original.
+<PredictThenCheck
+  prompt="You double a triangle with a dilation (k = 2) about the origin. What happens to its perimeter?"
+  choices={["It doubles", "It stays the same", "It quadruples", "It depends on the triangle"]}
+>
+  <p>
+    The perimeter <strong>doubles</strong>. Every side length is multiplied by
+    the scale factor, and the perimeter is just the sum of the sides — so it
+    scales by the same factor, for any triangle. (Area is the surprise: it
+    scales by k² = 4.) The one thing that doesn't budge is the angles.
+  </p>
+</PredictThenCheck>
+
+A dilation is **not** a <Term id="rigid-motion">rigid motion</Term>: unless
+$k = 1$, distances change, so the image is not <Term id="congruent">congruent</Term>
+to the preimage. But the image is always the **same shape** — every angle keeps
+its measure — which makes the image <Term id="similar">similar</Term> to the
+original.
 
 Two more facts you can check experimentally on the figure:
 
