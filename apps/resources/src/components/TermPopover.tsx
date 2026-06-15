@@ -1,6 +1,14 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { createPortal } from "react-dom";
 
 export interface TermPopoverProps {
   /** The canonical term (the trigger's accessible name). */
@@ -11,12 +19,44 @@ export interface TermPopoverProps {
   children: ReactNode;
 }
 
+const PANEL_WIDTH = 288; // w-72
+const GAP = 8;
+
 // A click/keyboard disclosure — deliberately not hover-only, so touch and
 // keyboard users are first-class. Escape and outside interaction close it.
+//
+// The definition panel is rendered in a portal on document.body rather than
+// inline. The trigger lives inside MDX prose (a <p>), and the definition itself
+// is MDX (which emits <p>), so rendering the panel inline would nest <p> in <p>
+// — invalid HTML and a React hydration error. Portaling also frees the panel
+// from any overflow-clipping ancestor.
 export function TermPopover({ term, label, children }: TermPopoverProps) {
   const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLSpanElement>(null);
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
+
+  // Position the portaled panel just below the trigger, clamped to the viewport.
+  useLayoutEffect(() => {
+    if (!open) return;
+    const place = () => {
+      const r = triggerRef.current?.getBoundingClientRect();
+      if (!r) return;
+      const left = Math.min(
+        Math.max(GAP, r.left),
+        window.innerWidth - PANEL_WIDTH - GAP,
+      );
+      setPos({ top: r.bottom + GAP, left });
+    };
+    place();
+    window.addEventListener("scroll", place, true);
+    window.addEventListener("resize", place);
+    return () => {
+      window.removeEventListener("scroll", place, true);
+      window.removeEventListener("resize", place);
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -24,7 +64,11 @@ export function TermPopover({ term, label, children }: TermPopoverProps) {
       if (e.key === "Escape") setOpen(false);
     };
     const onPointerDown = (e: PointerEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
+      const t = e.target as Node;
+      if (
+        !triggerRef.current?.contains(t) &&
+        !panelRef.current?.contains(t)
+      ) {
         setOpen(false);
       }
     };
@@ -37,8 +81,9 @@ export function TermPopover({ term, label, children }: TermPopoverProps) {
   }, [open]);
 
   return (
-    <span ref={rootRef} className="relative inline-block">
+    <span className="relative inline-block">
       <button
+        ref={triggerRef}
         type="button"
         aria-expanded={open}
         aria-controls={panelId}
@@ -48,16 +93,21 @@ export function TermPopover({ term, label, children }: TermPopoverProps) {
       >
         {label ?? term}
       </button>
-      {open && (
-        <span
-          id={panelId}
-          role="note"
-          aria-label={`Definition of ${term}`}
-          className="absolute left-0 top-full z-10 mt-2 block w-72 rounded-md border border-border bg-popover p-4 text-sm leading-relaxed text-popover-foreground shadow-md"
-        >
-          {children}
-        </span>
-      )}
+      {open &&
+        pos &&
+        createPortal(
+          <div
+            ref={panelRef}
+            id={panelId}
+            role="note"
+            aria-label={`Definition of ${term}`}
+            style={{ position: "fixed", top: pos.top, left: pos.left, width: PANEL_WIDTH }}
+            className="z-50 rounded-md border border-border bg-popover p-4 text-sm leading-relaxed text-popover-foreground shadow-md"
+          >
+            {children}
+          </div>,
+          document.body,
+        )}
     </span>
   );
 }

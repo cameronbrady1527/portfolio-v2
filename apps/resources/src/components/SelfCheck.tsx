@@ -71,7 +71,7 @@ export function SelfCheck({
       ) : (
         <input
           type="text"
-          inputMode="decimal"
+          inputMode="text"
           value={response}
           disabled={solved}
           onChange={(e) => setResponse(e.target.value)}

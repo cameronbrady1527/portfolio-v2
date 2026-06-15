@@ -76,6 +76,11 @@ items are done where they pay off, not mandated. Use as a PR checklist.
       passing — do not regress.)
 - [ ] **Consistent interaction grammar** with the other components: same control
       styling, same layout order (instruction → figure → controls → caption).
+- [ ] **Stable frame of reference.** The viewport is fixed; as the user drives the
+      controls the *shape* moves and the grid holds still — never the reverse. (See §3.7.)
+- [ ] **Works on touch with a full keyboard, and emits valid HTML.** Typed-answer
+      inputs allow the full keyboard (negatives, fractions), not a numbers-only keypad;
+      components placed in prose must not nest block elements inside a paragraph.
 
 ### Recommended (do where it helps)
 - [ ] Eased motion (~200–400ms) on state change; respect `prefers-reduced-motion`. Most
@@ -151,6 +156,27 @@ the same vars — but is never required to.
 ### 3.6 Motion — deferred
 Recommended, not in this pass. When added: tween image vertices old→new with an eased
 transition gated on `prefers-reduced-motion`; the sequence stepper animates each step.
+
+### 3.7 Stable viewport
+The grid is a fixed frame of reference; only the shape moves within it. Auto-fitting the
+view to the live image makes the grid appear to shift while the shape stays put —
+disorienting and exactly backwards pedagogically. The Grapher fits **once**, to the union
+of the preimage and the image sampled across the *full range* of every control (sliders
+at several points so a rotation's swept arc is captured, not just its endpoints; every
+choose option) — plus, for a sequence, every intermediate step. This is a pure
+`stableBounds(spec)` helper, depends only on the spec (never the live params), and honors
+an explicit `spec.bounds` override. Trade-off: a wide control range yields a wide fixed
+frame (the shape looks smaller) — correct per the principle; authors tighten ranges or
+set `bounds` if a topic needs a closer view.
+
+### 3.8 First-review fixes (folded into this pass)
+A click-through of the live topics surfaced three concrete issues, now addressed:
+- **Viewport reframing** on every control change → §3.7 stable viewport.
+- **Nested `<p>` error** opening a `<Term>` popover (its MDX definition emits `<p>`
+  while the trigger sits in a prose `<p>`) → the popover panel is portaled to
+  `document.body`, out of the paragraph (also immune to overflow clipping).
+- **Numbers-only mobile keypad** on typed answers (no minus key) → inputs use the full
+  keyboard so negatives and fractions are typeable.
 
 ---
 

@@ -166,6 +166,73 @@ export function autoBounds(
   };
 }
 
+/** Number of points sampled across a slider's range when fitting a fixed view. */
+const SLIDER_SAMPLES = 5;
+
+/** Cartesian product of per-control extreme values → param records (corners). */
+function paramCorners(
+  axes: { key: string; values: (number | string)[] }[],
+): Record<string, number | string>[] {
+  let out: Record<string, number | string>[] = [{}];
+  for (const { key, values } of axes) {
+    const next: Record<string, number | string>[] = [];
+    for (const base of out) {
+      for (const v of values) next.push({ ...base, [key]: v });
+    }
+    out = next;
+  }
+  return out;
+}
+
+/**
+ * A FIXED viewport that holds still as the user drives the controls.
+ *
+ * Auto-fitting to the live image makes the grid appear to shift while the shape
+ * stays put — disorienting. Instead we fit once to the union of the preimage and
+ * the image sampled across the full range of every control (sliders at several
+ * points so a rotation's swept arc is captured, not just its endpoints; every
+ * choose option) — plus, for a sequence, every intermediate step. The shape then
+ * moves *within* a stationary frame across the whole control range.
+ *
+ * Honors an explicit `spec.bounds` override. Pure: no React, no mafs.
+ */
+export function stableBounds(
+  spec: GrapherSpec,
+  pad = 1,
+): { x: [number, number]; y: [number, number] } {
+  if (spec.bounds) return spec.bounds;
+
+  const pre = Array.isArray(spec.preimage) ? spec.preimage : [spec.preimage];
+  const shapes: Shape[] = [...pre];
+  const { transform } = spec;
+
+  if (Array.isArray(transform)) {
+    // Sequence: include every intermediate position along the journey.
+    for (const s of pre) shapes.push(...applySequence(s, transform));
+  } else {
+    const axes: { key: string; values: (number | string)[] }[] = [];
+    forEachControl(transform, (path, ctrl) => {
+      const key = controlKey(path, ctrl.label);
+      const c = ctrl as unknown as
+        | { control: "slider"; min: number; max: number }
+        | { control: "choose"; options: readonly (number | string)[] };
+      const values =
+        c.control === "slider"
+          ? Array.from(
+              { length: SLIDER_SAMPLES },
+              (_, i) => c.min + ((c.max - c.min) * i) / (SLIDER_SAMPLES - 1),
+            )
+          : [...c.options];
+      axes.push({ key, values });
+    });
+    for (const params of paramCorners(axes)) {
+      const img = computeImage(spec, params);
+      if (img) shapes.push(...(Array.isArray(img) ? img : [img]));
+    }
+  }
+  return autoBounds(shapes, pad);
+}
+
 /** Human-readable description of a reflection line. */
 function describeLine(line: ReflectLine): string {
   switch (line.kind) {

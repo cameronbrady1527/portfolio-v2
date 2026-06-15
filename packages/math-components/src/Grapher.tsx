@@ -25,7 +25,7 @@ import {
   type ChooseControl,
 } from "./GrapherTypes";
 import {
-  autoBounds,
+  stableBounds,
   autoCaption,
   computeImage,
   controlKey,
@@ -235,15 +235,9 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
     return computeImage(spec, params);
   }, [spec, params, sequenceTrails, stepIndex]);
 
-  const bounds = useMemo(() => {
-    if (spec.bounds) return spec.bounds;
-    const all = sequenceTrails
-      ? [...preimageShapes, ...sequenceTrails.flat()]
-      : image
-        ? [...preimageShapes, ...toShapes(image)]
-        : preimageShapes;
-    return autoBounds(all);
-  }, [spec.bounds, preimageShapes, image, sequenceTrails]);
+  // A FIXED viewport: depends only on the spec, never on the live params, so the
+  // grid holds still and the shape moves within it as the user drives controls.
+  const bounds = useMemo(() => stableBounds(spec), [spec]);
 
   const caption = useMemo(
     () =>
