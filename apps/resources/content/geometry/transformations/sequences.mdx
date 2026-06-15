@@ -71,33 +71,59 @@ export const practice = [
 ];
 
 One transformation moves a figure once. A **sequence of transformations**
-applies several moves **in order**: the image of the first step becomes the
-preimage of the second, and so on. Use **Next step** on the figure above to
-play the sequence — each earlier position stays behind as a faded ghost so you
-can trace the whole journey.
+applies several moves **in order**: the <Term id="image">image</Term> of the
+first step becomes the <Term id="preimage">preimage</Term> of the second, and so
+on. Use **Next step** on the figure above to play the sequence — each earlier
+position stays behind as a faded ghost so you can trace the whole journey.
 
-## Order matters
+## Does the order matter?
 
-Try this with the point $(1, 2)$:
+<Refresher id="negative-numbers" />
 
-- **Translate by $\langle 2, 0 \rangle$, then rotate $90^\circ$:**
-  $(1, 2) \mapsto (3, 2) \mapsto (-2, 3)$
-- **Rotate $90^\circ$, then translate by $\langle 2, 0 \rangle$:**
-  $(1, 2) \mapsto (-2, 1) \mapsto (0, 1)$
+Here is a question worth pausing on before you read ahead. Make a prediction,
+then check it against the arithmetic.
 
-Same two moves, different order — different result. In the language of
-functions, composition of transformations is **not commutative** in general.
+<PredictThenCheck
+  prompt="Take the point (1, 2). You translate by ⟨2, 0⟩ and rotate 90° counter-clockwise about the origin — and a friend does the same two moves in the opposite order. Do you both land on the same point?"
+  choices={[
+    "No — the two orders usually disagree",
+    "Yes — the order of transformations never matters",
+    "Yes, but only because both are rigid motions",
+  ]}
+>
+  <p>
+    You disagree. Work each order out a step at a time:
+  </p>
+  <ul>
+    <li>
+      <strong>Translate, then rotate:</strong> (1, 2) ↦ (3, 2) ↦ (−2, 3)
+    </li>
+    <li>
+      <strong>Rotate, then translate:</strong> (1, 2) ↦ (−2, 1) ↦ (0, 1)
+    </li>
+  </ul>
+  <p>
+    Same two moves, different order, different landing spot. In the language of
+    functions, composition of transformations is <strong>not commutative</strong>
+    in general — and rigid motions are no exception.
+  </p>
+</PredictThenCheck>
+
+Why should swapping the order change anything? The rotation pivots about a fixed
+point — the origin — so where a figure *is* when you spin it changes where it
+lands. Translate first and you spin from a new spot; spin first and you slide a
+figure that's already turned.
 
 ## Sequences and congruence
 
-If every step of a sequence is a **rigid motion** (a translation, reflection,
-or rotation), then distances and angles survive every step, so the final image
-is **congruent** to the original figure. In fact, that is the definition:
-two figures are congruent exactly when some sequence of rigid motions carries
-one onto the other.
+If every step of a sequence is a <Term id="rigid-motion">rigid motion</Term> (a
+translation, reflection, or rotation), then distances and angles survive every
+step, so the final image is <Term id="congruent">congruent</Term> to the
+original figure. In fact, that is the definition: two figures are congruent
+exactly when some sequence of rigid motions carries one onto the other.
 
-Sneak one **dilation** into the sequence, though, and lengths get scaled —
-the final image is **similar** to the original instead.
+Sneak one **dilation** into the sequence, though, and lengths get scaled — the
+final image is <Term id="similar">similar</Term> to the original instead.
 
 ## Puzzle: get the triangle onto the target
 
