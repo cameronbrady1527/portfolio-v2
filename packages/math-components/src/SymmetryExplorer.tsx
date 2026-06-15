@@ -13,6 +13,7 @@ import { useMemo, useState } from "react";
 import { Coordinates, Mafs, Polygon, Line } from "mafs";
 import "mafs/core.css";
 import { autoBounds } from "./grapherLogic";
+import { VertexLabels } from "./VertexLabels";
 import {
   allSymmetries,
   applyProposal,
@@ -112,11 +113,24 @@ export function SymmetryExplorer({ polygon, className }: SymmetryExplorerProps) 
             points={polygon.vertices.map((v) => [v.x, v.y] as [number, number])}
             color={PREIMAGE_COLOR}
           />
+          <VertexLabels
+            vertices={polygon.vertices}
+            label={polygon.label}
+            color={PREIMAGE_COLOR}
+          />
           {movedVertices ? (
             <Polygon
               points={movedVertices.map((v) => [v.x, v.y] as [number, number])}
               color={last?.isSymmetry ? IMAGE_COLOR : MISS_COLOR}
               strokeStyle="dashed"
+            />
+          ) : null}
+          {movedVertices ? (
+            <VertexLabels
+              vertices={movedVertices}
+              label={polygon.label}
+              prime
+              color={last?.isSymmetry ? IMAGE_COLOR : MISS_COLOR}
             />
           ) : null}
         </Mafs>

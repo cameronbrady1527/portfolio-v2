@@ -17,6 +17,7 @@ import { Coordinates, Mafs, Point, Polygon, Line, Text } from "mafs";
 import "mafs/core.css";
 import type { Pt, Shape } from "./logic";
 import { applySequence } from "./logic";
+import { VertexLabels, PRIME } from "./VertexLabels";
 import {
   isControl,
   type GrapherProps,
@@ -43,32 +44,6 @@ const GHOST_COLOR = "var(--cbmc-ghost-color, #9aa89f)"; // faded intermediates
 
 function toShapes(s: Shape | Shape[]): Shape[] {
   return Array.isArray(s) ? s : [s];
-}
-
-const PRIME = "′"; // ′
-
-/** The letter for each vertex: A, B, C…, or the shape's own label if it fits. */
-function vertexLetters(
-  shape: Extract<Shape, { type: "polygon" }>,
-  primeLabel: boolean,
-): string[] {
-  const n = shape.vertices.length;
-  const base =
-    shape.label && shape.label.length === n
-      ? shape.label.split("")
-      : Array.from({ length: n }, (_, i) => String.fromCharCode(65 + i));
-  return base.map((ch) => (primeLabel ? `${ch}${PRIME}` : ch));
-}
-
-/** Place a vertex label just outside the polygon, along the centroid→vertex ray. */
-function labelAnchor(v: Pt, centroid: Pt, primeLabel: boolean): Pt {
-  const dx = v.x - centroid.x;
-  const dy = v.y - centroid.y;
-  const len = Math.hypot(dx, dy) || 1;
-  // Image labels sit a touch further out so A and A′ never coincide when the
-  // image overlaps the preimage (the deterministic preimage/image offset rule).
-  const off = primeLabel ? 0.62 : 0.45;
-  return { x: v.x + (dx / len) * off, y: v.y + (dy / len) * off };
 }
 
 /** Render one shape onto the mafs plane. mafs types never escape this module. */
@@ -112,11 +87,6 @@ function ShapeView({
       );
     case "polygon": {
       const vs = shape.vertices;
-      const centroid: Pt = {
-        x: vs.reduce((s, v) => s + v.x, 0) / vs.length,
-        y: vs.reduce((s, v) => s + v.y, 0) / vs.length,
-      };
-      const letters = vertexLetters(shape, primeLabel);
       return (
         <>
           <Polygon
@@ -125,16 +95,14 @@ function ShapeView({
             fillOpacity={dashed ? 0.05 : 0.12}
             strokeStyle={style}
           />
-          {labelVertices
-            ? vs.map((v, i) => {
-                const a = labelAnchor(v, centroid, primeLabel);
-                return (
-                  <Text key={`vl-${i}`} x={a.x} y={a.y} size={18} color={color}>
-                    {letters[i]}
-                  </Text>
-                );
-              })
-            : null}
+          {labelVertices ? (
+            <VertexLabels
+              vertices={vs}
+              label={shape.label}
+              prime={primeLabel}
+              color={color}
+            />
+          ) : null}
         </>
       );
     }

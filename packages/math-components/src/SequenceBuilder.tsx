@@ -15,6 +15,7 @@ import "mafs/core.css";
 import type { Shape } from "./logic";
 import { applySequence, shapesCoincide, type TransformStep } from "./logic";
 import { autoBounds } from "./grapherLogic";
+import { VertexLabels } from "./VertexLabels";
 
 const PREIMAGE_COLOR = "var(--cbmc-preimage-color, #16231c)";
 const IMAGE_COLOR = "var(--cbmc-image-color, #1f8a5b)";
@@ -109,8 +110,23 @@ export function SequenceBuilder({ puzzle, prompt, className }: SequenceBuilderPr
           />
           <ShapeOutline shape={target} color={TARGET_COLOR} dashed />
           <ShapeOutline shape={preimage} color={PREIMAGE_COLOR} />
+          {preimage.type === "polygon" ? (
+            <VertexLabels
+              vertices={preimage.vertices}
+              label={preimage.label}
+              color={PREIMAGE_COLOR}
+            />
+          ) : null}
           {tested?.final ? (
             <ShapeOutline shape={tested.final} color={IMAGE_COLOR} dashed />
+          ) : null}
+          {tested?.final?.type === "polygon" ? (
+            <VertexLabels
+              vertices={tested.final.vertices}
+              label={tested.final.label}
+              prime
+              color={IMAGE_COLOR}
+            />
           ) : null}
         </Mafs>
       </div>
