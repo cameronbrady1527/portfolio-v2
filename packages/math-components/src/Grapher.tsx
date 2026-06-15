@@ -45,22 +45,51 @@ function toShapes(s: Shape | Shape[]): Shape[] {
   return Array.isArray(s) ? s : [s];
 }
 
+const PRIME = "′"; // ′
+
+/** The letter for each vertex: A, B, C…, or the shape's own label if it fits. */
+function vertexLetters(
+  shape: Extract<Shape, { type: "polygon" }>,
+  primeLabel: boolean,
+): string[] {
+  const n = shape.vertices.length;
+  const base =
+    shape.label && shape.label.length === n
+      ? shape.label.split("")
+      : Array.from({ length: n }, (_, i) => String.fromCharCode(65 + i));
+  return base.map((ch) => (primeLabel ? `${ch}${PRIME}` : ch));
+}
+
+/** Place a vertex label just outside the polygon, along the centroid→vertex ray. */
+function labelAnchor(v: Pt, centroid: Pt, primeLabel: boolean): Pt {
+  const dx = v.x - centroid.x;
+  const dy = v.y - centroid.y;
+  const len = Math.hypot(dx, dy) || 1;
+  // Image labels sit a touch further out so A and A′ never coincide when the
+  // image overlaps the preimage (the deterministic preimage/image offset rule).
+  const off = primeLabel ? 0.62 : 0.45;
+  return { x: v.x + (dx / len) * off, y: v.y + (dy / len) * off };
+}
+
 /** Render one shape onto the mafs plane. mafs types never escape this module. */
 function ShapeView({
   shape,
   color,
   dashed,
   primeLabel,
+  labelVertices = true,
 }: {
   shape: Shape;
   color: string;
   dashed: boolean;
   primeLabel: boolean;
+  /** Label polygon vertices A,B,C / A′,B′,C′. Off for faded ghost trails. */
+  labelVertices?: boolean;
 }) {
   const style = dashed ? "dashed" : "solid";
   const label = shape.label
     ? primeLabel
-      ? `${shape.label}'`
+      ? `${shape.label}${PRIME}`
       : shape.label
     : undefined;
 
@@ -81,15 +110,34 @@ function ShapeView({
           style={style}
         />
       );
-    case "polygon":
+    case "polygon": {
+      const vs = shape.vertices;
+      const centroid: Pt = {
+        x: vs.reduce((s, v) => s + v.x, 0) / vs.length,
+        y: vs.reduce((s, v) => s + v.y, 0) / vs.length,
+      };
+      const letters = vertexLetters(shape, primeLabel);
       return (
-        <Polygon
-          points={shape.vertices.map((v) => [v.x, v.y] as [number, number])}
-          color={color}
-          fillOpacity={dashed ? 0.05 : 0.12}
-          strokeStyle={style}
-        />
+        <>
+          <Polygon
+            points={vs.map((v) => [v.x, v.y] as [number, number])}
+            color={color}
+            fillOpacity={dashed ? 0.05 : 0.12}
+            strokeStyle={style}
+          />
+          {labelVertices
+            ? vs.map((v, i) => {
+                const a = labelAnchor(v, centroid, primeLabel);
+                return (
+                  <Text key={`vl-${i}`} x={a.x} y={a.y} size={18} color={color}>
+                    {letters[i]}
+                  </Text>
+                );
+              })
+            : null}
+        </>
       );
+    }
   }
 }
 
@@ -133,50 +181,55 @@ function ControlField({
   onValue: (v: number | string) => void;
 }) {
   const label = ctrl.label ?? id;
-  const rowStyle = {
-    display: "flex",
-    alignItems: "center",
-    gap: "0.5rem",
-  } as const;
   if (ctrl.control === "slider") {
     return (
-      <div style={rowStyle}>
-        <label htmlFor={id} style={{ minWidth: "3rem" }}>
+      <div className="cbmc-control-row">
+        <label htmlFor={id} className="cbmc-control-label">
           {label}
         </label>
         <input
           id={id}
           type="range"
+          className="cbmc-range"
           min={ctrl.min}
           max={ctrl.max}
           step={ctrl.step}
           value={Number(value)}
           onChange={(e) => onValue(Number(e.target.value))}
         />
-        <output htmlFor={id}>{value}</output>
+        <output htmlFor={id} className="cbmc-control-value">
+          {value}
+        </output>
       </div>
     );
   }
+  // A choose() renders as a segmented button group: every option visible at
+  // once (no hidden dropdown), the active one tinted. Preserves option types.
   return (
-    <div style={rowStyle}>
-      <label htmlFor={id} style={{ minWidth: "3rem" }}>
+    <div className="cbmc-control-row">
+      <span id={`${id}-label`} className="cbmc-control-label">
         {label}
-      </label>
-      <select
-        id={id}
-        value={String(value)}
-        onChange={(e) => {
-          // Preserve numeric option types where the options are numbers.
-          const opt = ctrl.options.find((o) => String(o) === e.target.value);
-          onValue(opt ?? e.target.value);
-        }}
+      </span>
+      <div
+        className="cbmc-controls cbmc-segmented"
+        role="group"
+        aria-labelledby={`${id}-label`}
       >
-        {ctrl.options.map((o) => (
-          <option key={String(o)} value={String(o)}>
-            {String(o)}
-          </option>
-        ))}
-      </select>
+        {ctrl.options.map((o) => {
+          const selected = String(o) === String(value);
+          return (
+            <button
+              key={String(o)}
+              type="button"
+              className="cbmc-chip"
+              aria-pressed={selected}
+              onClick={() => onValue(o)}
+            >
+              {String(o)}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -324,6 +377,7 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
                     color={GHOST_COLOR}
                     dashed
                     primeLabel={false}
+                    labelVertices={false}
                   />
                 )),
               )

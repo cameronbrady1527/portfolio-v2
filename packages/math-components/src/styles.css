@@ -239,6 +239,76 @@
   margin: 0 0 0.25rem;
 }
 
+/* Grapher control rows: a labeled slider, or a segmented choose. */
+.cbmc-control-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+.cbmc-control-label {
+  min-width: 4rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--cbmc-control-fg, #2c3a32);
+}
+.cbmc-control-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  min-width: 2ch;
+  color: var(--cbmc-control-fg, #2c3a32);
+}
+
+/* A segmented choose: the active option takes the accent tint (no ✓ glyph). */
+.cbmc-segmented .cbmc-chip[aria-pressed="true"] {
+  background: var(--cbmc-found-bg, #e3f1e9);
+  border-color: var(--cbmc-accent, #176844);
+  color: var(--cbmc-found-fg, #14603f);
+  font-weight: 600;
+}
+
+/* Themed range slider — track + thumb, keyboard-focusable. */
+.cbmc-range {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  min-width: 8rem;
+  max-width: 16rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--cbmc-control-border, #cfc7b5);
+  cursor: pointer;
+}
+.cbmc-range:focus-visible {
+  outline: 3px solid var(--cbmc-focus-ring, #176844);
+  outline-offset: 4px;
+}
+.cbmc-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  background: var(--cbmc-accent, #176844);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+.cbmc-range::-moz-range-thumb {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  background: var(--cbmc-accent, #176844);
+  border: 2px solid #fff;
+  cursor: pointer;
+}
+.cbmc-range::-moz-range-track {
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--cbmc-control-border, #cfc7b5);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cbmc-chip,
   .cbmc-btn,
