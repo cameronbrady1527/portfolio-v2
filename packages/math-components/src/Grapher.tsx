@@ -17,6 +17,7 @@ import { Coordinates, Mafs, Point, Polygon, Line, Text } from "mafs";
 import "mafs/core.css";
 import type { Pt, Shape } from "./logic";
 import { applySequence } from "./logic";
+import { VertexLabels, PRIME } from "./VertexLabels";
 import {
   isControl,
   type GrapherProps,
@@ -25,7 +26,7 @@ import {
   type ChooseControl,
 } from "./GrapherTypes";
 import {
-  autoBounds,
+  stableBounds,
   autoCaption,
   computeImage,
   controlKey,
@@ -51,16 +52,19 @@ function ShapeView({
   color,
   dashed,
   primeLabel,
+  labelVertices = true,
 }: {
   shape: Shape;
   color: string;
   dashed: boolean;
   primeLabel: boolean;
+  /** Label polygon vertices A,B,C / A′,B′,C′. Off for faded ghost trails. */
+  labelVertices?: boolean;
 }) {
   const style = dashed ? "dashed" : "solid";
   const label = shape.label
     ? primeLabel
-      ? `${shape.label}'`
+      ? `${shape.label}${PRIME}`
       : shape.label
     : undefined;
 
@@ -81,15 +85,27 @@ function ShapeView({
           style={style}
         />
       );
-    case "polygon":
+    case "polygon": {
+      const vs = shape.vertices;
       return (
-        <Polygon
-          points={shape.vertices.map((v) => [v.x, v.y] as [number, number])}
-          color={color}
-          fillOpacity={dashed ? 0.05 : 0.12}
-          strokeStyle={style}
-        />
+        <>
+          <Polygon
+            points={vs.map((v) => [v.x, v.y] as [number, number])}
+            color={color}
+            fillOpacity={dashed ? 0.05 : 0.12}
+            strokeStyle={style}
+          />
+          {labelVertices ? (
+            <VertexLabels
+              vertices={vs}
+              label={shape.label}
+              prime={primeLabel}
+              color={color}
+            />
+          ) : null}
+        </>
       );
+    }
   }
 }
 
@@ -133,50 +149,55 @@ function ControlField({
   onValue: (v: number | string) => void;
 }) {
   const label = ctrl.label ?? id;
-  const rowStyle = {
-    display: "flex",
-    alignItems: "center",
-    gap: "0.5rem",
-  } as const;
   if (ctrl.control === "slider") {
     return (
-      <div style={rowStyle}>
-        <label htmlFor={id} style={{ minWidth: "3rem" }}>
+      <div className="cbmc-control-row">
+        <label htmlFor={id} className="cbmc-control-label">
           {label}
         </label>
         <input
           id={id}
           type="range"
+          className="cbmc-range"
           min={ctrl.min}
           max={ctrl.max}
           step={ctrl.step}
           value={Number(value)}
           onChange={(e) => onValue(Number(e.target.value))}
         />
-        <output htmlFor={id}>{value}</output>
+        <output htmlFor={id} className="cbmc-control-value">
+          {value}
+        </output>
       </div>
     );
   }
+  // A choose() renders as a segmented button group: every option visible at
+  // once (no hidden dropdown), the active one tinted. Preserves option types.
   return (
-    <div style={rowStyle}>
-      <label htmlFor={id} style={{ minWidth: "3rem" }}>
+    <div className="cbmc-control-row">
+      <span id={`${id}-label`} className="cbmc-control-label">
         {label}
-      </label>
-      <select
-        id={id}
-        value={String(value)}
-        onChange={(e) => {
-          // Preserve numeric option types where the options are numbers.
-          const opt = ctrl.options.find((o) => String(o) === e.target.value);
-          onValue(opt ?? e.target.value);
-        }}
+      </span>
+      <div
+        className="cbmc-controls cbmc-segmented"
+        role="group"
+        aria-labelledby={`${id}-label`}
       >
-        {ctrl.options.map((o) => (
-          <option key={String(o)} value={String(o)}>
-            {String(o)}
-          </option>
-        ))}
-      </select>
+        {ctrl.options.map((o) => {
+          const selected = String(o) === String(value);
+          return (
+            <button
+              key={String(o)}
+              type="button"
+              className="cbmc-chip"
+              aria-pressed={selected}
+              onClick={() => onValue(o)}
+            >
+              {String(o)}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -219,6 +240,9 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
   // Sequence mode: an array transform is played step by step (0 = start).
   const sequence = Array.isArray(spec.transform) ? spec.transform : null;
   const [stepIndex, setStepIndex] = useState(0);
+
+  // Student-controlled side-length labels; the spec sets the initial state.
+  const [showMeasure, setShowMeasure] = useState(spec.showMeasurements ?? false);
   const sequenceTrails = useMemo(
     () =>
       sequence
@@ -235,15 +259,9 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
     return computeImage(spec, params);
   }, [spec, params, sequenceTrails, stepIndex]);
 
-  const bounds = useMemo(() => {
-    if (spec.bounds) return spec.bounds;
-    const all = sequenceTrails
-      ? [...preimageShapes, ...sequenceTrails.flat()]
-      : image
-        ? [...preimageShapes, ...toShapes(image)]
-        : preimageShapes;
-    return autoBounds(all);
-  }, [spec.bounds, preimageShapes, image, sequenceTrails]);
+  // A FIXED viewport: depends only on the spec, never on the live params, so the
+  // grid holds still and the shape moves within it as the user drives controls.
+  const bounds = useMemo(() => stableBounds(spec), [spec]);
 
   const caption = useMemo(
     () =>
@@ -284,6 +302,8 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
   }, [spec.transform]);
 
   const showImage = spec.showImage !== false;
+  const showLegend = spec.showLegend !== false && showImage;
+  const canMeasure = preimageShapes.some((s) => s.type !== "point");
   const captionId = "grapher-caption";
 
   return (
@@ -292,6 +312,10 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
       style={{ margin: 0 }}
       aria-describedby={captionId}
     >
+      {spec.instruction ? (
+        <p className="cbmc-instruction">{spec.instruction}</p>
+      ) : null}
+
       <div
         className="cbmc-graph-paper"
         style={{ borderRadius: "var(--cbmc-radius, 0.5rem)" }}
@@ -330,6 +354,7 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
                     color={GHOST_COLOR}
                     dashed
                     primeLabel={false}
+                    labelVertices={false}
                   />
                 )),
               )
@@ -347,7 +372,7 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
               ))
             : null}
 
-          {spec.showMeasurements
+          {showMeasure
             ? [
                 ...preimageShapes.map((s, i) => ({ s, color: PREIMAGE_COLOR, k: `mp-${i}` })),
                 ...(showImage && image
@@ -369,6 +394,25 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
             : null}
         </Mafs>
       </div>
+
+      {showLegend ? (
+        <div className="cbmc-legend" aria-hidden="true">
+          <span className="cbmc-legend-item">
+            <span
+              className="cbmc-swatch"
+              style={{ background: PREIMAGE_COLOR, borderColor: PREIMAGE_COLOR }}
+            />
+            Original
+          </span>
+          <span className="cbmc-legend-item">
+            <span
+              className="cbmc-swatch cbmc-swatch-dashed"
+              style={{ borderColor: IMAGE_COLOR }}
+            />
+            Image
+          </span>
+        </div>
+      ) : null}
 
       {sequence ? (
         <div
@@ -419,6 +463,19 @@ export function Grapher({ spec, onChange, className }: GrapherProps) {
               onValue={(v) => setParam(key, v)}
             />
           ))}
+        </div>
+      ) : null}
+
+      {canMeasure ? (
+        <div className="cbmc-controls" style={{ marginTop: "0.6rem" }}>
+          <button
+            type="button"
+            className="cbmc-chip"
+            aria-pressed={showMeasure}
+            onClick={() => setShowMeasure((v) => !v)}
+          >
+            {showMeasure ? "Hide side lengths" : "Show side lengths"}
+          </button>
         </div>
       ) : null}
 

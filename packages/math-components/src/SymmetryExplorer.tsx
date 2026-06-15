@@ -13,6 +13,7 @@ import { useMemo, useState } from "react";
 import { Coordinates, Mafs, Polygon, Line } from "mafs";
 import "mafs/core.css";
 import { autoBounds } from "./grapherLogic";
+import { VertexLabels } from "./VertexLabels";
 import {
   allSymmetries,
   applyProposal,
@@ -112,6 +113,11 @@ export function SymmetryExplorer({ polygon, className }: SymmetryExplorerProps) 
             points={polygon.vertices.map((v) => [v.x, v.y] as [number, number])}
             color={PREIMAGE_COLOR}
           />
+          <VertexLabels
+            vertices={polygon.vertices}
+            label={polygon.label}
+            color={PREIMAGE_COLOR}
+          />
           {movedVertices ? (
             <Polygon
               points={movedVertices.map((v) => [v.x, v.y] as [number, number])}
@@ -119,22 +125,61 @@ export function SymmetryExplorer({ polygon, className }: SymmetryExplorerProps) 
               strokeStyle="dashed"
             />
           ) : null}
+          {movedVertices ? (
+            <VertexLabels
+              vertices={movedVertices}
+              label={polygon.label}
+              prime
+              color={last?.isSymmetry ? IMAGE_COLOR : MISS_COLOR}
+            />
+          ) : null}
         </Mafs>
       </div>
 
-      <div
-        role="group"
-        aria-label="Symmetry proposals"
-        style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.75rem" }}
-      >
-        {proposals.map((p) => (
-          <button key={proposalKey(p)} type="button" onClick={() => propose(p)}>
-            {p.kind === "rotation"
-              ? `Rotate ${fmt(p.angleDeg)}°`
-              : `Reflect across the ${fmt(p.angleDeg)}° axis`}
-          </button>
-        ))}
-      </div>
+      <p className="cbmc-instruction" style={{ marginTop: "0.75rem" }}>
+        Tap a move to test whether it carries the shape exactly onto itself.
+      </p>
+      {total > 0 ? (
+        <p className="cbmc-progress" aria-live="polite">
+          Found {foundCount} of {total} symmetries
+        </p>
+      ) : null}
+
+      {(["rotation", "reflection"] as const).map((kind) => {
+        const group = proposals.filter((p) => p.kind === kind);
+        if (group.length === 0) return null;
+        return (
+          <div key={kind}>
+            <p className="cbmc-group-label">
+              {kind === "rotation" ? "Rotations" : "Reflections"}
+            </p>
+            <div
+              className="cbmc-controls"
+              role="group"
+              aria-label={kind === "rotation" ? "Rotations" : "Reflections"}
+            >
+              {group.map((p) => {
+                const isFound = found.has(proposalKey(p));
+                return (
+                  <button
+                    key={proposalKey(p)}
+                    type="button"
+                    className={["cbmc-chip", isFound && "cbmc-chip-found"]
+                      .filter(Boolean)
+                      .join(" ")}
+                    aria-pressed={isFound}
+                    onClick={() => propose(p)}
+                  >
+                    {p.kind === "rotation"
+                      ? `Rotate ${fmt(p.angleDeg)}°`
+                      : `Reflect across the ${fmt(p.angleDeg)}° axis`}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
 
       <div role="status" style={{ marginTop: "0.5rem", fontSize: "0.875rem" }}>
         {last && (

@@ -222,9 +222,9 @@ function QuestionCard({
             </label>
             <input
               id={`input-${question.id}`}
-              type="number"
-              inputMode="decimal"
-              step="any"
+              type="text"
+              inputMode="text"
+              autoComplete="off"
               disabled={answered}
               value={state.response}
               onChange={(e) => onResponse(e.target.value)}

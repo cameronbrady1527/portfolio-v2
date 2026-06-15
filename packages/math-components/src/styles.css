@@ -4,30 +4,346 @@
  * Import once in your app:  import "@cameronbrady/math-components/styles.css";
  *
  * Everything here is namespaced under the `cbmc-` prefix — no global utility
- * classes, nothing that can collide with your app's styles. The Grapher renders
- * correctly even without this stylesheet (every value has an inline fallback);
- * importing it just provides the graph-paper background and a single, tidy
- * theming surface.
+ * classes, nothing that can collide with your app's styles. The package owns its
+ * own look: import it and the figure renders finished, on warm paper, with no
+ * configuration from the host app. It harmonizes with any host by good defaults
+ * plus font inheritance — it never reaches into host tokens.
  *
  * THEMING — set any of these custom properties on an ancestor (or :root) to
  * re-theme the figure. Defaults match the Math Resources Hub's warm-paper look:
  *
- *   --cbmc-paper-bg        plane background            (default #f7f5ef)
- *   --cbmc-grid-line       graph-paper grid color      (default #d8d2c2)
- *   --cbmc-grid-size       graph-paper cell size       (default 26px)
- *   --cbmc-preimage-color  the original figure         (default #16231c)
- *   --cbmc-image-color     the transformed image       (default #1f8a5b)
- *   --cbmc-line-color      line of reflection          (default #43564b)
- *   --cbmc-caption-color   the a11y caption text        (default #43564b)
- *   --cbmc-radius          plane corner radius         (default 0.5rem)
- *   --cbmc-font            label font family    (default: inherits, else sans)
+ *   --cbmc-paper-bg          plane background           (default #f7f5ef)
+ *   --cbmc-grid-line         major graph-paper grid     (default #b8ae9c)
+ *   --cbmc-grid-line-subtle  minor grid subdivisions    (default #e6e0d4)
+ *   --cbmc-axis-color        default ink / axis text    (default #43564b)
+ *   --cbmc-origin-color      the bold x- and y-axes      (default #8a7f6c)
+ *   --cbmc-grid-size         CSS-fallback cell size      (default 26px)
+ *   --cbmc-preimage-color    the original figure         (default #16231c)
+ *   --cbmc-image-color       the transformed image       (default #1f8a5b)
+ *   --cbmc-line-color        line of reflection          (default #43564b)
+ *   --cbmc-caption-color     the a11y caption text        (default #43564b)
+ *   --cbmc-radius            plane corner radius         (default 0.5rem)
+ *   --cbmc-font              label font family    (default: inherits, else sans)
+ *
+ * To re-theme dark, override --cbmc-paper-bg / --cbmc-axis-color / the grid vars.
  */
 
-/* Scoped graph-paper background for the Grapher's coordinate plane. */
+/*
+ * The Grapher's coordinate plane.
+ *
+ * mafs (the rendering substrate) declares `--mafs-bg: black` ON `.MafsView`
+ * itself, so it paints opaque black over any background set on this wrapper.
+ * We override mafs's own variables on the `.cbmc-graph-paper .MafsView` scope —
+ * two classes outrank mafs's single-class declaration, so no `!important` is
+ * needed. The wrapper's own background-color is only a pre-mount fallback (shown
+ * for the instant before mafs renders); mafs itself draws the visible grid.
+ */
 .cbmc-graph-paper {
   background-color: var(--cbmc-paper-bg, #f7f5ef);
-  background-image:
-    linear-gradient(to right, var(--cbmc-grid-line, #d8d2c2) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--cbmc-grid-line, #d8d2c2) 1px, transparent 1px);
-  background-size: var(--cbmc-grid-size, 26px) var(--cbmc-grid-size, 26px);
+  border-radius: var(--cbmc-radius, 0.5rem);
+}
+
+.cbmc-graph-paper .MafsView {
+  --mafs-bg: var(--cbmc-paper-bg, #f7f5ef);
+  --mafs-fg: var(--cbmc-axis-color, #43564b);
+  --mafs-line-color: var(--cbmc-grid-line, #b8ae9c);
+  --grid-line-subdivision-color: var(--cbmc-grid-line-subtle, #e6e0d4);
+  --mafs-origin-color: var(--cbmc-origin-color, #8a7f6c);
+}
+
+/* ── Interactive controls ───────────────────────────────────────────────────
+ * A small, self-contained control set shared by every widget (chips, buttons,
+ * icon buttons, the sequence build area). Goals: obviously clickable, AA
+ * contrast, ≥40px touch targets, a clearly visible :focus-visible ring, and
+ * motion that respects prefers-reduced-motion. Re-theme via the tokens below.
+ *
+ *   --cbmc-control-bg / -hover / -border / -border-hover / -fg
+ *   --cbmc-accent / -accent-hover   action + selected accent (AA on white)
+ *   --cbmc-found-bg / -found-fg     discovered/selected tint
+ *   --cbmc-muted                    secondary text
+ *   --cbmc-focus-ring               focus outline color
+ */
+.cbmc-instruction {
+  font-weight: 500;
+  margin: 0 0 0.6rem;
+}
+
+.cbmc-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.cbmc-chip,
+.cbmc-btn {
+  font: inherit;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.5rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--cbmc-control-border, #cfc7b5);
+  background: var(--cbmc-control-bg, #fffdf7);
+  color: var(--cbmc-control-fg, #2c3a32);
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    transform 60ms ease;
+}
+
+.cbmc-chip:hover,
+.cbmc-btn:hover {
+  background: var(--cbmc-control-bg-hover, #f1ebda);
+  border-color: var(--cbmc-control-border-hover, #b3a98f);
+}
+
+.cbmc-chip:active,
+.cbmc-btn:active {
+  transform: translateY(1px);
+}
+
+.cbmc-chip:focus-visible,
+.cbmc-btn:focus-visible,
+.cbmc-icon-btn:focus-visible {
+  outline: 3px solid var(--cbmc-focus-ring, #176844);
+  outline-offset: 2px;
+}
+
+.cbmc-chip:disabled,
+.cbmc-btn:disabled,
+.cbmc-icon-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* A leading "+" marks a chip that adds something. Decorative (not in the name). */
+.cbmc-chip-add::before {
+  content: "+";
+  font-weight: 700;
+  font-size: 1.05em;
+  color: var(--cbmc-accent, #176844);
+}
+
+/* The discovered / selected state — a tint with AA-contrast dark-green text. */
+.cbmc-chip-found {
+  background: var(--cbmc-found-bg, #e3f1e9);
+  border-color: var(--cbmc-accent, #176844);
+  color: var(--cbmc-found-fg, #14603f);
+  font-weight: 600;
+}
+.cbmc-chip-found::before {
+  content: "✓";
+  font-weight: 700;
+  color: var(--cbmc-accent, #176844);
+}
+
+/* The primary action (e.g. "Test my sequence"). */
+.cbmc-btn-primary {
+  background: var(--cbmc-accent, #176844);
+  border-color: var(--cbmc-accent, #176844);
+  color: #fff;
+  font-weight: 600;
+}
+.cbmc-btn-primary:hover {
+  background: var(--cbmc-accent-hover, #114e33);
+  border-color: var(--cbmc-accent-hover, #114e33);
+}
+
+/* Square icon buttons (reorder / remove). */
+.cbmc-icon-btn {
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--cbmc-control-border, #cfc7b5);
+  background: var(--cbmc-control-bg, #fffdf7);
+  color: var(--cbmc-control-fg, #2c3a32);
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+.cbmc-icon-btn:hover {
+  background: var(--cbmc-control-bg-hover, #f1ebda);
+}
+
+/* The "Your sequence" build area. */
+.cbmc-build {
+  margin-top: 0.85rem;
+  border: 1px dashed var(--cbmc-control-border, #cfc7b5);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+.cbmc-build-head {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cbmc-muted, #6b6353);
+  margin: 0 0 0.5rem;
+}
+.cbmc-build-empty {
+  color: var(--cbmc-muted, #6b6353);
+  font-size: 0.875rem;
+  margin: 0;
+}
+.cbmc-step-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.cbmc-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 0.4rem;
+  background: var(--cbmc-control-bg, #fffdf7);
+  border: 1px solid var(--cbmc-control-border, #cfc7b5);
+}
+.cbmc-step-num {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--cbmc-accent, #176844);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.cbmc-step-label {
+  flex: 1;
+}
+
+/* Grouped control sections (e.g. Rotations / Reflections) + progress readout. */
+.cbmc-group-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cbmc-muted, #6b6353);
+  margin: 0.75rem 0 0.4rem;
+}
+.cbmc-progress {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cbmc-muted, #6b6353);
+  margin: 0 0 0.25rem;
+}
+
+/* Grapher control rows: a labeled slider, or a segmented choose. */
+.cbmc-control-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+.cbmc-control-label {
+  min-width: 4rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--cbmc-control-fg, #2c3a32);
+}
+.cbmc-control-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  min-width: 2ch;
+  color: var(--cbmc-control-fg, #2c3a32);
+}
+
+/* A pressed/selected chip (segmented option, or a toggle like "Show side
+ * lengths") takes the accent tint. The symmetry "found" chip adds a ✓ on top. */
+.cbmc-chip[aria-pressed="true"] {
+  background: var(--cbmc-found-bg, #e3f1e9);
+  border-color: var(--cbmc-accent, #176844);
+  color: var(--cbmc-found-fg, #14603f);
+  font-weight: 600;
+}
+
+/* Original-vs-image legend. */
+.cbmc-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--cbmc-muted, #6b6353);
+}
+.cbmc-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.cbmc-swatch {
+  width: 1.1rem;
+  height: 0.8rem;
+  border-radius: 0.15rem;
+  border: 2px solid transparent;
+  opacity: 0.85;
+}
+.cbmc-swatch-dashed {
+  background: transparent !important;
+  border-style: dashed;
+}
+
+/* Themed range slider — track + thumb, keyboard-focusable. */
+.cbmc-range {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  min-width: 8rem;
+  max-width: 16rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--cbmc-control-border, #cfc7b5);
+  cursor: pointer;
+}
+.cbmc-range:focus-visible {
+  outline: 3px solid var(--cbmc-focus-ring, #176844);
+  outline-offset: 4px;
+}
+.cbmc-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  background: var(--cbmc-accent, #176844);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+.cbmc-range::-moz-range-thumb {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  background: var(--cbmc-accent, #176844);
+  border: 2px solid #fff;
+  cursor: pointer;
+}
+.cbmc-range::-moz-range-track {
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--cbmc-control-border, #cfc7b5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cbmc-chip,
+  .cbmc-btn,
+  .cbmc-icon-btn {
+    transition: none;
+  }
+  .cbmc-chip:active,
+  .cbmc-btn:active {
+    transform: none;
+  }
 }

@@ -15,6 +15,7 @@ import "mafs/core.css";
 import type { Shape } from "./logic";
 import { applySequence, shapesCoincide, type TransformStep } from "./logic";
 import { autoBounds } from "./grapherLogic";
+import { VertexLabels } from "./VertexLabels";
 
 const PREIMAGE_COLOR = "var(--cbmc-preimage-color, #16231c)";
 const IMAGE_COLOR = "var(--cbmc-image-color, #1f8a5b)";
@@ -83,17 +84,21 @@ export function SequenceBuilder({ puzzle, prompt, className }: SequenceBuilderPr
     setTested(null); // editing invalidates the last verdict
   };
 
-  const moveUp = (i: number) =>
+  const swap = (i: number, j: number) =>
     edit((prev) => {
-      if (i === 0) return prev;
+      if (j < 0 || j >= prev.length) return prev;
       const next = [...prev];
-      [next[i - 1], next[i]] = [next[i], next[i - 1]];
+      [next[i], next[j]] = [next[j], next[i]];
       return next;
     });
+  const moveUp = (i: number) => swap(i, i - 1);
+  const moveDown = (i: number) => swap(i, i + 1);
+
+  const full = moves.length >= maxSteps;
 
   return (
     <div className={["cbmc-sequence-builder", className].filter(Boolean).join(" ")}>
-      <p style={{ fontWeight: 500 }}>
+      <p className="cbmc-instruction">
         {prompt ?? "Build a sequence that carries the figure onto the target."}
       </p>
 
@@ -105,50 +110,97 @@ export function SequenceBuilder({ puzzle, prompt, className }: SequenceBuilderPr
           />
           <ShapeOutline shape={target} color={TARGET_COLOR} dashed />
           <ShapeOutline shape={preimage} color={PREIMAGE_COLOR} />
+          {preimage.type === "polygon" ? (
+            <VertexLabels
+              vertices={preimage.vertices}
+              label={preimage.label}
+              color={PREIMAGE_COLOR}
+            />
+          ) : null}
           {tested?.final ? (
             <ShapeOutline shape={tested.final} color={IMAGE_COLOR} dashed />
+          ) : null}
+          {tested?.final?.type === "polygon" ? (
+            <VertexLabels
+              vertices={tested.final.vertices}
+              label={tested.final.label}
+              prime
+              color={IMAGE_COLOR}
+            />
           ) : null}
         </Mafs>
       </div>
 
-      <div role="group" aria-label="Available moves" style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.75rem" }}>
+      <p className="cbmc-group-label">Tap a move to add it to your sequence</p>
+      <div className="cbmc-controls" role="group" aria-label="Available moves">
         {palette.map((m) => (
           <button
             key={m.id}
             type="button"
-            disabled={moves.length >= maxSteps}
+            className="cbmc-chip cbmc-chip-add"
+            aria-label={`Add: ${m.label}`}
+            disabled={full}
             onClick={() => edit((prev) => [...prev, m])}
           >
-            Add: {m.label}
+            {m.label}
           </button>
         ))}
       </div>
 
-      <ol aria-label="Your sequence" style={{ display: "flex", flexDirection: "column", gap: "0.25rem", marginTop: "0.5rem" }}>
-        {moves.map((m, i) => (
-          <li key={`${m.id}-${i}`} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <span>
-              {i + 1}. {m.label}
-            </span>
-            <button type="button" aria-label={`Move up: step ${i + 1}`} onClick={() => moveUp(i)}>
-              ↑
-            </button>
-            <button
-              type="button"
-              aria-label={`Remove: step ${i + 1}`}
-              onClick={() => edit((prev) => prev.filter((_, j) => j !== i))}
-            >
-              ✕
-            </button>
-          </li>
-        ))}
-      </ol>
+      <div className="cbmc-build">
+        <p className="cbmc-build-head">
+          Your sequence ({moves.length} of {maxSteps})
+        </p>
+        {moves.length === 0 ? (
+          <p className="cbmc-build-empty">
+            Tap a move above to begin building your sequence →
+          </p>
+        ) : (
+          <ol className="cbmc-step-list" aria-label="Your sequence">
+            {moves.map((m, i) => (
+              <li key={`${m.id}-${i}`} className="cbmc-step">
+                <span className="cbmc-step-num" aria-hidden="true">
+                  {i + 1}
+                </span>
+                <span className="cbmc-step-label">{m.label}</span>
+                <button
+                  type="button"
+                  className="cbmc-icon-btn"
+                  aria-label={`Move up: step ${i + 1}`}
+                  disabled={i === 0}
+                  onClick={() => moveUp(i)}
+                >
+                  ↑
+                </button>
+                <button
+                  type="button"
+                  className="cbmc-icon-btn"
+                  aria-label={`Move down: step ${i + 1}`}
+                  disabled={i === moves.length - 1}
+                  onClick={() => moveDown(i)}
+                >
+                  ↓
+                </button>
+                <button
+                  type="button"
+                  className="cbmc-icon-btn"
+                  aria-label={`Remove: step ${i + 1}`}
+                  onClick={() => edit((prev) => prev.filter((_, j) => j !== i))}
+                >
+                  ✕
+                </button>
+              </li>
+            ))}
+          </ol>
+        )}
+      </div>
 
       <button
         type="button"
+        className="cbmc-btn cbmc-btn-primary"
         disabled={moves.length === 0}
         onClick={test}
-        style={{ marginTop: "0.5rem" }}
+        style={{ marginTop: "0.75rem" }}
       >
         Test my sequence
       </button>

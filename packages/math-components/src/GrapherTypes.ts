@@ -104,9 +104,13 @@ export type GrapherSpec = {
   bounds?: { x: [number, number]; y: [number, number] };
   /** Override the auto-generated a11y caption. */
   caption?: string;
+  /** A one-line "try this →" instruction shown above the figure. */
+  instruction?: string;
   /** Whether to render the computed image. Default true. */
   showImage?: boolean;
-  /** Render side-length labels on preimage and image. Default false. */
+  /** Show the original-vs-image legend. Default true. */
+  showLegend?: boolean;
+  /** INITIAL state of the student "Show side lengths" toggle. Default false. */
   showMeasurements?: boolean;
   /** Optional enhancement: allow dragging the preimage. Default false. */
   draggablePreimage?: boolean;

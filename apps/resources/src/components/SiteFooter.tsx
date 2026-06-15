@@ -12,6 +12,9 @@ export function SiteFooter() {
           <Link href="/" className="transition-colors hover:text-primary">
             Hub home
           </Link>
+          <Link href="/about" className="transition-colors hover:text-primary">
+            About
+          </Link>
           <Link href="/glossary" className="transition-colors hover:text-primary">
             Glossary
           </Link>

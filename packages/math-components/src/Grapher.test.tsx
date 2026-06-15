@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 import { afterEach, describe, expect, it, vi, beforeAll } from "vitest";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import { Grapher, choose, slider } from "./Grapher";
@@ -47,9 +47,11 @@ describe("<Grapher> — reflection", () => {
   it("renders a keyboard-operable control and an auto a11y caption", () => {
     render(<Grapher spec={reflectionSpec()} />);
 
-    // controls-first: the choose() renders a labeled native <select>
-    const select = screen.getByLabelText("Axis");
-    expect(select.tagName).toBe("SELECT");
+    // controls-first: the choose() renders a labeled segmented button group,
+    // with every option visible at once.
+    const group = screen.getByRole("group", { name: "Axis" });
+    expect(within(group).getByRole("button", { name: "x" })).toBeInTheDocument();
+    expect(within(group).getByRole("button", { name: "y" })).toBeInTheDocument();
 
     // auto caption describes preimage + transform + current param
     const caption = document.getElementById("grapher-caption");
@@ -65,8 +67,12 @@ describe("<Grapher> — reflection", () => {
     // initial caption: reflecting over x-axis
     expect(caption()).toHaveTextContent(/across the x-axis/i);
 
-    // switch the axis to y
-    await user.selectOptions(screen.getByLabelText("Axis"), "y");
+    // switch the axis to y by clicking its segment
+    await user.click(
+      within(screen.getByRole("group", { name: "Axis" })).getByRole("button", {
+        name: "y",
+      }),
+    );
 
     // caption updates to the y-axis
     expect(caption()).toHaveTextContent(/across the y-axis/i);

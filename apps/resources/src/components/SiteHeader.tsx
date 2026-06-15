@@ -13,12 +13,20 @@ export function SiteHeader() {
         >
           Math Resources Hub
         </Link>
-        <a
-          href="https://cameronbrady.dev"
-          className="font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:text-primary"
+        <nav
+          aria-label="Primary"
+          className="flex items-center gap-4 font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground"
         >
-          ← cameronbrady.dev
-        </a>
+          <Link href="/about" className="transition-colors hover:text-primary">
+            About
+          </Link>
+          <a
+            href="https://cameronbrady.dev"
+            className="transition-colors hover:text-primary"
+          >
+            ← cameronbrady.dev
+          </a>
+        </nav>
       </div>
     </header>
   );
