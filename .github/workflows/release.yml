@@ -1,0 +1,65 @@
+name: Release
+
+# Changesets-driven release for @cameronbrady/math-components.
+#
+# How it works:
+#   1. A PR that touches the package includes a changeset (`pnpm changeset`).
+#   2. When that PR merges to main, this workflow opens/updates a
+#      "Version Packages" PR (bumps versions + writes CHANGELOG, consumes the
+#      changeset).
+#   3. Merging the "Version Packages" PR re-runs this workflow; with no
+#      changesets left, it builds and publishes to npm.
+#
+# Auth is npm Trusted Publishing (OIDC) — there is NO npm token stored as a
+# secret. GitHub mints a short-lived OIDC credential that npm trusts because the
+# package is configured to trust THIS workflow. Provenance is attached
+# automatically. See repo docs/releasing.md for the one-time npm setup.
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write # create the Version Packages PR, commit, and tag
+  pull-requests: write # open/update the release PR
+  id-token: write # OIDC for npm Trusted Publishing + provenance
+
+jobs:
+  release:
+    name: Version or publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # changesets needs full history to diff tags
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4 # version comes from package.json "packageManager"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Use an npm that supports Trusted Publishing
+        # OIDC publishing requires npm >= 11.5.1; the bundled npm is older.
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create Release PR or publish
+        uses: changesets/action@v1
+        with:
+          version: pnpm version-packages
+          publish: pnpm release
+          commit: "chore: version packages"
+          title: "chore: version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
