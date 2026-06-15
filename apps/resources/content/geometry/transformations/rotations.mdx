@@ -53,12 +53,15 @@ export const practice = [
 ];
 
 A **rotation** is a transformation that turns a figure about a fixed point,
-called the **center of rotation**, through a given **angle**. Every point of the
+called the <Term id="center-of-rotation">center of rotation</Term>, through a
+given **angle**. Every point of the
 figure travels along a circular arc centered at that point, so the distance from
 each point to the center never changes. Counter-clockwise angles are taken as
 positive, following the standard mathematical convention.
 
 ## Rotating about the origin
+
+<Refresher id="negative-numbers" />
 
 For the common quarter-turns about the origin, a rotation by an angle
 $\theta$ has clean coordinate rules. A $90^\circ$ counter-clockwise rotation
@@ -70,6 +73,31 @@ $$
 
 The half-turn $180^\circ$ sends $(x, y) \mapsto (-x, -y)$, and the three-quarter
 turn $270^\circ$ (equivalently $-90^\circ$) sends $(x, y) \mapsto (y, -x)$.
+
+<WorkedExample title="Rotate (2, 5) by 90° counter-clockwise about the origin">
+  <Step
+    check={{
+      id: "we-rotation-rule",
+      type: "mc",
+      prompt: "Which rule applies?",
+      choices: ["(x, y) ↦ (−y, x)", "(x, y) ↦ (y, −x)", "(x, y) ↦ (−x, −y)"],
+      answer: 0,
+      hints: ["Counter-clockwise by 90° sends (1, 0) up to (0, 1)."],
+      explanation:
+        "A 90° counter-clockwise rotation about the origin uses (x, y) ↦ (−y, x): it sends (1, 0) to (0, 1).",
+    }}
+  >
+    Pick the rule for a 90° counter-clockwise rotation about the origin.
+  </Step>
+  <Step>
+    Substitute x = 2 and y = 5 into the rule: (2, 5) ↦ (−5, 2).
+  </Step>
+  <Step>
+    Sanity-check with distance: both points are the same distance from the
+    center, since 2² + 5² = 29 and (−5)² + 2² = 29. Rotations never change
+    distances.
+  </Step>
+</WorkedExample>
 
 ## Rotating about any center
 

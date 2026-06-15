@@ -17,3 +17,24 @@ export type TopicModule = {
 export function importTopicContent(slug: TopicSlug): Promise<TopicModule> {
   return import(`../../../content/${slug.subject}/${slug.unit}/${slug.topic}.mdx`);
 }
+
+// A compiled refresher entry: short prose plus an optional zero-stakes
+// self-check question (graded, never recorded).
+export type RefresherModule = {
+  default: ComponentType;
+  check?: PracticeQuestion;
+};
+
+export function importRefresherEntry(slug: string): Promise<RefresherModule> {
+  return import(`../../../content/_refreshers/${slug}.mdx`);
+}
+
+// A compiled glossary entry: a short definition (plain language first,
+// formal second).
+export type GlossaryModule = {
+  default: ComponentType;
+};
+
+export function importGlossaryEntry(slug: string): Promise<GlossaryModule> {
+  return import(`../../../content/_glossary/${slug}.mdx`);
+}
