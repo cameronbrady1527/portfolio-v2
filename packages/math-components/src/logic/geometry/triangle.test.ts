@@ -5,6 +5,7 @@ import {
   roundAnglesToSum,
   triangleAngles,
   triangleFromSAS,
+  triangleFromSSS,
 } from "./triangle";
 
 const DEG = Math.PI / 180;
@@ -231,6 +232,53 @@ describe("midsegment", () => {
         const half = dist(p, q) / 2;
         expect(ms.length).toBeCloseTo(half, 9);
         expect(dist(ms.start, ms.end)).toBeCloseTo(half, 9);
+      }
+    }
+  });
+});
+
+describe("triangleFromSSS", () => {
+  it("builds a valid triangle and recovers the three side lengths", () => {
+    const { vertices, valid } = triangleFromSSS(3, 4, 5);
+    expect(valid).toBe(true);
+    const [a, b, c] = vertices;
+    expect(dist(a, b)).toBeCloseTo(3, 9); // AB
+    expect(dist(b, c)).toBeCloseTo(4, 9); // BC
+    expect(dist(c, a)).toBeCloseTo(5, 9); // CA
+  });
+
+  it("rejects a triple that violates the triangle inequality (regardless of order)", () => {
+    expect(triangleFromSSS(2, 3, 7).valid).toBe(false);
+    expect(triangleFromSSS(7, 3, 2).valid).toBe(false);
+    expect(triangleFromSSS(3, 7, 2).valid).toBe(false);
+  });
+
+  it("treats a degenerate (sum-equal) triple as invalid", () => {
+    expect(triangleFromSSS(2, 3, 5).valid).toBe(false);
+  });
+
+  it("valid ⇔ the (strict) triangle inequality, and valid triples recover their sides (property)", () => {
+    let seed = 192837465;
+    const rng = () => {
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      return seed / 0x7fffffff;
+    };
+    for (let i = 0; i < 500; i++) {
+      const ab = 1 + rng() * 9;
+      const bc = 1 + rng() * 9;
+      const ca = 1 + rng() * 9;
+      const expectValid = ab + bc > ca && bc + ca > ab && ca + ab > bc;
+      const { vertices, valid } = triangleFromSSS(ab, bc, ca);
+      expect(valid).toBe(expectValid);
+      if (valid) {
+        const [a, b, c] = vertices;
+        expect(dist(a, b)).toBeCloseTo(ab, 6);
+        expect(dist(b, c)).toBeCloseTo(bc, 6);
+        expect(dist(c, a)).toBeCloseTo(ca, 6);
+        const area2 = Math.abs(
+          (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y),
+        );
+        expect(area2).toBeGreaterThan(1e-9);
       }
     }
   });

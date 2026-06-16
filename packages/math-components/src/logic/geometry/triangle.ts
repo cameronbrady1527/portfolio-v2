@@ -166,6 +166,45 @@ export function midsegment(vertices: Pt[], side: TriangleSide): Midsegment {
   };
 }
 
+/** A triangle built from three side lengths (SSS), with a validity verdict. */
+export interface SSSTriangle {
+  /** [A, B, C]; A at the origin, B at (sideAB, 0), C swept above. Degenerate
+   *  triples collapse C onto the x-axis (y = 0) so the figure shows it fail to close. */
+  vertices: Pt[];
+  /** True iff the three sides satisfy the STRICT triangle inequality. */
+  valid: boolean;
+}
+
+/**
+ * Construct a triangle from its three side lengths (SSS), and report whether the
+ * sides can actually close into a triangle. `valid` encodes the triangle
+ * inequality (each side strictly less than the sum of the other two) — the whole
+ * point of the Triangle Inequality tool is to watch the figure FAIL to close
+ * when it doesn't hold, so a degenerate or impossible triple returns
+ * `valid: false` (with C placed on the base, y = 0, for the flat/open figure).
+ *
+ * Placement: A at the origin, B at (sideAB, 0), and C is the upper intersection
+ * of the circles |CA| = sideCA and |CB| = sideBC. For a valid triple the three
+ * side lengths are then exactly the inputs.
+ */
+export function triangleFromSSS(
+  sideAB: number,
+  sideBC: number,
+  sideCA: number,
+): SSSTriangle {
+  const valid =
+    sideAB + sideBC > sideCA &&
+    sideBC + sideCA > sideAB &&
+    sideCA + sideAB > sideBC;
+  const A: Pt = { x: 0, y: 0 };
+  const B: Pt = { x: sideAB, y: 0 };
+  // x from |CA|² − |CB|² along the base; y from |CA|² − x² (clamped at 0).
+  const x = sideAB === 0 ? 0 : (sideCA * sideCA - sideBC * sideBC + sideAB * sideAB) / (2 * sideAB);
+  const y2 = sideCA * sideCA - x * x;
+  const C: Pt = { x, y: y2 > 0 ? Math.sqrt(y2) : 0 };
+  return { vertices: [A, B, C], valid };
+}
+
 export function roundAnglesToSum(
   angles: [number, number, number],
 ): [number, number, number] {

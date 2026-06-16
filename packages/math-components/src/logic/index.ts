@@ -45,6 +45,7 @@ export {
 } from "./geometry/angles";
 export {
   triangleFromSAS,
+  triangleFromSSS,
   triangleAngles,
   roundAnglesToSum,
   angleSumAssembly,
@@ -52,6 +53,7 @@ export {
   type AngleSumAssembly,
   type TriangleSide,
   type Midsegment,
+  type SSSTriangle,
 } from "./geometry/triangle";
 
 // Practice — answer grading.
