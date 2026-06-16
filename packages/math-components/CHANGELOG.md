@@ -1,5 +1,12 @@
 # @cameronbrady/math-components
 
+## 0.2.0
+
+### Minor Changes
+
+- 69a96e2: Add AngleExplorer (vertical-angles lens) + the angles geometry module
+- b421679: Add TriangleLab (angle-sum invariance lens) + the triangle geometry module
+
 ## 0.1.1
 
 ### Patch Changes
