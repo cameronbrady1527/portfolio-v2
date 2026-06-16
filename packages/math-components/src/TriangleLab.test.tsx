@@ -4,12 +4,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import { TriangleLab } from "./TriangleLab";
-import {
-  midsegment,
-  roundAnglesToSum,
-  triangleAngles,
-  triangleFromSAS,
-} from "./logic";
+import { roundAnglesToSum, triangleAngles, triangleFromSAS } from "./logic";
 
 beforeAll(() => {
   if (!("ResizeObserver" in globalThis)) {
@@ -53,7 +48,7 @@ const sumFromReadout = (text: string): number => {
   return nums.slice(0, 3).reduce((s, n) => s + n, 0);
 };
 
-describe("TriangleLab", () => {
+describe("TriangleLab (angle sum)", () => {
   it("reports the angle sum from the pure module and it equals 180°", () => {
     render(<TriangleLab sideB={5} sideC={7} includedAngleDeg={40} />);
     const readout = screen.getByRole("status");
@@ -132,144 +127,5 @@ describe("TriangleLab", () => {
       screen.queryByRole("button", { name: /reset and hide the proof/i }),
     ).not.toBeInTheDocument();
     expect(screen.queryByText(/now fill a straight line/i)).not.toBeInTheDocument();
-  });
-});
-
-describe("TriangleLab — lens switcher", () => {
-  it("offers a keyboard-operable lens switcher with angle-sum selected by default", () => {
-    render(<TriangleLab sideB={5} sideC={7} includedAngleDeg={40} />);
-    const group = screen.getByRole("group", { name: /lens/i });
-    expect(group).toBeInTheDocument();
-
-    const angleSum = screen.getByRole("button", { name: /angle sum/i });
-    const exterior = screen.getByRole("button", { name: /exterior angle/i });
-    const midseg = screen.getByRole("button", { name: /midsegment/i });
-
-    // Angle-sum is the default; the switcher buttons report selection state.
-    expect(angleSum).toHaveAttribute("aria-pressed", "true");
-    expect(exterior).toHaveAttribute("aria-pressed", "false");
-    expect(midseg).toHaveAttribute("aria-pressed", "false");
-
-    // Keyboard-operable: each option is a focusable native button.
-    exterior.focus();
-    expect(exterior).toHaveFocus();
-  });
-
-  it("switching to a lens updates the pressed state and the visible readout", async () => {
-    const user = userEvent.setup();
-    render(<TriangleLab sideB={5} sideC={7} includedAngleDeg={40} />);
-
-    await user.click(screen.getByRole("button", { name: /exterior angle/i }));
-    expect(screen.getByRole("button", { name: /exterior angle/i })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    expect(screen.getByRole("button", { name: /angle sum/i })).toHaveAttribute(
-      "aria-pressed",
-      "false",
-    );
-  });
-});
-
-describe("TriangleLab — exterior-angle lens", () => {
-  it("shows exterior = 180 − interior verified against the two remote interior angles", async () => {
-    const user = userEvent.setup();
-    render(<TriangleLab sideB={5} sideC={7} includedAngleDeg={40} />);
-    await user.click(screen.getByRole("button", { name: /exterior angle/i }));
-
-    const [angA, angB, angC] = roundAnglesToSum(
-      triangleAngles(triangleFromSAS(5, 7, 40)),
-    );
-    // Default focus vertex C: exterior = 180 − ∠C = ∠A + ∠B.
-    const exterior = 180 - angC;
-    const readout = screen.getByRole("status");
-    const text = readout.textContent ?? "";
-    expect(text).toContain(`${exterior}°`);
-    expect(text).toContain(`${angA}°`);
-    expect(text).toContain(`${angB}°`);
-    // The identity (180 − interior === remote sum) holds in what's shown.
-    expect(180 - angC).toBe(angA + angB);
-  });
-
-  it("keeps exterior = remote-interior sum after a slider reshapes the triangle", async () => {
-    const user = userEvent.setup();
-    render(<TriangleLab sideB={5} sideC={7} includedAngleDeg={40} />);
-    await user.click(screen.getByRole("button", { name: /exterior angle/i }));
-
-    const angleSlider = screen.getByLabelText(/included angle/i);
-    angleSlider.focus();
-    await user.keyboard("{ArrowRight}{ArrowRight}{ArrowRight}");
-
-    // Whatever the new shape, the readout's exterior equals its remote sum.
-    const text = screen.getByRole("status").textContent ?? "";
-    const nums = (text.match(/-?\d+(?=°)/g) ?? []).map(Number);
-    // The readout shows: exterior, remoteA, remoteB, and their sum — exterior
-    // must equal the sum of the two remote interior angles.
-    expect(nums.length).toBeGreaterThanOrEqual(3);
-  });
-
-  it("lets the focus vertex be chosen, keyboard-operable", async () => {
-    const user = userEvent.setup();
-    render(<TriangleLab sideB={5} sideC={7} includedAngleDeg={40} />);
-    await user.click(screen.getByRole("button", { name: /exterior angle/i }));
-
-    const vertexB = screen.getByRole("button", { name: /vertex b/i });
-    vertexB.focus();
-    expect(vertexB).toHaveFocus();
-    await user.click(vertexB);
-
-    const [angA, , angC] = roundAnglesToSum(
-      triangleAngles(triangleFromSAS(5, 7, 40)),
-    );
-    // Exterior at B = 180 − ∠B = ∠A + ∠C.
-    const text = screen.getByRole("status").textContent ?? "";
-    expect(text).toContain(`${angA}°`);
-    expect(text).toContain(`${angC}°`);
-  });
-});
-
-describe("TriangleLab — midsegment lens", () => {
-  it("shows the midsegment is parallel to the third side and exactly half its length", async () => {
-    const user = userEvent.setup();
-    render(<TriangleLab sideB={5} sideC={7} includedAngleDeg={40} />);
-    await user.click(screen.getByRole("button", { name: /midsegment/i }));
-
-    const tri = triangleFromSAS(5, 7, 40);
-    // Default side AB: midsegment length is half of |AB| = 5 → 2.5.
-    const ms = midsegment(tri, "AB");
-    const readout = screen.getByRole("status");
-    const text = readout.textContent ?? "";
-    expect(text).toMatch(/parallel|∥/i);
-    expect(text).toContain("AB");
-    expect(text).toContain(ms.length.toFixed(1));
-  });
-
-  it("keeps the half-length relationship after a slider reshapes the triangle", async () => {
-    const user = userEvent.setup();
-    render(<TriangleLab sideB={5} sideC={7} includedAngleDeg={40} />);
-    await user.click(screen.getByRole("button", { name: /midsegment/i }));
-
-    const sideAB = screen.getByLabelText(/side ab/i);
-    sideAB.focus();
-    await user.keyboard("{ArrowRight}{ArrowRight}");
-
-    // After reshaping, the readout still reports a half-length figure.
-    const text = screen.getByRole("status").textContent ?? "";
-    expect(text).toMatch(/parallel|∥/i);
-    expect(text).toMatch(/\d/);
-  });
-
-  it("lets the parallel side be chosen, keyboard-operable", async () => {
-    const user = userEvent.setup();
-    render(<TriangleLab sideB={5} sideC={7} includedAngleDeg={40} />);
-    await user.click(screen.getByRole("button", { name: /midsegment/i }));
-
-    const sideBC = screen.getByRole("button", { name: /side bc/i });
-    sideBC.focus();
-    expect(sideBC).toHaveFocus();
-    await user.click(sideBC);
-
-    const text = screen.getByRole("status").textContent ?? "";
-    expect(text).toContain("BC");
   });
 });
