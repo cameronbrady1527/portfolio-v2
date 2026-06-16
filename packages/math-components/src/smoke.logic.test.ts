@@ -13,6 +13,9 @@ import {
   stretch,
   translate,
   rotate,
+  triangleFromSAS,
+  triangleAngles,
+  roundAnglesToSum,
   applyTransform,
   grade,
   emptyProgress,
@@ -39,6 +42,13 @@ describe("/logic — resolves and computes", () => {
       .toEqual({ type: "point", at: { x: 6, y: 3 }, label: undefined });
     expect(rotate({ type: "point", at: { x: 1, y: 0 } }, 90, { x: 0, y: 0 }))
       .toEqual({ type: "point", at: { x: 0, y: 1 } });
+  });
+
+  it("exposes the triangle module (SAS + angle sum invariance)", () => {
+    const tri = triangleFromSAS(5, 7, 40);
+    const [a, b, c] = roundAnglesToSum(triangleAngles(tri));
+    expect(a + b + c).toBe(180);
+    expect(a).toBe(40);
   });
 
   it("exposes grading + a key-agnostic progress core/adapter", () => {

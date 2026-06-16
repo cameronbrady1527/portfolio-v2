@@ -32,6 +32,11 @@ export {
 } from "./geometry/symmetry";
 export { translate } from "./geometry/translate";
 export { rotate } from "./geometry/rotate";
+export {
+  triangleFromSAS,
+  triangleAngles,
+  roundAnglesToSum,
+} from "./geometry/triangle";
 
 // Practice — answer grading.
 export { grade } from "./practice/grade";

@@ -23,3 +23,8 @@ export {
 } from "./symmetry";
 export { translate } from "./translate";
 export { rotate } from "./rotate";
+export {
+  triangleFromSAS,
+  triangleAngles,
+  roundAnglesToSum,
+} from "./triangle";

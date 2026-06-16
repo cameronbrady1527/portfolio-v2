@@ -15,6 +15,7 @@ export {
   SymmetryExplorer,
   type SymmetryExplorerProps,
 } from "./SymmetryExplorer";
+export { TriangleLab, type TriangleLabProps } from "./TriangleLab";
 export {
   SequenceBuilder,
   type SequenceBuilderProps,
