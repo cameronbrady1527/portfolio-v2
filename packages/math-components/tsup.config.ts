@@ -14,6 +14,7 @@ export default defineConfig({
     Grapher: "src/Grapher.tsx",
     SequenceBuilder: "src/SequenceBuilder.tsx",
     SymmetryExplorer: "src/SymmetryExplorer.tsx",
+    AngleExplorer: "src/AngleExplorer.tsx",
     GrapherTypes: "src/GrapherTypes.ts",
     "logic/index": "src/logic/index.ts",
   },

@@ -16,6 +16,10 @@ export {
   type SymmetryExplorerProps,
 } from "./SymmetryExplorer";
 export {
+  AngleExplorer,
+  type AngleExplorerProps,
+} from "./AngleExplorer";
+export {
   SequenceBuilder,
   type SequenceBuilderProps,
   type SequencePuzzle,

@@ -32,6 +32,17 @@ export {
 } from "./geometry/symmetry";
 export { translate } from "./geometry/translate";
 export { rotate } from "./geometry/rotate";
+export {
+  transversalAngles,
+  type AngleId,
+  type Intersection,
+  type Region,
+  type PairRelationship,
+  type Angle,
+  type AnglePair,
+  type TransversalConfig,
+  type TransversalAngles,
+} from "./geometry/angles";
 
 // Practice — answer grading.
 export { grade } from "./practice/grade";
