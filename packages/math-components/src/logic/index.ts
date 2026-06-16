@@ -32,6 +32,29 @@ export {
 } from "./geometry/symmetry";
 export { translate } from "./geometry/translate";
 export { rotate } from "./geometry/rotate";
+export {
+  transversalAngles,
+  type AngleId,
+  type Intersection,
+  type Region,
+  type PairRelationship,
+  type Angle,
+  type AnglePair,
+  type TransversalConfig,
+  type TransversalAngles,
+} from "./geometry/angles";
+export {
+  triangleFromSAS,
+  triangleFromSSS,
+  triangleAngles,
+  roundAnglesToSum,
+  angleSumAssembly,
+  midsegment,
+  type AngleSumAssembly,
+  type TriangleSide,
+  type Midsegment,
+  type SSSTriangle,
+} from "./geometry/triangle";
 
 // Practice — answer grading.
 export { grade } from "./practice/grade";
