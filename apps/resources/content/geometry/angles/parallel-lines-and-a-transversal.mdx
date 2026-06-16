@@ -1,0 +1,152 @@
+---
+title: Parallel Lines & a Transversal
+order: 2
+description: When a line cuts two parallel lines, the angles line up in predictable ways — and the pattern breaks the moment the lines stop being parallel.
+---
+
+import { TransversalAngles } from "@cameronbrady/math-components";
+
+A line that cuts across two other lines is a <Term id="transversal">transversal</Term>.
+It makes a set of angles at each crossing. When the two lines it cuts are
+**parallel**, those angles line up in predictable ways — and when the lines are
+*not* parallel, the pattern breaks. That break is the whole point: these angle
+relationships are a test for parallelism.
+
+<TransversalPattern
+  relationship="corresponding"
+  caption="A road crossing two parallel railroad tracks is a transversal. The matching-corner angles at the two crossings are equal — and the chevrons mark the tracks parallel."
+/>
+
+## Explore
+
+Pick a relationship from the switcher, then flip the lines between **parallel**
+and **not parallel**. Watch the highlighted pair of angles: equal (or summing to
+a straight line) when the lines are parallel, and off when they are not.
+
+<TransversalAngles />
+
+## Make a prediction
+
+<PredictThenCheck
+  prompt="Two parallel lines are cut by a transversal. A pair of corresponding angles sit in matching corners at the two crossings. One of them measures 65°. What is the other?"
+  choices={["65°", "115°", "90°", "Can't tell without more information"]}
+>
+
+The other is also **65°**. When the two lines are parallel, corresponding angles —
+the ones in matching corners — are always equal. Select "corresponding" in the
+tool above and confirm the highlighted pair reads the same value.
+
+</PredictThenCheck>
+
+## Test it
+
+In the tool, keep "corresponding" selected and flip the lines to **not
+parallel**. Do the two corresponding angles stay equal? Now try to find any
+non-parallel tilt where a corresponding pair lands back on equal. You can't — the
+angles match *only* when the lines are parallel. That is why a surveyor or a
+carpenter can use equal corresponding angles to *prove* two lines are parallel.
+
+## Why it works
+
+When the two lines are parallel, four relationships fall out of a single idea —
+matching corners agree.
+
+**Corresponding angles** (matching corners) are congruent.
+
+<TransversalPattern relationship="corresponding" />
+
+**Alternate interior angles** — between the lines, on opposite sides of the
+transversal, the "Z" pattern — are congruent.
+
+<TransversalPattern relationship="alternate-interior" />
+
+**Same-side interior angles** — between the lines, on the same side of the
+transversal, the "C" pattern — are supplementary (they add to $180°$).
+
+<TransversalPattern relationship="same-side-interior" />
+
+Each relationship follows from the one before using the rules from
+[intersecting lines](/geometry/angles/intersecting-lines). Start with one
+<Term id="corresponding-angles">corresponding</Term> angle. Its
+<Term id="alternate-interior-angles">alternate interior</Term> partner is the
+*vertical angle* of that corresponding angle, so it is equal too. And a
+<Term id="same-side-interior-angles">same-side interior</Term> angle is the
+*linear pair* of an alternate interior angle, so it must be its supplement:
+
+$$
+\text{same-side interior} = 180° - \text{alternate interior}
+$$
+
+<Takeaway>
+
+With parallel lines, **corresponding** and **alternate interior** angles are
+congruent, while **same-side interior** angles are supplementary. Every one of
+these runs both ways: if the angles match (or sum to 180°), the lines *must* be
+parallel.
+
+</Takeaway>
+
+<WorkedExample title="Two parallel lines are cut by a transversal. One angle measures 70°. Find a corresponding angle, an alternate interior angle, and a same-side interior angle to it.">
+  <Step
+    check={{
+      id: "we-corresponding",
+      type: "mc",
+      prompt: "The corresponding angle (matching corner at the other crossing) measures…",
+      choices: ["70°", "110°", "90°"],
+      answer: 0,
+      hints: ["With parallel lines, corresponding angles are congruent."],
+      explanation: "Corresponding angles are congruent when the lines are parallel, so it is also 70°.",
+    }}
+  >
+    The corresponding angle is in the matching corner at the other crossing, so
+    it is **70°**.
+  </Step>
+  <Step>
+    The alternate interior angle is the vertical angle of that corresponding
+    angle, so it is equal: **70°**.
+  </Step>
+  <Step>
+    A same-side interior angle forms a linear pair with the alternate interior
+    angle, so it is the supplement: $180° - 70° = 110°$.
+  </Step>
+</WorkedExample>
+
+export const practice = [
+  {
+    id: "corresponding-118",
+    type: "mc",
+    prompt: "Two parallel lines are cut by a transversal. One angle measures 118°. What is the measure of its corresponding angle?",
+    choices: ["118°", "62°", "90°", "236°"],
+    answer: 0,
+    hints: ["With parallel lines, corresponding angles are congruent."],
+    explanation: "Corresponding angles are congruent when the lines are parallel, so the corresponding angle is also 118°.",
+  },
+  {
+    id: "same-side-interior-105",
+    type: "numeric",
+    prompt: "Two parallel lines are cut by a transversal. One same-side interior angle measures 105°. What is the measure of the other same-side interior angle, in degrees?",
+    answer: 75,
+    tolerance: 0,
+    unit: "°",
+    hints: ["Same-side interior angles are supplementary when the lines are parallel — they add to 180°."],
+    explanation: "Same-side interior angles sum to 180°, so the other is 180° − 105° = 75°.",
+  },
+  {
+    id: "alternate-interior-algebra",
+    type: "numeric",
+    prompt: "Two parallel lines are cut by a transversal. A pair of alternate interior angles measure (3x − 5)° and (2x + 20)°. Find x.",
+    answer: 25,
+    tolerance: 0,
+    hints: ["Alternate interior angles are equal when the lines are parallel — set the expressions equal."],
+    explanation: "Alternate interior angles are congruent: 3x − 5 = 2x + 20, so x = 25. (Both angles then measure 70°.)",
+  },
+  {
+    id: "converse-conclusion",
+    type: "mc",
+    prompt: "A transversal cuts two lines, and a pair of corresponding angles turn out to be equal. What can you conclude about the two lines?",
+    choices: ["They are parallel", "They are perpendicular", "They cross at a right angle", "Nothing can be concluded"],
+    answer: 0,
+    hints: ["The corresponding-angles relationship runs both ways."],
+    explanation: "Equal corresponding angles force the two lines to be parallel — this converse is how equal angles are used to prove lines parallel.",
+  },
+];

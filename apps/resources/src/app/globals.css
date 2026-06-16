@@ -84,6 +84,30 @@
   }
 }
 
+/* Topic prose headings. Tailwind's preflight strips default heading sizing, so
+   MDX h2/h3 would otherwise render at body weight/size and read as plain text —
+   only the flex gap hinted at the hierarchy. Give them real presence: the
+   display serif (matching the page h1), bold weight, a modest size bump, and a
+   touch more space above than below so each section reads as a fresh start. */
+.topic-prose h2 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.5rem; /* matches the app's other h2s (Practice, glossary) */
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 0.75rem;
+}
+.topic-prose h3 {
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  margin-top: 0.25rem;
+}
+.topic-prose h4 {
+  font-weight: 700;
+}
+
 /* Signature graph-paper grid: ~26px cells in the editorial "line" colour. */
 .graph-paper {
   background-color: var(--background);

@@ -1,0 +1,166 @@
+---
+title: Intersecting Lines
+order: 1
+description: Two lines crossing make four angles — discover why opposite angles are always equal and neighboring angles always make a straight line.
+---
+
+import { AngleExplorer } from "@cameronbrady/math-components";
+
+When two straight lines cross, four angles appear at the meeting point — and
+they are not all different. They fall into two matching pairs, no matter how you
+tilt the lines.
+
+<AngleCrossing
+  angle={55}
+  variant="vertical"
+  caption="Wherever two lines cross — the blades of a pair of scissors, a railroad crossing, a plain X — the four angles come in two equal pairs."
+/>
+
+## Explore
+
+Drag the slider to change the angle between the lines. Click an angle to select
+it, and switch between the two views. Watch for the pattern: **which angles stay
+equal to each other, and which pair up to make a straight line?**
+
+<AngleExplorer />
+
+## Opposite angles
+
+<PredictThenCheck
+  prompt="Two lines cross. One of the four angles measures 110°. What is the angle directly opposite it — the one sharing only the crossing point?"
+  choices={["110°", "70°", "90°", "It depends on how the lines are tilted"]}
+>
+
+The opposite angle is also **110°**. Angles straight across the crossing from
+each other always match — change the tilt all you like, the two opposite angles
+move together. Select an angle in the tool above and watch its partner across
+the crossing.
+
+</PredictThenCheck>
+
+Angles on opposite sides of the crossing are <Term id="vertical-angles">vertical
+angles</Term>, and vertical angles are always <Term id="congruent">congruent</Term>
+(equal in measure). In the diagram, the two{" "}
+<strong style={{ color: "#b4540a" }}>orange</strong> angles are equal to each
+other, and so are the two <strong style={{ color: "#2563b4" }}>blue</strong> ones.
+
+## Neighboring angles
+
+<PredictThenCheck
+  prompt="An angle of 110° sits next to a neighboring angle, and together their outer sides form one straight line. What must the two angles add up to?"
+  choices={["180°", "90°", "110°", "360°"]}
+>
+
+They add to **180°**. Two angles whose outer sides form a straight line always
+total a straight angle — so if one is 110°, its neighbor must be 70°.
+
+</PredictThenCheck>
+
+Two angles that sit next to each other along a straight line form a
+<Term id="linear-pair">linear pair</Term>. Their outer sides make a straight
+angle, so a linear pair is always <Term id="supplementary">supplementary</Term> —
+the measures add to 180°.
+
+<AngleCrossing
+  angle={55}
+  variant="linear"
+  caption="A linear pair: the orange angle and its violet neighbor share a side, their outer sides form a straight line, and together they make 180°."
+/>
+
+## Test it
+
+Go back to the tool and drag the slider through many different tilts. Try to find
+**any** crossing where the two opposite angles are *not* equal, or any neighboring
+pair that does *not* total 180°. You won't — and that is what makes these
+relationships theorems rather than coincidences.
+
+## Why it works
+
+The two facts are linked: the linear-pair rule *forces* the vertical-angle rule.
+
+Pick one of the orange angles, 55°. Each of its two neighbors forms a linear pair
+with it, so each neighbor is $180° - 55° = 125°$ — the blue angles. Now the angle
+*opposite* the orange one is itself a neighbor of a blue angle, so it is
+$180° - 125° = 55°$ — orange again. Opposite angles have to match because they are
+each "180° minus the same neighbor."
+
+<Takeaway>
+
+When two lines cross, **vertical angles are congruent** and **each linear pair is
+supplementary (adds to 180°)**. Know one of the four angles and you know all four.
+
+</Takeaway>
+
+A special case is worth a look: when the lines cross at a right angle, every one
+of the four angles is 90°.
+
+<AngleCrossing
+  variant="right"
+  caption="Perpendicular lines. One angle is 90°, so its linear-pair neighbors are 180° − 90° = 90°, and the vertical angle is 90° too — all four are right angles."
+/>
+
+<WorkedExample title="Two lines cross and one angle measures 35°. Find the other three.">
+  <Step
+    check={{
+      id: "we-vert-opposite",
+      type: "mc",
+      prompt: "What is the measure of the angle directly opposite the 35° angle?",
+      choices: ["35° — it is the vertical angle", "145° — it is a linear pair", "90° — it is a right angle"],
+      answer: 0,
+      hints: ["Opposite angles across a crossing are vertical angles."],
+      explanation: "Vertical angles are congruent, so the angle opposite 35° is also 35°.",
+    }}
+  >
+    The angle straight across from the 35° angle is its vertical angle, so it is
+    also **35°**.
+  </Step>
+  <Step>
+    Each of the two remaining angles forms a linear pair with the 35° angle, so
+    each is $180° - 35° = 145°$. (As a check, those two are vertical angles to
+    each other — and indeed they are equal.)
+  </Step>
+  <Step>
+    The four angles around the crossing are $35°, 145°, 35°, 145°$ — opposite
+    angles equal, neighbors summing to $180°$.
+  </Step>
+</WorkedExample>
+
+export const practice = [
+  {
+    id: "vertical-72",
+    type: "mc",
+    prompt: "Two lines cross. One angle measures 72°. What is its vertical angle (the one directly opposite)?",
+    choices: ["72°", "108°", "18°", "90°"],
+    answer: 0,
+    hints: ["Vertical angles are the pair directly across the crossing from each other."],
+    explanation: "Vertical angles are congruent, so the angle opposite 72° is also 72°.",
+  },
+  {
+    id: "linear-pair-130",
+    type: "numeric",
+    prompt: "Two angles form a linear pair. One measures 130°. What is the measure of the other, in degrees?",
+    answer: 50,
+    tolerance: 0,
+    unit: "°",
+    hints: ["A linear pair is supplementary — the two angles add to 180°."],
+    explanation: "A linear pair sums to 180°, so the other angle is 180° − 130° = 50°.",
+  },
+  {
+    id: "perpendicular-right",
+    type: "mc",
+    prompt: "Two lines cross so that one of the four angles is a right angle (90°). What are the other three angles?",
+    choices: ["All three are 90°", "90°, 90°, and 180°", "Two are 90° and one is 180°", "There isn't enough information"],
+    answer: 0,
+    hints: ["Use the linear-pair rule on the 90° angle, then the vertical-angle rule."],
+    explanation: "Each neighbor is 180° − 90° = 90°, and the opposite angle is the vertical angle, also 90°. When lines cross at a right angle, all four angles are 90°.",
+  },
+  {
+    id: "vertical-algebra",
+    type: "numeric",
+    prompt: "Two vertical angles measure (2x + 10)° and (x + 40)°. Find x.",
+    answer: 30,
+    tolerance: 0,
+    hints: ["Vertical angles are equal — set the two expressions equal to each other."],
+    explanation: "Vertical angles are congruent: 2x + 10 = x + 40, so x = 30. (Both angles then measure 70°.)",
+  },
+];
