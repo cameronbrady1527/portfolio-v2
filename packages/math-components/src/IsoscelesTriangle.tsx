@@ -29,14 +29,7 @@ import { Coordinates, Mafs, Polygon, Polyline, Text } from "mafs";
 import "mafs/core.css";
 import { autoBounds } from "./grapherLogic";
 import { VertexLabels } from "./VertexLabels";
-import {
-  reflect,
-  roundAnglesToSum,
-  triangleAngles,
-  triangleFromSAS,
-  type Pt,
-  type Shape,
-} from "./logic";
+import { reflect, roundAnglesToSum, triangleAngles, type Pt, type Shape } from "./logic";
 import { easeOut, vertexArc } from "./internal/geometry";
 import { ANGLE_A, ANGLE_B, IMAGE, MUTED, PREIMAGE } from "./internal/colors";
 import { usePrefersReducedMotion } from "./internal/usePrefersReducedMotion";
@@ -69,6 +62,24 @@ export interface IsoscelesTriangleProps {
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
 /**
+ * Canonical isosceles placement: the apex A sits at the top ON THE y-AXIS, and
+ * the base BC rests symmetrically on the x-axis (B left, C right). Built so the
+ * coordinate y-axis IS the triangle's axis of symmetry — which makes the
+ * base-angles fold a clean reflection across x = 0. The two legs |AB| = |AC| are
+ * equal by the left/right symmetry, so the equal-leg constraint is exact.
+ */
+function isoVertices(leg: number, apexDeg: number): Pt[] {
+  const a = (apexDeg * Math.PI) / 180;
+  const half = leg * Math.sin(a / 2); // half the base length
+  const height = leg * Math.cos(a / 2); // apex height above the base
+  return [
+    { x: 0, y: height }, // A — apex, on the axis of symmetry
+    { x: -half, y: 0 }, // B — base left
+    { x: half, y: 0 }, // C — base right
+  ];
+}
+
+/**
  * A FIXED viewport that holds still as the user reshapes the triangle. Fit once
  * to the union of triangles sampled across the full range of BOTH controls (cf.
  * TriangleLab FIXED_BOUNDS), so the grid never appears to drift.
@@ -81,7 +92,7 @@ const FIXED_BOUNDS = (() => {
     const leg = LEG_MIN + ((LEG_MAX - LEG_MIN) * li) / (LEG_SAMPLES - 1);
     for (let ai = 0; ai < APEX_SAMPLES; ai++) {
       const apex = APEX_MIN + ((APEX_MAX - APEX_MIN) * ai) / (APEX_SAMPLES - 1);
-      shapes.push({ type: "polygon" as const, vertices: triangleFromSAS(leg, leg, apex) });
+      shapes.push({ type: "polygon" as const, vertices: isoVertices(leg, apex) });
     }
   }
   return autoBounds(shapes);
@@ -121,7 +132,7 @@ export function IsoscelesTriangle({
   // Everything is derived — both legs are driven by the SAME length, so the two
   // legs are equal BY CONSTRUCTION (the user cannot pull them apart).
   const vertices = useMemo(
-    () => triangleFromSAS(legLength, legLength, apexAngleDeg),
+    () => isoVertices(legLength, apexAngleDeg),
     [legLength, apexAngleDeg],
   );
   const angles = useMemo(() => triangleAngles(vertices), [vertices]);
@@ -141,21 +152,12 @@ export function IsoscelesTriangle({
   const tickAC = useMemo(() => legTick(A, C), [A, C]);
 
   // The axis of symmetry: the line through the apex A and the midpoint of base
-  // BC. Since |AB| = |AC|, this is also the apex-angle bisector and the
-  // perpendicular bisector of BC. A is the origin, so the axis passes through
-  // the origin: y = m·x with m = the bisector slope. (Vertical when the apex
-  // bisector points straight up — handled via a steep slope fallback.)
+  // BC. By the canonical placement that is exactly the y-axis (x = 0) — also the
+  // apex-angle bisector and the perpendicular bisector of BC. Reflecting across
+  // the y-axis sends (x, y) → (−x, y), which swaps B and C while fixing A — no
+  // slope arithmetic, exact.
   const axisMidBC = useMemo(() => ({ x: (B.x + C.x) / 2, y: (B.y + C.y) / 2 }), [B, C]);
-  const axisLine = useMemo(() => {
-    // Direction from A (origin) to the base midpoint.
-    const dx = axisMidBC.x - A.x;
-    const dy = axisMidBC.y - A.y;
-    // Reflection across the line y = m·x (b = 0) through the apex. Use a large
-    // finite slope rather than literal Infinity so reflect()'s formula stays
-    // well-conditioned for a near-vertical axis.
-    const m = Math.abs(dx) < 1e-6 ? 1e6 : dy / dx;
-    return { kind: "linear" as const, m, b: 0 };
-  }, [A, axisMidBC]);
+  const axisLine = useMemo(() => ({ kind: "axis" as const, axis: "y" as const }), []);
 
   // The folded copy: reflect the triangle across its axis of symmetry. The pure,
   // machine-checked reflect() swaps B and C while fixing A — so ∠B lands on ∠C.
