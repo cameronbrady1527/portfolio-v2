@@ -21,6 +21,10 @@ export {
   type AngleExplorerProps,
 } from "./AngleExplorer";
 export {
+  TransversalAngles,
+  type TransversalAnglesProps,
+} from "./TransversalAngles";
+export {
   SequenceBuilder,
   type SequenceBuilderProps,
   type SequencePuzzle,
