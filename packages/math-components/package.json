@@ -52,6 +52,16 @@
         "default": "./dist/logic/index.cjs"
       }
     },
+    "./dsl": {
+      "import": {
+        "types": "./dist/GrapherTypes.d.ts",
+        "default": "./dist/GrapherTypes.js"
+      },
+      "require": {
+        "types": "./dist/GrapherTypes.d.cts",
+        "default": "./dist/GrapherTypes.cjs"
+      }
+    },
     "./styles.css": "./dist/styles.css"
   },
   "files": [
