@@ -20,30 +20,35 @@
  * Linear-pair view: the selected angle and its neighbour are drawn in DISTINCT
  * colours (they are unequal) under one 180° sweep — the language of "these fill
  * a straight angle". Honors prefers-reduced-motion. Zero-stakes: nothing recorded.
- *
- * Performance: state holds the control value, the selection, the view, and the
- * animation clock; the figure is useMemo-derived. The rAF loop runs only while
- * the proof plays.
  */
 import { Fragment, useEffect, useId, useMemo, useRef, useState } from "react";
 import { Coordinates, Line, Mafs, Point, Polygon, Polyline, Text } from "mafs";
 import "mafs/core.css";
 import { transversalAngles } from "./logic";
 import type { Pt } from "./logic";
+import {
+  D,
+  arcLabel,
+  arcPoints,
+  dirWord,
+  easeOut,
+  lineIntersect,
+  rotPt,
+  wedge,
+} from "./internal/geometry";
+import { ANGLE_B, IMAGE, MUTED, PREIMAGE, TARGET } from "./internal/colors";
+import { usePrefersReducedMotion } from "./internal/usePrefersReducedMotion";
+import { ControlSlider, ViewSwitcher } from "./internal/controls";
 
-const D = Math.PI / 180;
-
-const LINE1_COLOR = "var(--cbmc-preimage-color, #16231c)"; // the fixed line
-const LINE2_COLOR = "var(--cbmc-target-color, #b4540a)"; // the line you rotate
-const ACTIVE_COLOR = "var(--cbmc-image-color, #1f8a5b)"; // the selected vertical pair
-const OTHER_COLOR = "var(--cbmc-muted, #6b6353)"; // the other vertical pair
-const PARTNER_COLOR = "var(--cbmc-angle-b, #2563b4)"; // a linear pair's OTHER angle
-// (distinct hue, because a linear pair is two UNEQUAL angles — never matching marks)
+const LINE1_COLOR = PREIMAGE; // the fixed line
+const LINE2_COLOR = TARGET; // the line you rotate
+const ACTIVE_COLOR = IMAGE; // the selected vertical pair
+const OTHER_COLOR = MUTED; // the other vertical pair
+const PARTNER_COLOR = ANGLE_B; // a linear pair's OTHER angle (unequal ⇒ distinct hue)
 
 // Cosmetic geometry only — positions never affect the math. Two lines cross at
 // the origin; the four angles around that single crossing are the whole lesson.
 const ORIGIN: Pt = { x: 0, y: 0 };
-const LINE1_THROUGH: Pt = ORIGIN;
 const VIEW = 4.5;
 
 const FILL_R = 1.5; // wedge fill radius
@@ -57,17 +62,11 @@ const DISMISS_MS = 5000; // auto-clear the proof a few seconds after it lands
 type Slot = 1 | 2 | 3 | 4;
 const SLOT_ORDER: Slot[] = [1, 2, 4, 3];
 const PARTNER: Record<Slot, Slot> = { 1: 4, 4: 1, 2: 3, 3: 2 };
-// Each slot's LINEAR-PAIR neighbour (adjacent angle summing to 180°). Used by the
-// linear-pairs view; sums verified against the pure module, not eyeballed.
+// Each slot's LINEAR-PAIR neighbour (adjacent angle summing to 180°).
 const NEIGHBOUR: Record<Slot, Slot> = { 1: 2, 2: 1, 4: 3, 3: 4 };
 
 /** The angle relationship currently in view — both live on the one crossing. */
 type Lens = "vertical" | "linear-pair";
-const LENS_ORDER: Lens[] = ["vertical", "linear-pair"];
-const LENS_LABEL: Record<Lens, string> = {
-  vertical: "Vertical angles",
-  "linear-pair": "Linear pairs",
-};
 
 export interface AngleExplorerProps {
   /** Direction angle of the first (fixed) line, degrees. Default 0 (horizontal). */
@@ -78,85 +77,6 @@ export interface AngleExplorerProps {
 }
 
 const fmt = (a: number) => `${Math.round(a * 10) / 10}°`;
-
-/** A coarse compass word for a direction (degrees) — for angle aria-labels. */
-function dirWord(deg: number): string {
-  const a = ((deg % 360) + 360) % 360;
-  const words = [
-    "right",
-    "upper-right",
-    "top",
-    "upper-left",
-    "left",
-    "lower-left",
-    "bottom",
-    "lower-right",
-  ];
-  return words[Math.round(a / 45) % 8];
-}
-
-/** Intersection of the second line (through ORIGIN at line2Dir) with the first
- *  (through linePt at lineDir). Rendering only — never affects the math. */
-function intersect(linePt: Pt, lineDir: number, line2Dir: number): Pt {
-  const lu = { x: Math.cos(lineDir * D), y: Math.sin(lineDir * D) };
-  const tu = { x: Math.cos(line2Dir * D), y: Math.sin(line2Dir * D) };
-  const det = lu.x * -tu.y - lu.y * -tu.x;
-  if (Math.abs(det) < 1e-9) return linePt; // near-parallel guard
-  const rx = ORIGIN.x - linePt.x;
-  const ry = ORIGIN.y - linePt.y;
-  const s = (rx * -tu.y - ry * -tu.x) / det;
-  return { x: linePt.x + s * lu.x, y: linePt.y + s * lu.y };
-}
-
-/** Sample an arc (radius r) from angle a0 to a1 (degrees) about c. */
-function arcPoints(c: Pt, a0: number, a1: number, r: number): [number, number][] {
-  const n = 20;
-  const pts: [number, number][] = [];
-  for (let i = 0; i <= n; i++) {
-    const a = (a0 + ((a1 - a0) * i) / n) * D;
-    pts.push([c.x + r * Math.cos(a), c.y + r * Math.sin(a)]);
-  }
-  return pts;
-}
-
-/** A filled wedge: the center, then the bounding arc. */
-function wedge(c: Pt, a0: number, a1: number, r: number): [number, number][] {
-  return [[c.x, c.y], ...arcPoints(c, a0, a1, r)];
-}
-
-/** Label position out along a wedge's bisector. */
-function arcLabel(c: Pt, a0: number, a1: number, r: number): [number, number] {
-  const mid = ((a0 + a1) / 2) * D;
-  return [c.x + r * Math.cos(mid), c.y + r * Math.sin(mid)];
-}
-
-/** Rotate a [x,y] point `deg` degrees about center c. */
-function rotPt([x, y]: [number, number], deg: number, c: Pt): [number, number] {
-  const a = deg * D;
-  const cos = Math.cos(a);
-  const sin = Math.sin(a);
-  const dx = x - c.x;
-  const dy = y - c.y;
-  return [c.x + cos * dx - sin * dy, c.y + sin * dx + cos * dy];
-}
-
-/** Ease-out so the half-turn decelerates gently into its landing. */
-const easeOut = (t: number) => 1 - (1 - t) ** 3;
-
-function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
-      return;
-    }
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const on = () => setReduced(mq.matches);
-    on();
-    mq.addEventListener?.("change", on);
-    return () => mq.removeEventListener?.("change", on);
-  }, []);
-  return reduced;
-}
 
 export function AngleExplorer({
   line1Dir = 0,
@@ -171,7 +91,6 @@ export function AngleExplorer({
   const [step, setStep] = useState(0); // 0 idle; 1/2/3 = the narrated proof steps
   const rafRef = useRef<number | null>(null);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const sliderId = useId();
   const captionId = useId();
   const reduceMotion = usePrefersReducedMotion();
 
@@ -188,7 +107,7 @@ export function AngleExplorer({
       line2Dir: line1Dir,
       transversalDir: line2,
     });
-    const c1 = intersect(LINE1_THROUGH, line1Dir, line2);
+    const c1 = lineIntersect(ORIGIN, line1Dir, ORIGIN, line2);
     const r = [line1Dir, line2, line1Dir + 180, line2 + 180];
     const dirs: Record<Slot, [number, number]> = {
       1: [r[0], r[1]],
@@ -337,6 +256,10 @@ export function AngleExplorer({
       selectAngle(id);
     }
   };
+  const selectLens = (l: Lens) => {
+    resetProof();
+    setLens(l);
+  };
 
   const active = step > 0;
   const landed = step >= 3;
@@ -352,7 +275,7 @@ export function AngleExplorer({
       [through.x + L * u.x, through.y + L * u.y],
     ];
   };
-  const seg1 = lineSeg(LINE1_THROUGH, line1Dir);
+  const seg1 = lineSeg(ORIGIN, line1Dir);
 
   const caption =
     lens === "vertical"
@@ -559,64 +482,27 @@ export function AngleExplorer({
         />
       ))}
 
-      <div className="cbmc-control-row" style={{ marginTop: "0.75rem" }}>
-        <label htmlFor={sliderId} className="cbmc-control-label">
-          Angle between the lines
-        </label>
-        <input
-          id={sliderId}
-          className="cbmc-range"
-          type="range"
+      <div style={{ marginTop: "0.75rem" }}>
+        <ControlSlider
+          label="Angle between the lines"
+          value={line2}
           min={1}
           max={179}
-          step={1}
-          value={line2}
-          aria-valuetext={fmt(theta)}
-          onChange={(e) => onSlider(Number(e.target.value))}
+          onChange={onSlider}
+          display={fmt(theta)}
+          valueText={fmt(theta)}
         />
-        <span className="cbmc-control-value">{fmt(theta)}</span>
       </div>
 
-      <div
-        className="cbmc-controls"
-        role="radiogroup"
-        aria-label="Angle relationship"
-        style={{ marginTop: "0.5rem" }}
-      >
-        {LENS_ORDER.map((l) => (
-          <button
-            key={l}
-            type="button"
-            role="radio"
-            aria-checked={lens === l}
-            tabIndex={lens === l ? 0 : -1}
-            className="cbmc-chip"
-            onClick={() => {
-              resetProof();
-              setLens(l);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-                e.preventDefault();
-                const next =
-                  LENS_ORDER[(LENS_ORDER.indexOf(l) + 1) % LENS_ORDER.length];
-                resetProof();
-                setLens(next);
-              } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-                e.preventDefault();
-                const prev =
-                  LENS_ORDER[
-                    (LENS_ORDER.indexOf(l) + LENS_ORDER.length - 1) % LENS_ORDER.length
-                  ];
-                resetProof();
-                setLens(prev);
-              }
-            }}
-          >
-            {LENS_LABEL[l]}
-          </button>
-        ))}
-      </div>
+      <ViewSwitcher<Lens>
+        label="Angle relationship"
+        value={lens}
+        options={[
+          { value: "vertical", label: "Vertical angles" },
+          { value: "linear-pair", label: "Linear pairs" },
+        ]}
+        onChange={selectLens}
+      />
 
       <div className="cbmc-controls" style={{ marginTop: "0.5rem" }}>
         {lens === "vertical" ? (
