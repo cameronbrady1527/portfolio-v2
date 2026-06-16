@@ -13,6 +13,9 @@ import {
   stretch,
   translate,
   rotate,
+  triangleFromSAS,
+  triangleAngles,
+  roundAnglesToSum,
   applyTransform,
   transversalAngles,
   grade,
@@ -47,6 +50,13 @@ describe("/logic — resolves and computes", () => {
     expect(r.angles[1].measure).toBeCloseTo(70, 9);
     expect(r.parallel).toBe(true);
     expect(r.pairs.some((p) => p.relationship === "vertical" && p.equal)).toBe(true);
+  });
+
+  it("exposes the triangle module (SAS + angle sum invariance)", () => {
+    const tri = triangleFromSAS(5, 7, 40);
+    const [a, b, c] = roundAnglesToSum(triangleAngles(tri));
+    expect(a + b + c).toBe(180);
+    expect(a).toBe(40);
   });
 
   it("exposes grading + a key-agnostic progress core/adapter", () => {

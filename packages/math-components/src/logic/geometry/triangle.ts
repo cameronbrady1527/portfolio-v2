@@ -1,0 +1,91 @@
+/**
+ * Pure triangle geometry — the machine-checked substrate behind the Triangle
+ * Lab (GEO triangle reasoning: angle sum, and later congruence/similarity/trig).
+ *
+ * Substrate-free: no React, no DOM, no mafs. Runs in the node vitest env.
+ *
+ * Angles are in degrees throughout. A triangle is three vertices `Pt[]` in
+ * order [A, B, C]. The SAS constructor places the figure canonically so the
+ * two given sides and their included angle are exactly recoverable; the angle
+ * reader uses vector dot products (no eyeballing, tolerance-aware by nature of
+ * the math). This module is the keystone C5 (congruence), C9 (similarity), and
+ * C10 (trig) will build on, so its surface is kept small and deep.
+ */
+import type { Pt } from "./types";
+
+const DEG = Math.PI / 180;
+
+/**
+ * Construct a triangle [A, B, C] from two sides and their included angle (SAS).
+ *
+ * - `sideB` is |AB| — the side from A to B, laid along the +x axis.
+ * - `sideC` is |AC| — the side from A to C.
+ * - `includedAngleDeg` is the angle ∠BAC between them; valid for 0 < θ < 180,
+ *   for which the triangle is always non-degenerate.
+ *
+ * Canonical placement: A at the origin, B at (sideB, 0), and C swept counter-
+ * clockwise from the +x axis by the included angle at radius sideC. This makes
+ * |AB|, |AC|, and ∠A exactly the inputs.
+ */
+export function triangleFromSAS(
+  sideB: number,
+  sideC: number,
+  includedAngleDeg: number,
+): Pt[] {
+  const a = includedAngleDeg * DEG;
+  return [
+    { x: 0, y: 0 },
+    { x: sideB, y: 0 },
+    { x: sideC * Math.cos(a), y: sideC * Math.sin(a) },
+  ];
+}
+
+/** The interior angle (degrees) at the corner `at`, between rays to `p` and `q`. */
+function angleAt(at: Pt, p: Pt, q: Pt): number {
+  const ux = p.x - at.x;
+  const uy = p.y - at.y;
+  const vx = q.x - at.x;
+  const vy = q.y - at.y;
+  const lu = Math.hypot(ux, uy);
+  const lv = Math.hypot(vx, vy);
+  // Clamp against floating-point overshoot so acos never returns NaN.
+  const cos = Math.max(-1, Math.min(1, (ux * vx + uy * vy) / (lu * lv)));
+  return Math.acos(cos) / DEG;
+}
+
+/**
+ * The three interior angles (degrees) of a triangle, positionally: the angle at
+ * vertex A (`vertices[0]`), then B, then C. Computed from vector dot products at
+ * each corner — never eyeballed — so a non-degenerate triangle's angles always
+ * sum to 180° within floating-point tolerance.
+ */
+export function triangleAngles(vertices: Pt[]): [number, number, number] {
+  const [a, b, c] = vertices;
+  return [angleAt(a, b, c), angleAt(b, a, c), angleAt(c, a, b)];
+}
+
+/**
+ * Round three angles to integers that still sum EXACTLY to their rounded total
+ * (180° for a valid triangle), via largest-remainder apportionment. Naively
+ * rounding each angle independently lets the displayed sum read 179° or 181°
+ * ~25% of the time — which would make an angle-sum invariance readout lie. This
+ * gives the nearest-integer display for each part while preserving the invariant
+ * the lens exists to show. Each result stays within 1° of its exact value.
+ */
+export function roundAnglesToSum(
+  angles: [number, number, number],
+): [number, number, number] {
+  const target = Math.round(angles[0] + angles[1] + angles[2]);
+  const floors = angles.map((a) => Math.floor(a));
+  let deficit = target - (floors[0] + floors[1] + floors[2]);
+  // Hand the remaining whole degrees to the largest fractional remainders.
+  const order = [0, 1, 2].sort(
+    (i, j) => angles[j] - floors[j] - (angles[i] - floors[i]),
+  );
+  const out = [...floors] as [number, number, number];
+  for (let k = 0; k < order.length && deficit > 0; k++) {
+    out[order[k]] += 1;
+    deficit -= 1;
+  }
+  return out;
+}

@@ -34,3 +34,8 @@ export {
   type TransversalConfig,
   type TransversalAngles,
 } from "./angles";
+export {
+  triangleFromSAS,
+  triangleAngles,
+  roundAnglesToSum,
+} from "./triangle";

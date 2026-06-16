@@ -5,7 +5,7 @@
 // the built dist. jsdom because importing the main entry pulls in the Grapher
 // (and mafs). Requires a build first (the package `test` script runs tsup).
 import { describe, expect, it } from "vitest";
-import { Grapher, SequenceBuilder, SymmetryExplorer, AngleExplorer, slider, choose } from "@cameronbrady/math-components";
+import { Grapher, SequenceBuilder, SymmetryExplorer, AngleExplorer, TriangleLab, slider, choose } from "@cameronbrady/math-components";
 
 describe("public API — main entry", () => {
   it("exposes the Grapher component", () => {
@@ -22,6 +22,10 @@ describe("public API — main entry", () => {
 
   it("exposes the AngleExplorer component", () => {
     expect(typeof AngleExplorer).toBe("function");
+  });
+
+  it("exposes the TriangleLab component", () => {
+    expect(typeof TriangleLab).toBe("function");
   });
 
   it("exposes the spec DSL, producing the expected control descriptors", () => {

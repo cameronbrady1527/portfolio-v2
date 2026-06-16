@@ -43,6 +43,11 @@ export {
   type TransversalConfig,
   type TransversalAngles,
 } from "./geometry/angles";
+export {
+  triangleFromSAS,
+  triangleAngles,
+  roundAnglesToSum,
+} from "./geometry/triangle";
 
 // Practice — answer grading.
 export { grade } from "./practice/grade";
