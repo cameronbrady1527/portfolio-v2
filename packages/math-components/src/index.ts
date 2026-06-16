@@ -33,6 +33,10 @@ export {
   type TransversalAnglesProps,
 } from "./TransversalAngles";
 export {
+  TriangleInequality,
+  type TriangleInequalityProps,
+} from "./TriangleInequality";
+export {
   SequenceBuilder,
   type SequenceBuilderProps,
   type SequencePuzzle,
