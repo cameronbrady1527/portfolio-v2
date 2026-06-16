@@ -31,6 +31,8 @@ const LINE_COLOR = "var(--cbmc-preimage-color, #16231c)";
 const TRANSVERSAL_COLOR = "var(--cbmc-target-color, #b4540a)";
 const ACTIVE_COLOR = "var(--cbmc-image-color, #1f8a5b)"; // the selected vertical pair
 const OTHER_COLOR = "var(--cbmc-muted, #6b6353)"; // the other vertical pair
+const PARTNER_COLOR = "var(--cbmc-angle-b, #2563b4)"; // a linear pair's OTHER angle
+// (distinct hue, because a linear pair is two UNEQUAL angles — never matching marks)
 
 // Cosmetic geometry only — positions never affect the math. For the
 // vertical-angles lens we show ONE centered crossing of two lines (line1 + the
@@ -51,6 +53,18 @@ const DISMISS_MS = 5000; // auto-clear the proof a few seconds after it lands
 type Slot = 1 | 2 | 3 | 4;
 const SLOT_ORDER: Slot[] = [1, 2, 4, 3];
 const PARTNER: Record<Slot, Slot> = { 1: 4, 4: 1, 2: 3, 3: 2 };
+// Each slot's LINEAR-PAIR neighbour (adjacent angle summing to 180°). Used by the
+// linear-pairs lens; sums verified against the pure module, not eyeballed.
+const NEIGHBOUR: Record<Slot, Slot> = { 1: 2, 2: 1, 4: 3, 3: 4 };
+
+/** The angle relationship currently in focus. Minimal + extensible — the full
+ *  lens switcher and the `lenses` authoring prop arrive in a later slice. */
+type Lens = "vertical" | "linear-pair";
+const LENS_ORDER: Lens[] = ["vertical", "linear-pair"];
+const LENS_LABEL: Record<Lens, string> = {
+  vertical: "Vertical angles",
+  "linear-pair": "Linear pairs",
+};
 
 export interface AngleExplorerProps {
   /** Direction angle of the first line, degrees. Default 0 (horizontal). */
@@ -150,7 +164,16 @@ export function AngleExplorer({
   className,
 }: AngleExplorerProps) {
   const [tDir, setTDir] = useState(transversalDir);
+  const [parallel, setParallel] = useState(true);
+  // The second line's direction when the lines are NOT parallel. While parallel,
+  // line2 is SLAVED to line1 (so transversalAngles reports parallel === true and
+  // the parallel-line relationships actually hold); this value is the angle we
+  // restore the moment the switch flips to non-parallel.
+  const [line2Slider, setLine2Slider] = useState(line2Dir);
+  // The effective direction fed to the figure / pure module.
+  const effLine2Dir = parallel ? line1Dir : line2Slider;
   const [selected, setSelected] = useState<Slot>(1);
+  const [lens, setLens] = useState<Lens>("vertical");
   const [proofT, setProofT] = useState(0); // 0 … 1 — how far the angle has swung
   const [step, setStep] = useState(0); // 0 idle; 1/2/3 = the narrated proof steps
   const rafRef = useRef<number | null>(null);
@@ -163,7 +186,11 @@ export function AngleExplorer({
   // wedge fill, congruence arcs (single + the two of a double), bisector label,
   // and the direction word for its aria-label.
   const figure = useMemo(() => {
-    const result = transversalAngles({ line1Dir, line2Dir, transversalDir: tDir });
+    const result = transversalAngles({
+      line1Dir,
+      line2Dir: effLine2Dir,
+      transversalDir: tDir,
+    });
     const c1 = intersect(LINE1_THROUGH, line1Dir, tDir);
     const r = [line1Dir, tDir, line1Dir + 180, tDir + 180];
     const dirs: Record<Slot, [number, number]> = {
@@ -175,6 +202,8 @@ export function AngleExplorer({
     const slots = {} as Record<
       Slot,
       {
+        a0: number;
+        a1: number;
         wedge: [number, number][];
         single: [number, number][];
         doubleIn: [number, number][];
@@ -186,6 +215,8 @@ export function AngleExplorer({
     for (const id of [1, 2, 3, 4] as Slot[]) {
       const [a0, a1] = dirs[id];
       slots[id] = {
+        a0,
+        a1,
         wedge: wedge(c1, a0, a1, FILL_R),
         single: arcPoints(c1, a0, a1, MARK_R),
         doubleIn: arcPoints(c1, a0, a1, MARK_R - 0.09),
@@ -195,14 +226,57 @@ export function AngleExplorer({
       };
     }
     return { result, c1, slots };
-  }, [line1Dir, line2Dir, tDir]);
+  }, [line1Dir, effLine2Dir, tDir]);
 
   const { c1, slots } = figure;
+  // The corresponding-angle verdict — equal IFF the two lines are parallel. Read
+  // straight from the pure module; the UI never decides equality itself.
+  const correspondingEqual =
+    figure.result.pairs.find((p) => p.relationship === "corresponding")?.equal ?? false;
   const theta = figure.result.angles[1].measure; // θ — the {1,4} pair
   const measureOf = (id: Slot) => (id === 1 || id === 4 ? theta : 180 - theta);
-  const isActive = (id: Slot) => id === selected || id === PARTNER[selected];
+  // The slot the active lens pairs the selected angle WITH: its vertical opposite
+  // (vertical lens) or its adjacent neighbour (linear-pairs lens).
+  const partner = lens === "vertical" ? PARTNER[selected] : NEIGHBOUR[selected];
+  const isActive = (id: Slot) => id === selected || id === partner;
   const activeMeasure = measureOf(selected);
+  const partnerMeasure = measureOf(partner);
   const otherMeasure = 180 - activeMeasure;
+  // The linear-pair sum (the two adjacent measures), machine-sourced: every
+  // linear-pair in the module sums to 180°, so this reads it rather than asserting.
+  const linearPairSum = activeMeasure + partnerMeasure;
+
+  // Per-slot fill/label colour. Vertical: the equal pair shares ACTIVE_COLOR.
+  // Linear-pair: the two angles are UNEQUAL, so they get DISTINCT colours (never
+  // matching marks, which would falsely signal equality).
+  const colorOf = (id: Slot) =>
+    lens === "linear-pair"
+      ? id === selected
+        ? ACTIVE_COLOR
+        : id === partner
+          ? PARTNER_COLOR
+          : OTHER_COLOR
+      : isActive(id)
+        ? ACTIVE_COLOR
+        : OTHER_COLOR;
+
+  // The straight-angle sweep for the linear-pairs lens: the selected wedge and
+  // its neighbour together span a straight line through the crossing — one arc
+  // across both, labelled 180°, is the language of "these fill a straight angle".
+  const straightAngle = useMemo(() => {
+    if (lens !== "linear-pair") return null;
+    const sel = slots[selected];
+    const par = slots[partner];
+    const adjacent = (a: number, b: number) =>
+      Math.abs(((a - b + 540) % 360) - 180) < 1e-6;
+    const [u0, u1] = adjacent(sel.a1, par.a0)
+      ? [sel.a0, par.a1]
+      : [par.a0, sel.a1];
+    return {
+      arc: arcPoints(c1, u0, u1, MARK_R),
+      label: arcLabel(c1, u0, u1, MARK_R + 0.7),
+    };
+  }, [lens, slots, selected, partner, c1]);
 
   // The moving wedge for the proof: the SELECTED wedge rotated 180·proofT about
   // c1. It appears as soon as the proof starts (step 1, at proofT = 0, sitting on
@@ -288,11 +362,16 @@ export function AngleExplorer({
   const seg1 = lineSeg(LINE1_THROUGH, line1Dir);
 
   const caption =
-    `Two lines crossed by a transversal at ${fmt(tDir)}. The selected angle and ` +
-    `its opposite (single-arc) form a vertical pair, each ${fmt(activeMeasure)}; ` +
-    `the other pair (double-arc) each measure ${fmt(otherMeasure)}. Vertical ` +
-    `angles are always equal — a half-turn about the crossing maps one exactly ` +
-    `onto the other.`;
+    lens === "vertical"
+      ? `Two lines crossed by a transversal at ${fmt(tDir)}. The selected angle and ` +
+        `its opposite (single-arc) form a vertical pair, each ${fmt(activeMeasure)}; ` +
+        `the other pair (double-arc) each measure ${fmt(otherMeasure)}. Vertical ` +
+        `angles are always equal — a half-turn about the crossing maps one exactly ` +
+        `onto the other.`
+      : `Two lines crossed by a transversal at ${fmt(tDir)}. The selected angle ` +
+        `(${fmt(activeMeasure)}) and the angle beside it (${fmt(partnerMeasure)}) form ` +
+        `a linear pair along a straight line, so together they make a straight angle: ` +
+        `${fmt(activeMeasure)} + ${fmt(partnerMeasure)} = ${fmt(linearPairSum)}.`;
 
   // The proof, narrated line by line — revealed step-by-step as it plays.
   const proofSteps = [
@@ -334,7 +413,7 @@ export function AngleExplorer({
               <Polygon
                 key={`fill-${id}`}
                 points={s.wedge}
-                color={act ? ACTIVE_COLOR : OTHER_COLOR}
+                color={colorOf(id)}
                 fillOpacity={sel && step > 0 ? 0.06 : act ? 0.2 : 0.08}
                 weight={sel ? 1.4 : 0}
                 svgPolygonProps={{
@@ -359,20 +438,39 @@ export function AngleExplorer({
             color={TRANSVERSAL_COLOR}
           />
 
-          {/* Congruence marks — MATCHING marks mean equal: a single arc on the
-              selected vertical pair, a double arc on the other pair. */}
-          {SLOT_ORDER.map((id) => {
-            const s = slots[id];
-            const color = isActive(id) ? ACTIVE_COLOR : OTHER_COLOR;
-            return isActive(id) ? (
-              <Polyline key={`mk-${id}`} points={s.single} color={color} fillOpacity={0} />
-            ) : (
-              <Fragment key={`mk-${id}`}>
-                <Polyline points={s.doubleIn} color={color} fillOpacity={0} />
-                <Polyline points={s.doubleOut} color={color} fillOpacity={0} />
-              </Fragment>
-            );
-          })}
+          {/* Vertical lens — congruence marks: MATCHING marks mean equal (a single
+              arc on the selected vertical pair, a double arc on the other pair). */}
+          {lens === "vertical"
+            ? SLOT_ORDER.map((id) => {
+                const s = slots[id];
+                const color = isActive(id) ? ACTIVE_COLOR : OTHER_COLOR;
+                return isActive(id) ? (
+                  <Polyline key={`mk-${id}`} points={s.single} color={color} fillOpacity={0} />
+                ) : (
+                  <Fragment key={`mk-${id}`}>
+                    <Polyline points={s.doubleIn} color={color} fillOpacity={0} />
+                    <Polyline points={s.doubleOut} color={color} fillOpacity={0} />
+                  </Fragment>
+                );
+              })
+            : null}
+
+          {/* Linear-pairs lens — ONE arc sweeping the selected angle and its
+              neighbour: together they fill a straight line, so the sweep is a
+              straight angle (180°). NOT congruence marks: the two are unequal. */}
+          {lens === "linear-pair" && straightAngle ? (
+            <>
+              <Polyline points={straightAngle.arc} color={ACTIVE_COLOR} fillOpacity={0} weight={2} />
+              <Text
+                x={straightAngle.label[0]}
+                y={straightAngle.label[1]}
+                size={15}
+                color={ACTIVE_COLOR}
+              >
+                180°
+              </Text>
+            </>
+          ) : null}
 
           {/* The proof in motion: the selected angle swung around the crossing. */}
           {movingWedge ? (
@@ -397,7 +495,7 @@ export function AngleExplorer({
                 x={s.label[0]}
                 y={s.label[1]}
                 size={isActive(id) ? 15 : 14}
-                color={isActive(id) ? ACTIVE_COLOR : OTHER_COLOR}
+                color={colorOf(id)}
               >
                 {fmt(measureOf(id))}
               </Text>
@@ -406,27 +504,66 @@ export function AngleExplorer({
         </Mafs>
       </div>
 
-      {/* Legend — matching marks mean equal. */}
+      {/* Legend — lens-aware. Vertical: matching marks mean equal. Linear pair:
+          two unequal angles that together fill a straight angle. */}
       <div className="cbmc-legend" aria-hidden="true">
-        <span className="cbmc-legend-item">
-          <span
-            className="cbmc-swatch"
-            style={{ background: ACTIVE_COLOR, borderColor: ACTIVE_COLOR }}
-          />
-          Selected pair — single arc
-        </span>
-        <span className="cbmc-legend-item">
-          <span
-            className="cbmc-swatch"
-            style={{ background: OTHER_COLOR, borderColor: OTHER_COLOR }}
-          />
-          Other pair — double arc
-        </span>
+        {lens === "vertical" ? (
+          <>
+            <span className="cbmc-legend-item">
+              <span
+                className="cbmc-swatch"
+                style={{ background: ACTIVE_COLOR, borderColor: ACTIVE_COLOR }}
+              />
+              Selected pair — single arc
+            </span>
+            <span className="cbmc-legend-item">
+              <span
+                className="cbmc-swatch"
+                style={{ background: OTHER_COLOR, borderColor: OTHER_COLOR }}
+              />
+              Other pair — double arc
+            </span>
+          </>
+        ) : (
+          <>
+            <span className="cbmc-legend-item">
+              <span
+                className="cbmc-swatch"
+                style={{ background: ACTIVE_COLOR, borderColor: ACTIVE_COLOR }}
+              />
+              Selected angle
+            </span>
+            <span className="cbmc-legend-item">
+              <span
+                className="cbmc-swatch"
+                style={{ background: PARTNER_COLOR, borderColor: PARTNER_COLOR }}
+              />
+              Its neighbour — together a straight angle (180°)
+            </span>
+          </>
+        )}
       </div>
 
-      {/* The marks' non-color encoding, surfaced to the DOM for a11y/tests. */}
-      <span className="cbmc-sr-only" data-cbmc-angle-pattern="single-arc" data-cbmc-angle={selected} />
-      <span className="cbmc-sr-only" data-cbmc-angle-pattern="double-arc" data-cbmc-angle={PARTNER[selected]} />
+      {/* The marks' non-color encoding, surfaced to the DOM for a11y/tests — one
+          marker per slot, tagging the arc pattern it actually carries so the
+          active pair is distinguishable without relying on color. */}
+      {SLOT_ORDER.map((id) => (
+        <span
+          key={`pat-${id}`}
+          className="cbmc-sr-only"
+          data-cbmc-angle-pattern={
+            lens === "vertical"
+              ? isActive(id)
+                ? "single-arc"
+                : "double-arc"
+              : isActive(id)
+                ? "straight-angle"
+                : "none"
+          }
+          data-cbmc-angle={id}
+          data-cbmc-lens={lens}
+        />
+      ))}
 
       <div className="cbmc-control-row" style={{ marginTop: "0.75rem" }}>
         <label htmlFor={sliderId} className="cbmc-control-label">
@@ -446,15 +583,100 @@ export function AngleExplorer({
         <span className="cbmc-control-value">{fmt(tDir)}</span>
       </div>
 
-      <div className="cbmc-controls" style={{ marginTop: "0.5rem" }}>
+      <div className="cbmc-control-row" style={{ marginTop: "0.5rem" }}>
+        <span className="cbmc-control-label" id={`${sliderId}-par`}>
+          Lines parallel
+        </span>
         <button
           type="button"
+          role="switch"
+          aria-checked={parallel}
+          aria-labelledby={`${sliderId}-par`}
           className="cbmc-btn"
-          aria-pressed={active}
-          onClick={playProof}
+          onClick={() => {
+            resetProof();
+            setParallel((p) => !p);
+          }}
         >
-          {active ? "Replay the half-turn" : "Show why they're equal"}
+          {parallel ? "Parallel" : "Not parallel"}
         </button>
+      </div>
+
+      {!parallel ? (
+        <div className="cbmc-control-row" style={{ marginTop: "0.5rem" }}>
+          <label htmlFor={`${sliderId}-l2`} className="cbmc-control-label">
+            Second line angle
+          </label>
+          <input
+            id={`${sliderId}-l2`}
+            className="cbmc-range"
+            type="range"
+            min={1}
+            max={179}
+            step={1}
+            value={line2Slider}
+            aria-valuetext={fmt(line2Slider)}
+            onChange={(e) => {
+              resetProof();
+              setLine2Slider(Number(e.target.value));
+            }}
+          />
+          <span className="cbmc-control-value">{fmt(line2Slider)}</span>
+        </div>
+      ) : null}
+
+      <div
+        className="cbmc-controls"
+        role="radiogroup"
+        aria-label="Angle-relationship lens"
+        style={{ marginTop: "0.5rem" }}
+      >
+        {LENS_ORDER.map((l) => (
+          <button
+            key={l}
+            type="button"
+            role="radio"
+            aria-checked={lens === l}
+            tabIndex={lens === l ? 0 : -1}
+            className="cbmc-chip"
+            onClick={() => {
+              resetProof();
+              setLens(l);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+                e.preventDefault();
+                const next =
+                  LENS_ORDER[(LENS_ORDER.indexOf(l) + 1) % LENS_ORDER.length];
+                resetProof();
+                setLens(next);
+              } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                e.preventDefault();
+                const prev =
+                  LENS_ORDER[
+                    (LENS_ORDER.indexOf(l) + LENS_ORDER.length - 1) % LENS_ORDER.length
+                  ];
+                resetProof();
+                setLens(prev);
+              }
+            }}
+          >
+            {LENS_LABEL[l]}
+          </button>
+        ))}
+      </div>
+
+      <div className="cbmc-controls" style={{ marginTop: "0.5rem" }}>
+        {lens === "vertical" ? (
+          <button
+            type="button"
+            className="cbmc-btn"
+            aria-pressed={active}
+            onClick={playProof}
+          >
+            {active ? "Replay the half-turn" : "Show why they're equal"}
+          </button>
+        ) : null}
         {active ? (
           <button
             type="button"
@@ -469,7 +691,9 @@ export function AngleExplorer({
       </div>
 
       <p className="cbmc-instruction" style={{ marginTop: "0.5rem" }}>
-        Click an angle to choose it, slide the transversal, then press “Show why”.
+        {lens === "vertical"
+          ? "Click an angle to choose it, slide the transversal, then press “Show why”."
+          : "Click an angle to choose it and slide the transversal — its neighbour completes the straight line."}
       </p>
 
       <div
@@ -492,11 +716,20 @@ export function AngleExplorer({
               </li>
             ))}
           </ol>
-        ) : (
+        ) : lens === "vertical" ? (
           <p>
             The selected angle and its opposite are a vertical pair — {fmt(activeMeasure)}{" "}
             and {fmt(activeMeasure)} — and vertical angles are always equal. The other
-            pair each measure {fmt(otherMeasure)}.
+            pair each measure {fmt(otherMeasure)}.{" "}
+            {correspondingEqual
+              ? "The lines are parallel, so corresponding (and alternate) angles are equal."
+              : "The lines are not parallel, so corresponding (and alternate) angles are not equal."}
+          </p>
+        ) : (
+          <p>
+            The selected angle and its neighbour form a linear pair — {fmt(activeMeasure)}{" "}
+            and {fmt(partnerMeasure)} — and a linear pair always sums to a straight
+            angle: {fmt(activeMeasure)} + {fmt(partnerMeasure)} = {fmt(linearPairSum)}.
           </p>
         )}
       </div>

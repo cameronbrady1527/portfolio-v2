@@ -38,4 +38,7 @@ export {
   triangleFromSAS,
   triangleAngles,
   roundAnglesToSum,
+  midsegment,
+  type TriangleSide,
+  type Midsegment,
 } from "./triangle";

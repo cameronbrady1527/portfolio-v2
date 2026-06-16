@@ -70,4 +70,92 @@ describe("AngleExplorer", () => {
     // so the highlighted vertical pair is distinguishable without color.
     expect(container.querySelector("[data-cbmc-angle-pattern]")).toBeTruthy();
   });
+
+  it("exposes a keyboard-operable parallel/non-parallel switch", () => {
+    render(<AngleExplorer />);
+    const toggle = screen.getByRole("switch", { name: /parallel/i });
+    expect(toggle).toBeInTheDocument();
+    toggle.focus();
+    expect(toggle).toHaveFocus();
+  });
+
+  it("reveals a second-line slider only in non-parallel mode", () => {
+    render(<AngleExplorer />);
+    // Parallel by default: the second line is slaved, so no independent slider.
+    expect(
+      screen.queryByRole("slider", { name: /second line/i }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("switch", { name: /parallel/i }));
+    const second = screen.getByRole("slider", { name: /second line/i });
+    expect(second).toBeInTheDocument();
+    expect(second).toHaveAttribute("type", "range");
+    second.focus();
+    expect(second).toHaveFocus();
+  });
+
+  it("flips the parallel-line verdict live when the switch toggles", () => {
+    render(<AngleExplorer line1Dir={0} line2Dir={40} transversalDir={70} />);
+    const status = () => screen.getByRole("status").textContent ?? "";
+
+    // Parallel by default → corresponding/alternate angles ARE equal.
+    expect(status()).toMatch(/equal/i);
+    expect(status()).not.toMatch(/not equal|aren't equal|are not equal/i);
+
+    // Flip to non-parallel: line2 (40°) ≠ line1 (0°), so they are NOT equal.
+    fireEvent.click(screen.getByRole("switch", { name: /parallel/i }));
+    expect(status()).toMatch(/not equal|aren't equal|are not equal/i);
+  });
+
+  it("offers a keyboard-operable lens selector including a linear-pairs lens", () => {
+    render(<AngleExplorer />);
+    const group = screen.getByRole("radiogroup", { name: /lens/i });
+    expect(group).toBeInTheDocument();
+    const linear = screen.getByRole("radio", { name: /linear pair/i });
+    expect(linear).toBeInTheDocument();
+    linear.focus();
+    expect(linear).toHaveFocus();
+  });
+
+  it("the readout reflects the active lens when linear-pairs is selected", () => {
+    render(<AngleExplorer line1Dir={0} line2Dir={0} transversalDir={70} />);
+    const status = () => screen.getByRole("status").textContent ?? "";
+
+    // Vertical lens by default.
+    expect(status()).toMatch(/vertical/i);
+
+    fireEvent.click(screen.getByRole("radio", { name: /linear pair/i }));
+    // The linear-pairs lens: adjacent angles summing to 180°, from the module.
+    expect(status()).toMatch(/linear pair/i);
+    expect(status()).toContain("180");
+    // θ = 70 → the adjacent angle is 110; both measures are surfaced.
+    expect(status()).toContain("70°");
+    expect(status()).toContain("110°");
+  });
+
+  it("keeps the linear-pair lens summing to 180 as the transversal moves", () => {
+    render(<AngleExplorer line1Dir={0} line2Dir={0} transversalDir={70} />);
+    fireEvent.click(screen.getByRole("radio", { name: /linear pair/i }));
+    const status = () => screen.getByRole("status").textContent ?? "";
+
+    fireEvent.change(
+      screen.getByRole("slider", { name: /transversal angle/i }),
+      { target: { value: "120" } },
+    );
+    // θ = 120 → adjacent angle 60; the pair still sums to a straight angle.
+    expect(status()).toMatch(/linear pair/i);
+    expect(status()).toContain("120°");
+    expect(status()).toContain("60°");
+    expect(status()).toContain("180");
+  });
+
+  it("returns to the vertical-angles readout when that lens is reselected", () => {
+    render(<AngleExplorer line1Dir={0} line2Dir={0} transversalDir={70} />);
+    const status = () => screen.getByRole("status").textContent ?? "";
+    fireEvent.click(screen.getByRole("radio", { name: /linear pair/i }));
+    expect(status()).toMatch(/linear pair/i);
+    fireEvent.click(screen.getByRole("radio", { name: /vertical/i }));
+    expect(status()).toMatch(/vertical/i);
+    expect(status()).not.toMatch(/linear pair/i);
+  });
 });

@@ -48,7 +48,10 @@ export {
   triangleAngles,
   roundAnglesToSum,
   angleSumAssembly,
+  midsegment,
   type AngleSumAssembly,
+  type TriangleSide,
+  type Midsegment,
 } from "./geometry/triangle";
 
 // Practice — answer grading.

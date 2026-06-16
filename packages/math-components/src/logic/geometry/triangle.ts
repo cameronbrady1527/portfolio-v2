@@ -124,6 +124,48 @@ export function angleSumAssembly(vertices: Pt[]): AngleSumAssembly {
   };
 }
 
+/** The three sides of triangle [A, B, C], named by their endpoints. */
+export type TriangleSide = "AB" | "BC" | "CA";
+
+/** A triangle's midsegment for a chosen side — the keystone of the midsegment lens. */
+export interface Midsegment {
+  /** One endpoint: the midpoint of an adjacent side. */
+  start: Pt;
+  /** The other endpoint: the midpoint of the other adjacent side. */
+  end: Pt;
+  /** The side this midsegment is parallel to (the one it does NOT touch). */
+  parallelTo: TriangleSide;
+  /** Always true — the midsegment is, by construction, parallel to that side. */
+  isParallel: true;
+  /** Its length, which is exactly half the length of `parallelTo`. */
+  length: number;
+}
+
+/**
+ * The midsegment parallel to the named `side` of triangle [A, B, C]: the segment
+ * joining the midpoints of the OTHER two sides. By the Midsegment (Midline)
+ * Theorem it is exactly parallel to `side` and exactly half its length — both
+ * fall straight out of the midpoint construction (the two adjacent half-sides
+ * scale the third by ½ about the shared vertex), so this is exact, not
+ * eyeballed. The substrate behind the Triangle Lab's midsegment lens.
+ */
+export function midsegment(vertices: Pt[], side: TriangleSide): Midsegment {
+  const [A, B, C] = vertices;
+  // Endpoints of the chosen side, and the apex opposite it (the shared vertex of
+  // the two sides whose midpoints we join).
+  const [p, q, apex] =
+    side === "AB" ? [A, B, C] : side === "BC" ? [B, C, A] : [C, A, B];
+  const start = midpoint(apex, p);
+  const end = midpoint(apex, q);
+  return {
+    start,
+    end,
+    parallelTo: side,
+    isParallel: true,
+    length: Math.hypot(end.x - start.x, end.y - start.y),
+  };
+}
+
 export function roundAnglesToSum(
   angles: [number, number, number],
 ): [number, number, number] {

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   angleSumAssembly,
+  midsegment,
   roundAnglesToSum,
   triangleAngles,
   triangleFromSAS,
@@ -161,6 +162,76 @@ describe("angleSumAssembly", () => {
       const ab = { x: B.x - A.x, y: B.y - A.y };
       const line = { x: imageOfA.x - imageOfB.x, y: imageOfA.y - imageOfB.y };
       expect(ab.x * line.y - ab.y * line.x).toBeCloseTo(0, 6);
+    }
+  });
+});
+
+describe("midsegment", () => {
+  it("connects the midpoints of the two sides adjacent to the named side", () => {
+    // Right triangle: A=(0,0), B=(4,0), C=(0,3). The midsegment parallel to AB
+    // joins the midpoints of CA and CB.
+    const tri = [
+      { x: 0, y: 0 },
+      { x: 4, y: 0 },
+      { x: 0, y: 3 },
+    ];
+    const ms = midsegment(tri, "AB");
+    // Midpoint of CA = (0, 1.5); midpoint of CB = (2, 1.5).
+    const got = [ms.start, ms.end].sort((p, q) => p.x - q.x);
+    expect(got[0].x).toBeCloseTo(0, 9);
+    expect(got[0].y).toBeCloseTo(1.5, 9);
+    expect(got[1].x).toBeCloseTo(2, 9);
+    expect(got[1].y).toBeCloseTo(1.5, 9);
+  });
+
+  it("reports it is parallel to the named side and exactly half its length", () => {
+    const tri = [
+      { x: 0, y: 0 },
+      { x: 4, y: 0 },
+      { x: 0, y: 3 },
+    ];
+    const ms = midsegment(tri, "AB");
+    expect(ms.parallelTo).toBe("AB");
+    expect(ms.isParallel).toBe(true);
+    // |AB| = 4, so the midsegment length is 2.
+    expect(ms.length).toBeCloseTo(2, 9);
+    expect(dist(ms.start, ms.end)).toBeCloseTo(2, 9);
+  });
+
+  it("over many random valid triangles, for every side: exactly parallel and exactly half-length (property)", () => {
+    let seed = 1357924680;
+    const rng = () => {
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      return seed / 0x7fffffff;
+    };
+    const ends = (
+      tri: { x: number; y: number }[],
+      side: "AB" | "BC" | "CA",
+    ) => {
+      const [A, B, C] = tri;
+      return side === "AB" ? [A, B] : side === "BC" ? [B, C] : [C, A];
+    };
+
+    for (let i = 0; i < 500; i++) {
+      const tri = triangleFromSAS(
+        0.5 + rng() * 9.5,
+        0.5 + rng() * 9.5,
+        1 + rng() * 178,
+      );
+      for (const side of ["AB", "BC", "CA"] as const) {
+        const ms = midsegment(tri, side);
+        const [p, q] = ends(tri, side);
+        const sideVec = { x: q.x - p.x, y: q.y - p.y };
+        // Exactly parallel: the midsegment vector is collinear with the side.
+        const segVec = { x: ms.end.x - ms.start.x, y: ms.end.y - ms.start.y };
+        expect(cross({ x: 0, y: 0 }, sideVec, segVec)).toBeCloseTo(0, 6);
+        expect(ms.isParallel).toBe(true);
+        expect(ms.parallelTo).toBe(side);
+        // Exactly half the side length.
+        const half = dist(p, q) / 2;
+        expect(ms.length).toBeCloseTo(half, 9);
+        expect(dist(ms.start, ms.end)).toBeCloseTo(half, 9);
+      }
     }
   });
 });

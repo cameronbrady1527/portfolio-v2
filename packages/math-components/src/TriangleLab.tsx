@@ -35,10 +35,12 @@ import { autoBounds } from "./grapherLogic";
 import { VertexLabels } from "./VertexLabels";
 import {
   angleSumAssembly,
+  midsegment,
   roundAnglesToSum,
   triangleAngles,
   triangleFromSAS,
   type Pt,
+  type TriangleSide,
 } from "./logic";
 
 const TRIANGLE_COLOR = "var(--cbmc-preimage-color, #16231c)";
@@ -55,6 +57,28 @@ const VERTEX_ARC_COLORS = [
 ];
 
 const DEG = Math.PI / 180;
+
+/**
+ * Which invariant the lab is currently spotlighting. The switcher introduced
+ * here is deliberately a small, closed union: extensible by adding a case, but
+ * NOT yet the author-facing `lenses` prop (that is slice #83). Each lens owns its
+ * own figure overlay, controls, and a single `role="status"` readout — only the
+ * active lens renders, so the announced quantity is never ambiguous.
+ */
+type Lens = "angle-sum" | "exterior" | "midsegment";
+
+const LENS_OPTIONS: { id: Lens; label: string }[] = [
+  { id: "angle-sum", label: "Angle sum" },
+  { id: "exterior", label: "Exterior angle" },
+  { id: "midsegment", label: "Midsegment" },
+];
+
+/** Vertex metadata for the exterior-angle lens: index into [A,B,C] + remotes. */
+const VERTICES = ["A", "B", "C"] as const;
+type VertexName = (typeof VERTICES)[number];
+
+/** The three sides offered by the midsegment lens, in figure order. */
+const SIDE_OPTIONS: TriangleSide[] = ["AB", "BC", "CA"];
 
 /** Sample an arc of radius `r` about `c`, from `a0deg` to `a1deg` (degrees). */
 function arcPoints(c: Pt, a0deg: number, a1deg: number, r: number): [number, number][] {
@@ -207,6 +231,10 @@ export function TriangleLab({
   // 4 = landed. proofT (0…1) is how far the CURRENT half-turn has swung.
   const [step, setStep] = useState(0);
   const [proofT, setProofT] = useState(0);
+  // Lens selection + each lens's own pick (control values only — derived below).
+  const [lens, setLens] = useState<Lens>("angle-sum");
+  const [extVertex, setExtVertex] = useState<VertexName>("C");
+  const [msSide, setMsSide] = useState<TriangleSide>("AB");
   const rafRef = useRef<number | null>(null);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const reduceMotion = usePrefersReducedMotion();
@@ -253,6 +281,53 @@ export function TriangleLab({
       C: vertexArc(C, A, B, rP), // wedge of ∠C — the one that never moves
     };
   }, [vertices, A, B, C]);
+
+  // --- exterior-angle lens (derived) --------------------------------------
+  // At the focus vertex, the exterior angle (180 − interior) equals the sum of
+  // the two REMOTE interior angles. All three numbers come from the same
+  // sum-preserving rounding as the readout, so 180 − interior === remoteA +
+  // remoteB holds in what's shown — the identity the lens exists to demonstrate.
+  const exterior = useMemo(() => {
+    const i = VERTICES.indexOf(extVertex);
+    const interior = [angA, angB, angC][i];
+    const remotes = [angA, angB, angC].filter((_, k) => k !== i);
+    const remoteNames = VERTICES.filter((_, k) => k !== i);
+    const v = vertices[i];
+    // The exterior ray: extend the side from a neighbour THROUGH this vertex.
+    const neighbour = vertices[(i + 1) % 3];
+    const dir = { x: v.x - neighbour.x, y: v.y - neighbour.y };
+    const len = Math.hypot(dir.x, dir.y) || 1;
+    const tip = { x: v.x + (dir.x / len) * 2, y: v.y + (dir.y / len) * 2 };
+    // The exterior-angle arc: from the extension ray to the far edge of the
+    // triangle at this vertex (the side NOT shared with `neighbour`).
+    const far = vertices[(i + 2) % 3];
+    const arc = vertexArc(v, tip, far);
+    return {
+      vertexName: extVertex,
+      interior,
+      value: 180 - interior,
+      remotes,
+      remoteNames,
+      vertex: v,
+      tip,
+      arc,
+    };
+  }, [extVertex, angA, angB, angC, vertices]);
+
+  // --- midsegment lens (derived) ------------------------------------------
+  // The midsegment parallel to the chosen side: endpoints, parallel-to flag, and
+  // half-length all come straight from the pure `midsegment()` — never eyeballed.
+  const mid = useMemo(() => {
+    const ms = midsegment(vertices, msSide);
+    const [p, q] =
+      msSide === "AB"
+        ? [A, B]
+        : msSide === "BC"
+          ? [B, C]
+          : [C, A];
+    const sideLen = Math.hypot(q.x - p.x, q.y - p.y);
+    return { ms, side: msSide, sideLen };
+  }, [vertices, msSide, A, B, C]);
 
   // How far each half-turn has swung: A swings during step 2, B during step 3.
   const tA = step < 2 ? 0 : step === 2 ? proofT : 1;
@@ -326,6 +401,13 @@ export function TriangleLab({
     fn();
   };
 
+  // Leaving the angle-sum lens abandons any running proof (it belongs to that
+  // lens only); the proof overlay is gated on `lens === "angle-sum"` below too.
+  const selectLens = (next: Lens) => {
+    if (next !== "angle-sum" && step !== 0) resetProof();
+    setLens(next);
+  };
+
   // Dragging vertex B or C reshapes the triangle; recompute SAS and write back.
   // (Vertex A is the canonical anchor at the origin.)
   const onDrag = (which: "B" | "C", [x, y]: [number, number]) => {
@@ -379,9 +461,9 @@ export function TriangleLab({
             color={TRIANGLE_COLOR}
           />
 
-          {/* Resting state: thin on-figure angle arcs + machine-sourced measures
-              — the angle-sum lens drawn in the language of the concept. */}
-          {!active &&
+          {/* Angle-sum lens, resting state: thin on-figure angle arcs +
+              machine-sourced measures — the lens drawn in its own language. */}
+          {lens === "angle-sum" && !active &&
             arcs.map((a, i) => (
               <Polyline
                 key={`arc-${i}`}
@@ -391,7 +473,7 @@ export function TriangleLab({
                 weight={2}
               />
             ))}
-          {!active &&
+          {lens === "angle-sum" && !active &&
             arcs.map((a, i) => (
               <Text
                 key={`meas-${i}`}
@@ -403,6 +485,55 @@ export function TriangleLab({
                 {`${measures[i]}°`}
               </Text>
             ))}
+
+          {/* Exterior-angle lens: extend a side through the focus vertex and arc
+              the exterior angle, labelled with its measure. */}
+          {lens === "exterior" ? (
+            <>
+              <Polyline
+                points={[
+                  [exterior.vertex.x, exterior.vertex.y],
+                  [exterior.tip.x, exterior.tip.y],
+                ]}
+                color="var(--cbmc-muted, #6b6353)"
+                fillOpacity={0}
+                weight={1.5}
+                svgPolylineProps={{ strokeDasharray: "6 5" }}
+              />
+              <Polyline
+                points={exterior.arc.arc}
+                color={ACCENT_COLOR}
+                fillOpacity={0}
+                weight={2}
+              />
+              <Text
+                x={exterior.arc.label[0]}
+                y={exterior.arc.label[1]}
+                size={15}
+                color={ACCENT_COLOR}
+              >
+                {`${exterior.value}°`}
+              </Text>
+            </>
+          ) : null}
+
+          {/* Midsegment lens: the midsegment parallel to the chosen side, drawn
+              between the two adjacent midpoints. */}
+          {lens === "midsegment" ? (
+            <>
+              <Polyline
+                points={[
+                  [mid.ms.start.x, mid.ms.start.y],
+                  [mid.ms.end.x, mid.ms.end.y],
+                ]}
+                color={ACCENT_COLOR}
+                fillOpacity={0}
+                weight={3}
+              />
+              <Point x={mid.ms.start.x} y={mid.ms.start.y} color={ACCENT_COLOR} />
+              <Point x={mid.ms.end.x} y={mid.ms.end.y} color={ACCENT_COLOR} />
+            </>
+          ) : null}
 
           {/* The proof in motion: ∠A and ∠B half-turn about the side midpoints
               to land beside ∠C, tiling a straight line through C parallel to AB. */}
@@ -536,38 +667,125 @@ export function TriangleLab({
         </div>
       </div>
 
-      <div className="cbmc-controls" style={{ marginTop: "0.5rem" }}>
-        <button
-          type="button"
-          className="cbmc-btn"
-          aria-pressed={active}
-          onClick={playProof}
-        >
-          {active ? "Replay the proof" : "Show why it's 180°"}
-        </button>
-        {active ? (
+      {/* Lens switcher — a segmented group of native buttons (keyboard-operable;
+          colour-independent via aria-pressed + text). Each lens owns the controls
+          + readout below. Extensible by adding a LENS_OPTIONS entry + a case. */}
+      <div
+        className="cbmc-controls"
+        role="group"
+        aria-label="Lens"
+        style={{ marginTop: "0.75rem" }}
+      >
+        {LENS_OPTIONS.map((opt) => (
           <button
+            key={opt.id}
             type="button"
-            className="cbmc-btn"
-            aria-label="Reset and hide the proof"
-            title="Press to reset and hide the proof"
-            onClick={resetProof}
+            className="cbmc-chip"
+            aria-pressed={lens === opt.id}
+            onClick={() => selectLens(opt.id)}
           >
-            ✕
+            {opt.label}
           </button>
-        ) : null}
+        ))}
       </div>
 
-      <p className="cbmc-progress" role="status" aria-live="polite">
-        <span style={{ color: VERTEX_ARC_COLORS[0], fontWeight: 600 }}>∠A</span> +{" "}
-        <span style={{ color: VERTEX_ARC_COLORS[1], fontWeight: 600 }}>∠B</span> +{" "}
-        <span style={{ color: VERTEX_ARC_COLORS[2], fontWeight: 600 }}>∠C</span> ={" "}
-        <span style={{ color: VERTEX_ARC_COLORS[0] }}>{angA}°</span> +{" "}
-        <span style={{ color: VERTEX_ARC_COLORS[1] }}>{angB}°</span> +{" "}
-        <span style={{ color: VERTEX_ARC_COLORS[2] }}>{angC}°</span> = {sum}°
-      </p>
+      {/* ── Angle-sum lens ─────────────────────────────────────────────── */}
+      {lens === "angle-sum" ? (
+        <>
+          <div className="cbmc-controls" style={{ marginTop: "0.5rem" }}>
+            <button
+              type="button"
+              className="cbmc-btn"
+              aria-pressed={active}
+              onClick={playProof}
+            >
+              {active ? "Replay the proof" : "Show why it's 180°"}
+            </button>
+            {active ? (
+              <button
+                type="button"
+                className="cbmc-btn"
+                aria-label="Reset and hide the proof"
+                title="Press to reset and hide the proof"
+                onClick={resetProof}
+              >
+                ✕
+              </button>
+            ) : null}
+          </div>
 
-      {active ? (
+          <p className="cbmc-progress" role="status" aria-live="polite">
+            <span style={{ color: VERTEX_ARC_COLORS[0], fontWeight: 600 }}>∠A</span> +{" "}
+            <span style={{ color: VERTEX_ARC_COLORS[1], fontWeight: 600 }}>∠B</span> +{" "}
+            <span style={{ color: VERTEX_ARC_COLORS[2], fontWeight: 600 }}>∠C</span> ={" "}
+            <span style={{ color: VERTEX_ARC_COLORS[0] }}>{angA}°</span> +{" "}
+            <span style={{ color: VERTEX_ARC_COLORS[1] }}>{angB}°</span> +{" "}
+            <span style={{ color: VERTEX_ARC_COLORS[2] }}>{angC}°</span> = {sum}°
+          </p>
+        </>
+      ) : null}
+
+      {/* ── Exterior-angle lens ────────────────────────────────────────── */}
+      {lens === "exterior" ? (
+        <>
+          <div
+            className="cbmc-controls"
+            role="group"
+            aria-label="Exterior-angle vertex"
+            style={{ marginTop: "0.5rem" }}
+          >
+            {VERTICES.map((name) => (
+              <button
+                key={name}
+                type="button"
+                className="cbmc-chip"
+                aria-pressed={extVertex === name}
+                onClick={() => setExtVertex(name)}
+              >
+                {`Vertex ${name}`}
+              </button>
+            ))}
+          </div>
+          <p className="cbmc-progress" role="status" aria-live="polite">
+            Exterior angle at {exterior.vertexName} = 180° − ∠{exterior.vertexName}{" "}
+            = 180° − {exterior.interior}° = {exterior.value}° = ∠
+            {exterior.remoteNames[0]} + ∠{exterior.remoteNames[1]} ={" "}
+            {exterior.remotes[0]}° + {exterior.remotes[1]}° ={" "}
+            {exterior.remotes[0] + exterior.remotes[1]}°
+          </p>
+        </>
+      ) : null}
+
+      {/* ── Midsegment lens ────────────────────────────────────────────── */}
+      {lens === "midsegment" ? (
+        <>
+          <div
+            className="cbmc-controls"
+            role="group"
+            aria-label="Midsegment parallel side"
+            style={{ marginTop: "0.5rem" }}
+          >
+            {SIDE_OPTIONS.map((side) => (
+              <button
+                key={side}
+                type="button"
+                className="cbmc-chip"
+                aria-pressed={msSide === side}
+                onClick={() => setMsSide(side)}
+              >
+                {`Side ${side}`}
+              </button>
+            ))}
+          </div>
+          <p className="cbmc-progress" role="status" aria-live="polite">
+            Midsegment ∥ {mid.side} (parallel to {mid.side}), length{" "}
+            {mid.ms.length.toFixed(1)} = ½ · |{mid.side}| = ½ ·{" "}
+            {mid.sideLen.toFixed(1)} = {(mid.sideLen / 2).toFixed(1)}
+          </p>
+        </>
+      ) : null}
+
+      {active && lens === "angle-sum" ? (
         <div
           className="cbmc-proof-narration"
           aria-live="polite"
