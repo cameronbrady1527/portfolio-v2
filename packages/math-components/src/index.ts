@@ -37,6 +37,18 @@ export {
   type TriangleInequalityProps,
 } from "./TriangleInequality";
 export {
+  ExteriorAngle,
+  type ExteriorAngleProps,
+} from "./ExteriorAngle";
+export {
+  Midsegment,
+  type MidsegmentProps,
+} from "./Midsegment";
+export {
+  IsoscelesTriangle,
+  type IsoscelesTriangleProps,
+} from "./IsoscelesTriangle";
+export {
   SequenceBuilder,
   type SequenceBuilderProps,
   type SequencePuzzle,
