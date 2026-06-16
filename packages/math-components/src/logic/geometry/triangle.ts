@@ -12,6 +12,7 @@
  * C10 (trig) will build on, so its surface is kept small and deep.
  */
 import type { Pt } from "./types";
+import { rotate } from "./rotate";
 
 const DEG = Math.PI / 180;
 
@@ -72,6 +73,57 @@ export function triangleAngles(vertices: Pt[]): [number, number, number] {
  * gives the nearest-integer display for each part while preserving the invariant
  * the lens exists to show. Each result stays within 1° of its exact value.
  */
+/** Midpoint of segment PQ. */
+function midpoint(p: Pt, q: Pt): Pt {
+  return { x: (p.x + q.x) / 2, y: (p.y + q.y) / 2 };
+}
+
+/** 180° half-turn of a point about a center, via the shipped (tested) rotate(). */
+function halfTurn(p: Pt, about: Pt): Pt {
+  const out = rotate({ type: "point", at: p }, 180, about);
+  // rotate() preserves the shape kind; a point rotates to a point.
+  return (out as { type: "point"; at: Pt }).at;
+}
+
+/** The construction behind the transformational angle-sum proof. */
+export interface AngleSumAssembly {
+  /** The apex C — where the three angles are brought together. */
+  apex: Pt;
+  /** Rotation center for the A-corner: the midpoint of side CA. */
+  midCA: Pt;
+  /** Rotation center for the B-corner: the midpoint of side CB. */
+  midCB: Pt;
+  /** B half-turned about midCA — one end of the straight angle at the apex. */
+  imageOfB: Pt;
+  /** A half-turned about midCB — the other end of the straight angle. */
+  imageOfA: Pt;
+}
+
+/**
+ * The rigid-motion construction for the angle-sum proof (∠A + ∠B + ∠C = 180°).
+ *
+ * A 180° rotation about the midpoint of CA carries the whole triangle to a copy
+ * that swaps A and C, landing ∠A at the apex C as the alternate-interior angle
+ * (the half-turn sends line AB to a parallel line through C). A 180° rotation
+ * about the midpoint of CB does the same for ∠B. The two images of A and B land
+ * on a single line through C parallel to AB, with C strictly between them — so
+ * ∠A, ∠C, ∠B tile that straight angle and sum to 180°. The half-turns reuse the
+ * shipped, exact `rotate()`, so the construction is machine-checked, not
+ * eyeballed. Inputs are [A, B, C]; the apex is C.
+ */
+export function angleSumAssembly(vertices: Pt[]): AngleSumAssembly {
+  const [A, B, C] = vertices;
+  const midCA = midpoint(C, A);
+  const midCB = midpoint(C, B);
+  return {
+    apex: C,
+    midCA,
+    midCB,
+    imageOfB: halfTurn(B, midCA),
+    imageOfA: halfTurn(A, midCB),
+  };
+}
+
 export function roundAnglesToSum(
   angles: [number, number, number],
 ): [number, number, number] {

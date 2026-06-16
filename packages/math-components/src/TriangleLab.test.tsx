@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import { TriangleLab } from "./TriangleLab";
@@ -20,7 +20,26 @@ beforeAll(() => {
 afterEach(() => {
   cleanup();
   window.localStorage.clear();
+  // The reduced-motion test installs a matchMedia stub; restore the default
+  // (jsdom has none) so other tests take the no-reduced-motion path.
+  delete (window as unknown as { matchMedia?: unknown }).matchMedia;
 });
+
+/** Force `prefers-reduced-motion: reduce` for the hook under test. */
+function mockReducedMotion(reduce: boolean) {
+  (window as unknown as { matchMedia: (q: string) => MediaQueryList }).matchMedia =
+    () =>
+      ({
+        matches: reduce,
+        media: "(prefers-reduced-motion: reduce)",
+        onchange: null,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        addListener: () => {},
+        removeListener: () => {},
+        dispatchEvent: () => false,
+      }) as unknown as MediaQueryList;
+}
 
 const sumFromReadout = (text: string): number => {
   // "∠A + ∠B + ∠C = 53° + 67° + 60° = 180°" → parse every integer°, drop the
@@ -68,5 +87,45 @@ describe("TriangleLab", () => {
   it("records nothing — zero-stakes", () => {
     render(<TriangleLab sideB={5} sideC={7} includedAngleDeg={40} />);
     expect(window.localStorage.length).toBe(0);
+  });
+
+  it("offers a keyboard-operable 'Show why it's 180°' proof trigger", () => {
+    render(<TriangleLab sideB={5} sideC={7} includedAngleDeg={40} />);
+    const trigger = screen.getByRole("button", { name: /show why/i });
+    expect(trigger).toBeInTheDocument();
+    trigger.focus();
+    expect(trigger).toHaveFocus();
+  });
+
+  it("under reduced motion, the proof jumps straight to the assembled straight angle", () => {
+    mockReducedMotion(true);
+    render(<TriangleLab sideB={5} sideC={7} includedAngleDeg={40} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /show why/i }));
+
+    // No animation to wait on — the concluding step is shown immediately, and
+    // the reveal exposes a reset (✕) and flips the trigger to Replay.
+    expect(screen.getByText(/now fill a straight line/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /reset and hide the proof/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /replay the proof/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("the reset control returns the proof to its resting state", () => {
+    mockReducedMotion(true);
+    render(<TriangleLab sideB={5} sideC={7} includedAngleDeg={40} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /show why/i }));
+    fireEvent.click(screen.getByRole("button", { name: /reset and hide the proof/i }));
+
+    // Back to rest: the trigger reads "Show why" again and the ✕ is gone.
+    expect(screen.getByRole("button", { name: /show why/i })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /reset and hide the proof/i }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/now fill a straight line/i)).not.toBeInTheDocument();
   });
 });

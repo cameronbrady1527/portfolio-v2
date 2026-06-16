@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  angleSumAssembly,
   roundAnglesToSum,
   triangleAngles,
   triangleFromSAS,
@@ -8,6 +9,11 @@ import {
 const DEG = Math.PI / 180;
 const dist = (a: { x: number; y: number }, b: { x: number; y: number }) =>
   Math.hypot(b.x - a.x, b.y - a.y);
+const cross = (
+  o: { x: number; y: number },
+  p: { x: number; y: number },
+  q: { x: number; y: number },
+) => (p.x - o.x) * (q.y - o.y) - (p.y - o.y) * (q.x - o.x);
 
 describe("triangleFromSAS", () => {
   it("recovers the two given side lengths and the included angle", () => {
@@ -101,6 +107,60 @@ describe("triangleAngles", () => {
         expect(ang).toBeGreaterThan(0);
         expect(ang).toBeLessThan(180);
       }
+    }
+  });
+});
+
+describe("angleSumAssembly", () => {
+  it("places the rotation centers at the side midpoints and the apex at C", () => {
+    const tri = triangleFromSAS(5, 7, 40);
+    const [A, B, C] = tri;
+    const asm = angleSumAssembly(tri);
+    expect(dist(asm.apex, C)).toBeCloseTo(0, 9);
+    expect(asm.midCA.x).toBeCloseTo((C.x + A.x) / 2, 9);
+    expect(asm.midCA.y).toBeCloseTo((C.y + A.y) / 2, 9);
+    expect(asm.midCB.x).toBeCloseTo((C.x + B.x) / 2, 9);
+    expect(asm.midCB.y).toBeCloseTo((C.y + B.y) / 2, 9);
+  });
+
+  it("the corner images are the vertices half-turned about the side midpoints", () => {
+    const tri = triangleFromSAS(5, 7, 40);
+    const [A, B, C] = tri;
+    const asm = angleSumAssembly(tri);
+    // imageOfB = B rotated 180° about midpoint of CA (= 2·mid − B), and likewise.
+    expect(asm.imageOfB.x).toBeCloseTo(C.x + A.x - B.x, 9);
+    expect(asm.imageOfB.y).toBeCloseTo(C.y + A.y - B.y, 9);
+    expect(asm.imageOfA.x).toBeCloseTo(C.x + B.x - A.x, 9);
+    expect(asm.imageOfA.y).toBeCloseTo(C.y + B.y - A.y, 9);
+  });
+
+  it("assembles a straight angle at the apex over many random triangles (property)", () => {
+    let seed = 24681357;
+    const rng = () => {
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      return seed / 0x7fffffff;
+    };
+    for (let i = 0; i < 500; i++) {
+      const tri = triangleFromSAS(
+        0.5 + rng() * 9.5,
+        0.5 + rng() * 9.5,
+        1 + rng() * 178,
+      );
+      const [A, B] = tri;
+      const { apex: C, imageOfA, imageOfB } = angleSumAssembly(tri);
+
+      // The two corner images and the apex are collinear — the assembly line.
+      expect(cross(C, imageOfB, imageOfA)).toBeCloseTo(0, 6);
+      // The apex sits strictly BETWEEN them, so the three angles tile a straight
+      // angle (opposite rays ⇒ negative dot product).
+      const dot =
+        (imageOfB.x - C.x) * (imageOfA.x - C.x) +
+        (imageOfB.y - C.y) * (imageOfA.y - C.y);
+      expect(dot).toBeLessThan(0);
+      // The assembly line through the apex is parallel to AB.
+      const ab = { x: B.x - A.x, y: B.y - A.y };
+      const line = { x: imageOfA.x - imageOfB.x, y: imageOfA.y - imageOfB.y };
+      expect(ab.x * line.y - ab.y * line.x).toBeCloseTo(0, 6);
     }
   });
 });

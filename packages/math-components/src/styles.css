@@ -260,6 +260,63 @@
   color: var(--cbmc-control-fg, #2c3a32);
 }
 
+/* Visually-hidden but screen-reader/queryable — the canonical accessible-hidden
+ * utility (e.g. the non-color angle-mark encoding surfaced for AT and tests). */
+.cbmc-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Step-by-step proof narration: revealed one line at a time, current step bold. */
+.cbmc-proof-steps {
+  margin: 0;
+  padding-left: 1.3rem;
+  display: grid;
+  gap: 0.25rem;
+  transition: opacity 150ms ease;
+}
+
+/* Selectable angle wedges: a subtle outline on hover/keyboard focus. */
+.cbmc-angle-hit {
+  cursor: pointer;
+  outline: none;
+  transition: stroke-width 120ms ease;
+}
+.cbmc-angle-hit:hover,
+.cbmc-angle-hit:focus-visible {
+  stroke: var(--cbmc-accent, #176844);
+  stroke-width: 3;
+}
+
+/* Completion signal: when the half-turn lands, the figure gives a soft
+ * accent-green glow that breathes twice and fades. Motion-safe. */
+@keyframes cbmc-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(23, 104, 68, 0);
+  }
+  35% {
+    box-shadow: 0 0 0 5px rgba(23, 104, 68, 0.22);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(23, 104, 68, 0);
+  }
+}
+.cbmc-pulse {
+  animation: cbmc-pulse 1.4s ease-in-out 2;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cbmc-pulse {
+    animation: none;
+  }
+}
+
 /* A pressed/selected chip (segmented option, or a toggle like "Show side
  * lengths") takes the accent tint. The symmetry "found" chip adds a ✓ on top. */
 .cbmc-chip[aria-pressed="true"] {

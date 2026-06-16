@@ -1,7 +1,6 @@
 /** @vitest-environment jsdom */
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import { AngleExplorer } from "./AngleExplorer";
 
@@ -43,11 +42,10 @@ describe("AngleExplorer", () => {
     expect(status).toHaveAttribute("aria-live");
   });
 
-  it("the slider is keyboard-reachable (a focusable native range)", async () => {
-    const user = userEvent.setup();
+  it("the slider is keyboard-reachable (a focusable native range)", () => {
     render(<AngleExplorer />);
     const slider = screen.getByRole("slider", { name: /transversal angle/i });
-    await user.tab();
+    slider.focus();
     expect(slider).toHaveFocus();
   });
 

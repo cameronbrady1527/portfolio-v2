@@ -8,7 +8,7 @@
  * only the rendering. At an intersection the angle from the line to the
  * transversal is θ = normalize(transversalDir − lineDir), and the four angles
  * around that point are {θ, 180−θ} appearing twice (vertical + linear-pair
- * quartet). Measures are normalized into (0, 180).
+ * quartet). Measures are normalized into (0, 180].
  *
  * Slot layout (textbook numbering): intersection line1 = slots 1–4, line2 =
  * slots 5–8. Each slot is fixed by which side of the transversal it sits on
@@ -58,10 +58,10 @@ export type PairRelationship =
   | "alternate-exterior"
   | "co-interior";
 
-/** One of the eight angles, with its measure (degrees, (0,180)) and placement. */
+/** One of the eight angles, with its measure (degrees, (0,180]) and placement. */
 export interface Angle {
   id: AngleId;
-  /** Measure in degrees, normalized into (0, 180). */
+  /** Measure in degrees, normalized into (0, 180]. */
   measure: number;
   intersection: Intersection;
   region: Region;

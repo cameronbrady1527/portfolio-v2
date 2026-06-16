@@ -47,6 +47,8 @@ export {
   triangleFromSAS,
   triangleAngles,
   roundAnglesToSum,
+  angleSumAssembly,
+  type AngleSumAssembly,
 } from "./geometry/triangle";
 
 // Practice — answer grading.
