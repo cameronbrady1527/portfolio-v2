@@ -1,5 +1,12 @@
 # resources
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [79044d7]
+  - @cameronbrady/math-components@0.2.1
+
 ## 0.1.3
 
 ### Patch Changes
