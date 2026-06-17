@@ -23,6 +23,7 @@
  */
 import type { Equation, Node } from "./ast";
 import { evaluate, type Bindings } from "./evaluate";
+import { mulberry32 } from "../../random";
 
 const TRIALS = 32;
 const MIN_VALID_POINTS = 6;
@@ -49,19 +50,6 @@ export function freeVars(node: Node, into: Set<string> = new Set()): Set<string>
       freeVars(node.right, into);
       return into;
   }
-}
-
-// Deterministic PRNG (mulberry32) so grading is reproducible across runs and
-// machines — no Math.random.
-function mulberry32(seed: number): () => number {
-  let a = seed >>> 0;
-  return () => {
-    a |= 0;
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
 }
 
 function sampleBindings(vars: string[], rand: () => number): Bindings {

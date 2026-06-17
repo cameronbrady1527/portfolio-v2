@@ -56,6 +56,21 @@ export {
   type SSSTriangle,
 } from "./geometry/triangle";
 
+// Deterministic PRNG — shared seeded randomness for reproducible practice.
+export { mulberry32 } from "./random";
+
+// Practice — seeded problem generators (pure (level, rng) => Problem).
+export { signedAddSub } from "./practice/generators";
+export type { Problem, ProblemGenerator } from "./practice/generators";
+
+// Practice — drill fluency state machine (pure (state, event) => state).
+export {
+  DEFAULT_FLUENCY_THRESHOLD,
+  initFluency,
+  fluencyReducer,
+} from "./practice/drill";
+export type { FluencyState, FluencyEvent } from "./practice/drill";
+
 // Practice — answer grading.
 export { grade } from "./practice/grade";
 export type { PracticeQuestion, GradeResult } from "./practice/grade";
