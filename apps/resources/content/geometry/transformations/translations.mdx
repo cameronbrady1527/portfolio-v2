@@ -65,8 +65,21 @@ to the original.
 ## Translating by a vector
 
 The slide is described by a _translation vector_ $\langle a, b \rangle$, where
-$a$ is the horizontal shift and $b$ is the vertical shift. Applying it to a
-point adds the components coordinate-wise:
+$a$ is the horizontal shift and $b$ is the vertical shift.
+
+<PredictThenCheck
+  prompt="The point (2, 3) is translated by the vector ⟨5, −1⟩ — 5 units right and 1 unit down. Where does its image land?"
+  choices={["(7, 2)", "(7, 4)", "(−3, 4)", "(10, −3)"]}
+>
+
+The image is **(7, 2)**. A translation adds the vector to the point one
+coordinate at a time: the x-coordinate goes $2 + 5 = 7$, and the y-coordinate
+goes $3 + (-1) = 2$. Drag the shift sliders on the grapher below to
+$\langle 5, -1 \rangle$ and watch every vertex make that same move.
+
+</PredictThenCheck>
+
+Applying the vector to a point adds its components coordinate-wise:
 
 $$
 (x, y) \mapsto (x + a,\, y + b)
