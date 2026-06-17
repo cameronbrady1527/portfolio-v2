@@ -4,6 +4,14 @@ import { Step, WorkedExample } from "@/components/WorkedExample";
 import { PredictThenCheck } from "@/components/PredictThenCheck";
 import { Term } from "@/components/Term";
 import { AngleCrossing, TransversalPattern, Takeaway } from "@/components/AngleDiagrams";
+import {
+  TriangleAngles,
+  AngleSumStrip,
+  ExteriorAngleFig,
+  MidsegmentFig,
+  TriangleInequalityFig,
+  IsoscelesFig,
+} from "@/components/TriangleDiagrams";
 
 // Required by @next/mdx in the App Router. Topic prose inherits the global
 // typographic styles from globals.css; per-element overrides can be added here.
@@ -19,6 +27,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     AngleCrossing,
     TransversalPattern,
     Takeaway,
+    TriangleAngles,
+    AngleSumStrip,
+    ExteriorAngleFig,
+    MidsegmentFig,
+    TriangleInequalityFig,
+    IsoscelesFig,
     ...components,
   };
 }

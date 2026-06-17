@@ -1,0 +1,121 @@
+---
+title: Midsegment
+order: 3
+description: Join the midpoints of two sides of a triangle and you get a segment that is parallel to the third side and exactly half as long.
+---
+
+import { Midsegment } from "@cameronbrady/math-components";
+
+Mark the middle of two sides of a triangle and connect those two points. The
+short segment you draw — a <Term id="midsegment">midsegment</Term> — lines up with
+the third side in a way that never changes: it runs perfectly **parallel** to it,
+and it is exactly **half its length**.
+
+<MidsegmentFig
+  caption="M and N are the midpoints of two sides. The midsegment MN is parallel to the base BC (the chevrons match) and half as long: MN = ½ · BC."
+/>
+
+## Explore
+
+Reshape the triangle and watch the midsegment MN against the third side BC.
+Compare their **lengths**, and compare their **directions**. What two things stay
+true no matter how you drag?
+
+<Midsegment />
+
+## Make a prediction
+
+<PredictThenCheck
+  prompt="In a triangle, the third side (the one the midsegment doesn't touch) is 12 cm long. How long is the midsegment joining the midpoints of the other two sides?"
+  choices={["6 cm", "12 cm", "24 cm", "It depends on the triangle's shape"]}
+>
+
+The midsegment is **6 cm** — half of the third side. It does not matter how the
+triangle is shaped; the midsegment is always exactly half the side it parallels.
+Set the third side near $12$ in the tool and watch the midsegment read half of it.
+
+</PredictThenCheck>
+
+## Test it
+
+In the tool, slide the triangle through tall, flat, and lopsided shapes. The
+midsegment and the third side stay **parallel** — same tilt — the whole time, and
+the midsegment's length stays glued to exactly half. This pair of facts is the
+**Triangle Midsegment Theorem**.
+
+## Why it works
+
+Because the midsegment is parallel to the third side, it cuts the top of the
+triangle into a smaller triangle with the *same angles* as the whole — the
+parallel line makes equal
+[corresponding angles](/geometry/angles/parallel-lines-and-a-transversal). That
+smaller triangle is a scaled-down copy of the big one. Each of its two sides runs
+from a vertex to a **midpoint**, so it is built at exactly half scale — which
+forces its bottom edge, the midsegment, to be half of the matching full side.
+
+<Takeaway>
+
+A **midsegment** joins the midpoints of two sides. It is **parallel** to the
+third side and **half its length**: $\text{midsegment} = \tfrac{1}{2}\,(\text{third side})$.
+
+</Takeaway>
+
+<WorkedExample title="In a triangle, a midsegment measures 9 cm. Find the length of the side it is parallel to, and state how the two are oriented.">
+  <Step
+    check={{
+      id: "we-midsegment-base",
+      type: "mc",
+      prompt: "How long is the side the midsegment is parallel to?",
+      choices: ["18 cm", "4.5 cm", "9 cm"],
+      answer: 0,
+      hints: ["The midsegment is half the third side, so the third side is twice the midsegment."],
+      explanation: "The third side is twice the midsegment: 2 × 9 = 18 cm.",
+    }}
+  >
+    The midsegment is half of the third side, so the third side is double the
+    midsegment: $2 \times 9 = 18$ cm.
+  </Step>
+  <Step>
+    They are **parallel**. The midsegment always runs in the same direction as the
+    side it connects to — that is the other half of the theorem.
+  </Step>
+</WorkedExample>
+
+export const practice = [
+  {
+    id: "midsegment-from-base",
+    type: "numeric",
+    prompt: "The third side of a triangle is 16 cm. How long is the midsegment parallel to it, in cm?",
+    answer: 8,
+    tolerance: 0,
+    hints: ["The midsegment is half the third side."],
+    explanation: "½ × 16 = 8 cm.",
+  },
+  {
+    id: "midsegment-to-base",
+    type: "numeric",
+    prompt: "A midsegment of a triangle is 9 cm long. How long is the side it is parallel to, in cm?",
+    answer: 18,
+    tolerance: 0,
+    hints: ["The side it parallels is twice the midsegment."],
+    explanation: "2 × 9 = 18 cm.",
+  },
+  {
+    id: "midsegment-algebra",
+    type: "numeric",
+    prompt: "A midsegment measures (2x − 3) and the side it is parallel to measures 18. Find x.",
+    answer: 6,
+    tolerance: 0,
+    hints: ["The midsegment equals half the third side: 2x − 3 = ½ × 18."],
+    explanation: "2x − 3 = 9, so 2x = 12 and x = 6.",
+  },
+  {
+    id: "midsegment-parallel-angle",
+    type: "mc",
+    prompt: "A midsegment is parallel to the third side. Where the third side meets one of the cut sides, the angle is 50°. What is the corresponding angle where the midsegment meets that same side?",
+    choices: ["50°", "40°", "130°", "Can't tell"],
+    answer: 0,
+    hints: ["Parallel lines cut by the same side make equal corresponding angles."],
+    explanation: "The midsegment and the third side are parallel, so they make equal corresponding angles with the side that crosses them: 50°.",
+  },
+];

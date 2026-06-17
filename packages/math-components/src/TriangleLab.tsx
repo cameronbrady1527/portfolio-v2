@@ -36,7 +36,15 @@ import {
   triangleFromSAS,
   type Pt,
 } from "./logic";
-import { arcPoints, easeOut, rotPt, vertexArc, vertexArcRadius } from "./internal/geometry";
+import {
+  arcPoints,
+  congruenceTickCounts,
+  easeOut,
+  rotPt,
+  sideTicks,
+  vertexArc,
+  vertexArcRadius,
+} from "./internal/geometry";
 import { ANGLE_A, ANGLE_B, ANGLE_C, IMAGE, PREIMAGE } from "./internal/colors";
 import { usePrefersReducedMotion } from "./internal/usePrefersReducedMotion";
 import { ControlSlider } from "./internal/controls";
@@ -143,6 +151,25 @@ export function TriangleLab({
     () => [vertexArc(A, B, C), vertexArc(B, A, C), vertexArc(C, A, B)],
     [A, B, C],
   );
+
+  // Congruence (hatch) marks: tick any sides that are equal in length, so an
+  // isosceles or equilateral configuration reads at a glance. Recomputed live
+  // as the triangle is reshaped — equal sides get matching single ticks.
+  const sideTickSegs = useMemo(() => {
+    const lens = [
+      Math.hypot(B.x - A.x, B.y - A.y), // AB
+      Math.hypot(C.x - B.x, C.y - B.y), // BC
+      Math.hypot(A.x - C.x, A.y - C.y), // CA
+    ];
+    const edges: [Pt, Pt][] = [
+      [A, B],
+      [B, C],
+      [C, A],
+    ];
+    return congruenceTickCounts(lens).flatMap((n, i) =>
+      n > 0 ? sideTicks(edges[i][0], edges[i][1], n) : [],
+    );
+  }, [A, B, C]);
 
   // The proof construction: half-turn centers (side midpoints) and the images of
   // A and B that land on the straight line through the apex C. Reuses the
@@ -284,6 +311,18 @@ export function TriangleLab({
             points={vertices.map((v) => [v.x, v.y] as [number, number])}
             color={TRIANGLE_COLOR}
           />
+
+          {/* Congruence ticks on equal sides (resting state only). */}
+          {!active &&
+            sideTickSegs.map((seg, i) => (
+              <Polyline
+                key={`stick-${i}`}
+                points={seg}
+                color={TRIANGLE_COLOR}
+                fillOpacity={0}
+                weight={2}
+              />
+            ))}
 
           {/* Resting state: thin on-figure angle arcs + machine-sourced measures
               — the angle-sum lens drawn in the language of the concept. */}

@@ -25,8 +25,8 @@ import { Coordinates, Mafs, Point, Polygon, Polyline, Text } from "mafs";
 import "mafs/core.css";
 import { autoBounds } from "./grapherLogic";
 import { triangleFromSSS, type Pt } from "./logic";
-import { easeOut } from "./internal/geometry";
-import { ANGLE_A, ANGLE_B, ANGLE_C, IMAGE, MUTED } from "./internal/colors";
+import { congruenceTickCounts, easeOut, sideTicks } from "./internal/geometry";
+import { ANGLE_A, ANGLE_B, ANGLE_C, IMAGE, MUTED, PREIMAGE } from "./internal/colors";
 import { usePrefersReducedMotion } from "./internal/usePrefersReducedMotion";
 import { ControlSlider } from "./internal/controls";
 
@@ -174,6 +174,55 @@ export function TriangleInequality({
   const flatLeftEnd: Pt = { x: left.x + pLen, y: 0 };
   const flatRightEnd: Pt = { x: right.x - qLen, y: 0 };
 
+  // Congruence (hatch) marks: equal-length sticks get matching ticks, drawn in
+  // ink so two equal sticks read as congruent despite their distinct colours.
+  // The ticks ride whichever edge each stick occupies in the resting layout.
+  const tickCounts = congruenceTickCounts(sides);
+  const restingTickSegs = (() => {
+    const baseEdge: [Pt, Pt] = [left, right];
+    const leftEdge: [Pt, Pt] = valid
+      ? [left, apex]
+      : [
+          { x: left.x, y: left.y + 0.15 },
+          { x: flatLeftEnd.x, y: flatLeftEnd.y + 0.15 },
+        ];
+    const rightEdge: [Pt, Pt] = valid
+      ? [right, apex]
+      : [
+          { x: right.x, y: right.y + 0.15 },
+          { x: flatRightEnd.x, y: flatRightEnd.y + 0.15 },
+        ];
+    const edges: { idx: number; edge: [Pt, Pt] }[] = [
+      { idx: baseIdx, edge: baseEdge },
+      { idx: legIdx[0], edge: leftEdge },
+      { idx: legIdx[1], edge: rightEdge },
+    ];
+    return edges.flatMap(({ idx, edge }) =>
+      tickCounts[idx] > 0 ? sideTicks(edge[0], edge[1], tickCounts[idx]) : [],
+    );
+  })();
+
+  // A side's length label, nudged off the line (perpendicular, away from the
+  // `away` reference point) so it clears the congruence tick on the midpoint.
+  const sideLabelPos = (p: Pt, q: Pt, away: Pt, d = 0.6): [number, number] => {
+    const mx = (p.x + q.x) / 2;
+    const my = (p.y + q.y) / 2;
+    const dx = q.x - p.x;
+    const dy = q.y - p.y;
+    const L = Math.hypot(dx, dy) || 1;
+    let nx = -dy / L;
+    let ny = dx / L;
+    if ((mx - away.x) * nx + (my - away.y) * ny < 0) {
+      nx = -nx;
+      ny = -ny;
+    }
+    return [mx + nx * d, my + ny * d];
+  };
+  const labLeftValid = sideLabelPos(left, apex, right);
+  const labRightValid = sideLabelPos(right, apex, left);
+  const labLeftActive = sideLabelPos(left, leftEnd, right);
+  const labRightActive = sideLabelPos(right, rightEnd, left);
+
   // --- fold playback -------------------------------------------------------
   const clearTimers = () => {
     if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
@@ -291,7 +340,7 @@ export function TriangleInequality({
             weight={3.5}
           />
           <Text x={(left.x + right.x) / 2} y={-0.5} size={15} color={baseColor}>
-            {`${longest}`}
+            {`${STICK_NAMES[baseIdx]} = ${longest}`}
           </Text>
 
           {active ? (
@@ -315,11 +364,11 @@ export function TriangleInequality({
                 fillOpacity={0}
                 weight={3.5}
               />
-              <Text x={(left.x + leftEnd.x) / 2 - 0.3} y={(left.y + leftEnd.y) / 2 + 0.3} size={14} color={leftColor}>
-                {`${pLen}`}
+              <Text x={labLeftActive[0]} y={labLeftActive[1]} size={14} color={leftColor}>
+                {`${STICK_NAMES[legIdx[0]]} = ${pLen}`}
               </Text>
-              <Text x={(right.x + rightEnd.x) / 2 + 0.3} y={(right.y + rightEnd.y) / 2 + 0.3} size={14} color={rightColor}>
-                {`${qLen}`}
+              <Text x={labRightActive[0]} y={labRightActive[1]} size={14} color={rightColor}>
+                {`${STICK_NAMES[legIdx[1]]} = ${qLen}`}
               </Text>
               {/* Free-end markers; when they coincide (valid, landed) it reads as a vertex. */}
               <Point x={leftEnd.x} y={leftEnd.y} color={leftColor} />
@@ -369,11 +418,11 @@ export function TriangleInequality({
                 fillOpacity={0}
                 weight={3.5}
               />
-              <Text x={(left.x + apex.x) / 2 - 0.35} y={(left.y + apex.y) / 2} size={14} color={leftColor}>
-                {`${pLen}`}
+              <Text x={labLeftValid[0]} y={labLeftValid[1]} size={14} color={leftColor}>
+                {`${STICK_NAMES[legIdx[0]]} = ${pLen}`}
               </Text>
-              <Text x={(right.x + apex.x) / 2 + 0.35} y={(right.y + apex.y) / 2} size={14} color={rightColor}>
-                {`${qLen}`}
+              <Text x={labRightValid[0]} y={labRightValid[1]} size={14} color={rightColor}>
+                {`${STICK_NAMES[legIdx[1]]} = ${qLen}`}
               </Text>
             </>
           ) : (
@@ -410,11 +459,29 @@ export function TriangleInequality({
                 weight={1.5}
                 svgPolylineProps={{ strokeDasharray: "5 5" }}
               />
+              <Text x={(left.x + flatLeftEnd.x) / 2} y={0.7} size={14} color={leftColor}>
+                {`${STICK_NAMES[legIdx[0]]} = ${pLen}`}
+              </Text>
+              <Text x={(right.x + flatRightEnd.x) / 2} y={0.7} size={14} color={rightColor}>
+                {`${STICK_NAMES[legIdx[1]]} = ${qLen}`}
+              </Text>
               <Text x={(flatLeftEnd.x + flatRightEnd.x) / 2} y={0.7} size={14} color={MUTED}>
                 {`gap ${shortfall}`}
               </Text>
             </>
           )}
+
+          {/* Congruence ticks on equal sticks (resting state only). */}
+          {!active &&
+            restingTickSegs.map((seg, i) => (
+              <Polyline
+                key={`stick-${i}`}
+                points={seg}
+                color={PREIMAGE}
+                fillOpacity={0}
+                weight={2}
+              />
+            ))}
         </Mafs>
       </div>
 

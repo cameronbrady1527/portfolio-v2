@@ -1,0 +1,135 @@
+---
+title: Triangle Inequality
+order: 4
+description: Three lengths only close into a triangle when any two of them, added together, beat the third — otherwise the short sides can't reach across to meet.
+---
+
+import { TriangleInequality } from "@cameronbrady/math-components";
+
+Not every trio of lengths makes a triangle. Grab three sticks and the question is
+whether the two shorter ones can stretch far enough to meet over the longest one.
+If their combined length falls short, there is a gap they can never close.
+
+<TriangleInequalityFig
+  variant="closes"
+  caption="Sides 7, 6, and 5. The two shorter sides reach across the longest with room to spare — 6 + 5 = 11, comfortably more than 7 — so the triangle closes."
+/>
+
+<TriangleInequalityFig
+  variant="fails"
+  caption="A base of 9 with sticks of 4 and 3. Since 4 + 3 = 7 is less than 9, the sticks fall short of each other — no triangle can form."
+/>
+
+## Explore
+
+Set the three side lengths and watch whether the triangle closes or collapses to
+a flat line. Push two of the sticks short while the third stays long. **When
+exactly does the triangle fail to form?**
+
+<TriangleInequality />
+
+## Make a prediction
+
+<PredictThenCheck
+  prompt="Can three sticks of length 3, 4, and 8 form a triangle?"
+  choices={["No — 3 + 4 is less than 8", "Yes", "Only if you bend them", "Can't tell without the angles"]}
+>
+
+**No.** The two shorter sticks total $3 + 4 = 7$, which is *less* than the longest
+stick, $8$. They can't reach across to meet, so no triangle forms. Set those
+three lengths in the tool and watch it stay open.
+
+</PredictThenCheck>
+
+## Test it
+
+In the tool, take a valid triangle and shrink one side toward the difference of
+the other two. Right when the two shorter sides *just* add up to the longest, the
+triangle flattens into a straight segment — a "degenerate" triangle with no area.
+Below that, it can't close at all. That tipping point is the
+<Term id="triangle-inequality">triangle inequality</Term> at work.
+
+## Why it works
+
+The shortest path between two points is a straight line. To travel from one end of
+the longest side to the other, you can go *directly* along that side, or you can
+detour through the third vertex — along the other two sides. The detour can never
+be shorter than the straight route, so the other two sides together must be longer
+than the longest side. Written out for sides $a$, $b$, $c$:
+
+$$
+a + b > c, \qquad a + c > b, \qquad b + c > a
+$$
+
+In practice you only need to check the **largest** side against the sum of the
+other two — if that one passes, the rest automatically do.
+
+<Takeaway>
+
+Three lengths form a triangle exactly when **every pair sums to more than the
+third side** — equivalently, when the longest side is shorter than the other two
+combined. With two sides $a$ and $b$ fixed, the third must land strictly between
+$|a - b|$ and $a + b$.
+
+</Takeaway>
+
+<WorkedExample title="Two sides of a triangle are 7 and 10. Find the full range of possible lengths for the third side.">
+  <Step
+    check={{
+      id: "we-upper-bound",
+      type: "mc",
+      prompt: "The third side must be less than…",
+      choices: ["17", "70", "10"],
+      answer: 0,
+      hints: ["The two known sides added together cap the third side."],
+      explanation: "The third side must be less than 7 + 10 = 17, or the longest side would beat the other two combined.",
+    }}
+  >
+    The third side has to be shorter than the other two combined:
+    $7 + 10 = 17$.
+  </Step>
+  <Step>
+    It also has to be long enough that $7$ and the third side beat $10$ — so the
+    third side must exceed $10 - 7 = 3$. Putting both bounds together, the third
+    side is any length **strictly between $3$ and $17$**: $3 < x < 17$.
+  </Step>
+</WorkedExample>
+
+export const practice = [
+  {
+    id: "which-forms-triangle",
+    type: "mc",
+    prompt: "Which set of three lengths can form a triangle?",
+    choices: ["2, 3, 4", "1, 2, 3", "2, 2, 5", "3, 4, 8"],
+    answer: 0,
+    hints: ["Check the two shorter lengths against the longest: do they add to more than it?"],
+    explanation: "Only 2, 3, 4 works: 2 + 3 = 5 > 4. In each other set the two shorter sides fall short of (or just equal) the longest.",
+  },
+  {
+    id: "third-side-upper",
+    type: "numeric",
+    prompt: "Two sides of a triangle are 5 and 8. The third side must be less than what whole number?",
+    answer: 13,
+    tolerance: 0,
+    hints: ["The third side must be shorter than the other two added together."],
+    explanation: "The third side must be less than 5 + 8 = 13.",
+  },
+  {
+    id: "third-side-lower",
+    type: "numeric",
+    prompt: "Two sides of a triangle are 5 and 8. The third side must be greater than what whole number?",
+    answer: 3,
+    tolerance: 0,
+    hints: ["The third side must be longer than the difference of the other two."],
+    explanation: "The third side must exceed 8 − 5 = 3, so that 5 and the third side together beat 8.",
+  },
+  {
+    id: "degenerate-case",
+    type: "mc",
+    prompt: "Can sides of length 4, 6, and 10 form a triangle?",
+    choices: ["No — 4 + 6 only equals 10, so it lies flat", "Yes, a right triangle", "Yes, an obtuse triangle", "Only if 10 is the base"],
+    answer: 0,
+    hints: ["Compare the two shorter sides' sum to the longest. Equal is not enough."],
+    explanation: "4 + 6 = 10 exactly equals the longest side, so the three lengths collapse into a straight line — a degenerate triangle with no area. The inequality must be strict.",
+  },
+];

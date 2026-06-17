@@ -37,7 +37,15 @@ import {
   triangleFromSAS,
   type Pt,
 } from "./logic";
-import { arcPoints, easeOut, vertexArc, vertexArcRadius, D } from "./internal/geometry";
+import {
+  arcPoints,
+  congruenceTickCounts,
+  easeOut,
+  sideTicks,
+  vertexArc,
+  vertexArcRadius,
+  D,
+} from "./internal/geometry";
 import { ANGLE_A, ANGLE_C, IMAGE, MUTED, PREIMAGE } from "./internal/colors";
 import { usePrefersReducedMotion } from "./internal/usePrefersReducedMotion";
 import { ControlSlider } from "./internal/controls";
@@ -157,6 +165,24 @@ export function ExteriorAngle({
   // arc at B between the extension ray (B→Bext, i.e. +x) and ray B→C.
   const arcA = useMemo(() => vertexArc(A, B, C), [A, B, C]);
   const arcC = useMemo(() => vertexArc(C, A, B), [A, B, C]);
+
+  // Congruence (hatch) marks on equal sides — recomputed live, so making the
+  // triangle isosceles (e.g. AB = AC) shows matching single ticks.
+  const sideTickSegs = useMemo(() => {
+    const lens = [
+      Math.hypot(B.x - A.x, B.y - A.y), // AB
+      Math.hypot(C.x - B.x, C.y - B.y), // BC
+      Math.hypot(A.x - C.x, A.y - C.y), // CA
+    ];
+    const edges: [Pt, Pt][] = [
+      [A, B],
+      [B, C],
+      [C, A],
+    ];
+    return congruenceTickCounts(lens).flatMap((n, i) =>
+      n > 0 ? sideTicks(edges[i][0], edges[i][1], n) : [],
+    );
+  }, [A, B, C]);
   // Exterior wedge at B: from the +x extension (0°) up to the direction of B→C.
   const extWedge = useMemo(() => {
     const angC0 = Math.atan2(C.y - B.y, C.x - B.x) / D; // direction B→C (0..180)
@@ -345,6 +371,18 @@ export function ExteriorAngle({
             points={vertices.map((v) => [v.x, v.y] as [number, number])}
             color={TRIANGLE_COLOR}
           />
+
+          {/* Congruence ticks on equal sides (resting state only). */}
+          {!active &&
+            sideTickSegs.map((seg, i) => (
+              <Polyline
+                key={`stick-${i}`}
+                points={seg}
+                color={TRIANGLE_COLOR}
+                fillOpacity={0}
+                weight={2}
+              />
+            ))}
 
           {/* The base AB extended past B along +x — the ray the exterior angle
               opens against. Dashed so it reads as a construction, not a side. */}
