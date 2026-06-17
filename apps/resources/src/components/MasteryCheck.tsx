@@ -45,7 +45,6 @@ export function MasteryCheck({ skill, className }: MasteryCheckProps) {
     setMastered(isMastered(loadProgress(RESOURCES_PROGRESS_KEY), skill));
   }, [skill]);
 
-  const allCorrect = deck.every((q) => ui[q.id]?.result?.correct === true);
   const correctCount = deck.filter(
     (q) => ui[q.id]?.result?.correct === true,
   ).length;

@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import { isMastered, loadProgress } from "@cameronbrady/math-components/logic";
@@ -54,11 +54,6 @@ afterEach(() => {
   cleanup();
   window.localStorage.clear();
 });
-
-async function answer(label: RegExp | string, value: string) {
-  const user = userEvent.setup();
-  await user.type(screen.getByLabelText(label), value);
-}
 
 describe("MasteryCheck", () => {
   it("records the mastery flag once every item is answered correctly", async () => {

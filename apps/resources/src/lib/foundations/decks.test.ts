@@ -27,14 +27,16 @@ describe("validateDeck", () => {
   });
 
   it("throws loud (naming the skill) when an item is missing its difficulty tag", () => {
-    const { difficulty: _omit, ...noDifficulty } = validItem;
+    const noDifficulty = { ...validItem } as Record<string, unknown>;
+    delete noDifficulty.difficulty;
     expect(() =>
       validateDeck([noDifficulty as unknown as DeckItem], "test-skill"),
     ).toThrowError(/test-skill/);
   });
 
   it("throws loud when an item is missing its source tag", () => {
-    const { source: _omit, ...noSource } = validItem;
+    const noSource = { ...validItem } as Record<string, unknown>;
+    delete noSource.source;
     expect(() =>
       validateDeck([noSource as unknown as DeckItem], "test-skill"),
     ).toThrowError(/source/i);
