@@ -63,13 +63,34 @@ describe("resolveDeck (registry)", () => {
   });
 });
 
-describe("adding-subtracting-signed-numbers deck — math mandate", () => {
-  const deck = resolveDeck("adding-subtracting-signed-numbers");
+// Every Foundations deck must clear the same math mandate: every stated answer
+// grades correct, the set mixes core and stretch, and ids are unique.
+const FOUNDATIONS_SKILLS = [
+  "adding-subtracting-signed-numbers",
+  "multiplication-division-fluency",
+  "order-of-operations",
+  "rounding",
+] as const;
+
+describe.each(FOUNDATIONS_SKILLS)("%s deck — math mandate", (skill) => {
+  const deck = resolveDeck(skill);
+
+  it("has at least 10 items", () => {
+    expect(deck.length).toBeGreaterThanOrEqual(10);
+  });
 
   it("has a grade()-correct stated answer for every item", () => {
     for (const item of deck) {
       const result = grade(item, item.answer);
       expect(result.correct, `item ${item.id} (${item.prompt})`).toBe(true);
+    }
+  });
+
+  it("rejects a deliberately wrong answer for every numeric item (tolerance is real)", () => {
+    for (const item of deck) {
+      if (item.type !== "numeric") continue;
+      const wrong = grade(item, item.answer + 1);
+      expect(wrong.correct, `item ${item.id} (${item.prompt})`).toBe(false);
     }
   });
 

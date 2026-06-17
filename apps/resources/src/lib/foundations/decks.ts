@@ -9,6 +9,9 @@
 
 import type { PracticeQuestion } from "@cameronbrady/math-components/logic";
 import signedAddSubDeck from "../../../content/foundations/geometry/_decks/adding-subtracting-signed-numbers";
+import multDivDeck from "../../../content/foundations/geometry/_decks/multiplication-division-fluency";
+import orderOfOperationsDeck from "../../../content/foundations/geometry/_decks/order-of-operations";
+import roundingDeck from "../../../content/foundations/geometry/_decks/rounding";
 
 /** Authoring difficulty tag. "core" = on-grade; "stretch" = harder/applied. */
 export type Difficulty = "core" | "stretch";
@@ -87,6 +90,15 @@ const DECKS: Record<string, DeckItem[]> = {
     signedAddSubDeck,
     "adding-subtracting-signed-numbers",
   ),
+  "multiplication-division-fluency": validateDeck(
+    multDivDeck,
+    "multiplication-division-fluency",
+  ),
+  "order-of-operations": validateDeck(
+    orderOfOperationsDeck,
+    "order-of-operations",
+  ),
+  rounding: validateDeck(roundingDeck, "rounding"),
 };
 
 /** Resolve a skill's validated mastery deck, failing loud if none is registered. */

@@ -1,0 +1,75 @@
+---
+title: Order of Operations
+order: 3
+strand: Number & Operations
+description: One expression, one answer — but only if everyone evaluates it in the same order. Lock in PEMDAS so multi-step formulas in geometry come out right every time.
+---
+
+Geometry formulas stack operations together — $\tfrac{1}{2}bh$, $s^2$, $a^2 + b^2$.
+Plug numbers in and you get a multi-step expression, and there's exactly **one**
+correct value — but only if you evaluate it in the agreed order. This card makes
+that order automatic so your formula work is never off by a hidden mis-step.
+
+<SkillCard skill="order-of-operations" title="Order of Operations">
+
+<SkillStep title="What & why">
+
+Read $4 + 3 \times 5$ left to right and you'd get $35$. Multiply first and you get
+$19$. Both can't be right — so mathematicians agreed on a fixed order, and it
+isn't arbitrary: multiplication is repeated addition, so it "binds tighter" than
+the addition around it.
+
+The order is **PEMDAS**:
+
+- **P**arentheses
+- **E**xponents
+- **M**ultiplication and **D**ivision — together, left to right
+- **A**ddition and **S**ubtraction — together, left to right
+
+The pairs matter: M and D are the *same* rank (do them in the order they appear),
+and so are A and S. They are not four separate steps but two ranked tiers riding
+on grouping and powers.
+
+</SkillStep>
+
+<SkillStep title="Watch how it works">
+
+**Multiplication before addition.** In $4 + 3 \times 5$, the $3 \times 5$ happens
+first:
+
+$$4 + 3 \times 5 = 4 + 15 = 19$$
+
+**Parentheses override that.** Wrap the addition and it goes first — same numbers,
+different answer:
+
+$$(4 + 3) \times 5 = 7 \times 5 = 35$$
+
+**Exponents come before multiply/add.** In $2 + 3^2$, square first:
+
+$$2 + 3^2 = 2 + 9 = 11$$
+
+Work one operation at a time and **rewrite the whole expression** after each step —
+that habit is what keeps long ones from going sideways.
+
+</SkillStep>
+
+<SkillStep title="Reason through one together">
+
+Here's the trap: an operation that comes *later* in reading order can still have to
+go *first*. Picture the steps before you choose.
+
+<PredictThenCheck
+  prompt="Evaluate 20 − 12 ÷ 4."
+  choices={["17", "2", "8", "16"]}
+>
+
+It's **17**. Division outranks subtraction, so $12 \div 4 = 3$ happens first,
+*then* $20 - 3 = 17$. Going strictly left to right would give $20 - 12 = 8$, then
+$8 \div 4 = 2$ — a different, wrong answer. The subtraction is written first, but
+it waits its turn.
+
+</PredictThenCheck>
+
+</SkillStep>
+
+</SkillCard>
