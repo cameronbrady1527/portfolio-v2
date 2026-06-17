@@ -6,6 +6,8 @@ export type AnswerRecord = { answered: true; correct: boolean };
 
 export type TopicProgress = {
   completedAt?: string;
+  /** Set once the skill's mastery check is passed; the card shows ✓ mastered. */
+  masteredAt?: string;
   best: { correct: number; total: number };
   answers: { [questionId: string]: AnswerRecord };
 };
@@ -83,6 +85,40 @@ export function recordAnswer(
 // Read a topic's stored state, always returning a usable object.
 export function getTopic(progress: Progress, slug: string): TopicProgress {
   return progress.topics[slug] ?? emptyTopic();
+}
+
+// ---------------------------------------------------------------------------
+// Mastery — a per-skill flag, separate from question-by-question answers. The
+// drill is zero-stakes; only passing a skill's mastery check sets this.
+// ---------------------------------------------------------------------------
+
+// Mark a skill (keyed by its topic slug) mastered, returning a NEW Progress.
+// Idempotent: the first mastery time is preserved (a refresh restores ✓), and
+// any existing answer state for the topic is left untouched.
+export function recordMastery(
+  progress: Progress,
+  slug: string,
+  now: () => string = () => new Date().toISOString(),
+): Progress {
+  const prevTopic = progress.topics[slug] ?? emptyTopic();
+  if (prevTopic.masteredAt) return progress;
+  return {
+    ...progress,
+    topics: {
+      ...progress.topics,
+      [slug]: { ...prevTopic, masteredAt: now() },
+    },
+  };
+}
+
+/** True iff the skill at `slug` has been mastered. */
+export function isMastered(progress: Progress, slug: string): boolean {
+  return progress.topics[slug]?.masteredAt !== undefined;
+}
+
+/** How many of the given skill slugs have been mastered (for "N of M"). */
+export function countMastered(progress: Progress, slugs: string[]): number {
+  return slugs.filter((slug) => isMastered(progress, slug)).length;
 }
 
 // Validate / normalise an unknown value into a fresh-or-loaded Progress.

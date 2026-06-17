@@ -104,5 +104,8 @@ export {
   normalizeProgress,
   loadProgress,
   saveProgress,
+  recordMastery,
+  isMastered,
+  countMastered,
 } from "./practice/progress";
 export type { Progress, TopicProgress, AnswerRecord } from "./practice/progress";
