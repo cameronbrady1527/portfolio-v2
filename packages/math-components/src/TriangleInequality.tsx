@@ -25,8 +25,8 @@ import { Coordinates, Mafs, Point, Polygon, Polyline, Text } from "mafs";
 import "mafs/core.css";
 import { autoBounds } from "./grapherLogic";
 import { triangleFromSSS, type Pt } from "./logic";
-import { easeOut } from "./internal/geometry";
-import { ANGLE_A, ANGLE_B, ANGLE_C, IMAGE, MUTED } from "./internal/colors";
+import { congruenceTickCounts, easeOut, sideTicks } from "./internal/geometry";
+import { ANGLE_A, ANGLE_B, ANGLE_C, IMAGE, MUTED, PREIMAGE } from "./internal/colors";
 import { usePrefersReducedMotion } from "./internal/usePrefersReducedMotion";
 import { ControlSlider } from "./internal/controls";
 
@@ -173,6 +173,34 @@ export function TriangleInequality({
   // Flat resting layout (legs lying on the base, pointing toward each other).
   const flatLeftEnd: Pt = { x: left.x + pLen, y: 0 };
   const flatRightEnd: Pt = { x: right.x - qLen, y: 0 };
+
+  // Congruence (hatch) marks: equal-length sticks get matching ticks, drawn in
+  // ink so two equal sticks read as congruent despite their distinct colours.
+  // The ticks ride whichever edge each stick occupies in the resting layout.
+  const tickCounts = congruenceTickCounts(sides);
+  const restingTickSegs = (() => {
+    const baseEdge: [Pt, Pt] = [left, right];
+    const leftEdge: [Pt, Pt] = valid
+      ? [left, apex]
+      : [
+          { x: left.x, y: left.y + 0.15 },
+          { x: flatLeftEnd.x, y: flatLeftEnd.y + 0.15 },
+        ];
+    const rightEdge: [Pt, Pt] = valid
+      ? [right, apex]
+      : [
+          { x: right.x, y: right.y + 0.15 },
+          { x: flatRightEnd.x, y: flatRightEnd.y + 0.15 },
+        ];
+    const edges: { idx: number; edge: [Pt, Pt] }[] = [
+      { idx: baseIdx, edge: baseEdge },
+      { idx: legIdx[0], edge: leftEdge },
+      { idx: legIdx[1], edge: rightEdge },
+    ];
+    return edges.flatMap(({ idx, edge }) =>
+      tickCounts[idx] > 0 ? sideTicks(edge[0], edge[1], tickCounts[idx]) : [],
+    );
+  })();
 
   // --- fold playback -------------------------------------------------------
   const clearTimers = () => {
@@ -415,6 +443,18 @@ export function TriangleInequality({
               </Text>
             </>
           )}
+
+          {/* Congruence ticks on equal sticks (resting state only). */}
+          {!active &&
+            restingTickSegs.map((seg, i) => (
+              <Polyline
+                key={`stick-${i}`}
+                points={seg}
+                color={PREIMAGE}
+                fillOpacity={0}
+                weight={2}
+              />
+            ))}
         </Mafs>
       </div>
 

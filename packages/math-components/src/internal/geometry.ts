@@ -113,3 +113,68 @@ export function vertexArc(
     label: [v.x + labelR * Math.cos(mid), v.y + labelR * Math.sin(mid)],
   };
 }
+
+/**
+ * Congruence (hatch) marks: how many tick marks each side carries so that sides
+ * of equal length read as congruent. Group the `sides` lengths into classes —
+ * two lengths are equal within `relTol` (relative), so an isosceles/equilateral
+ * configuration reads cleanly even when one side is a computed (irrational)
+ * length. Each class of two or more equal sides gets a tick count (1 for the
+ * first such class, 2 for the next, …, the standard single/double/triple
+ * convention); sides whose length is unique get 0. Returned in input order.
+ */
+export function congruenceTickCounts(sides: number[], relTol = 0.012): number[] {
+  const cls = sides.map(() => -1);
+  const classLen: number[] = [];
+  sides.forEach((len, i) => {
+    for (let c = 0; c < classLen.length; c++) {
+      if (Math.abs(len - classLen[c]) <= relTol * Math.max(len, classLen[c])) {
+        cls[i] = c;
+        return;
+      }
+    }
+    cls[i] = classLen.length;
+    classLen.push(len);
+  });
+  const size = classLen.map(() => 0);
+  cls.forEach((c) => (size[c] += 1));
+  // Number only the classes with a congruent partner, in order of appearance.
+  let next = 1;
+  const tickOfClass = classLen.map((_, c) => (size[c] >= 2 ? next++ : 0));
+  return cls.map((c) => tickOfClass[c]);
+}
+
+/**
+ * `count` short congruence ticks centred on segment p→q's midpoint, each drawn
+ * perpendicular to the side. Returns one [start, end] segment per tick (render
+ * each as a Polyline). `len` is half a tick's length and `gap` the spacing
+ * between adjacent ticks, both in plane units.
+ */
+export function sideTicks(
+  p: Pt,
+  q: Pt,
+  count: number,
+  len = 0.16,
+  gap = 0.16,
+): [number, number][][] {
+  const mx = (p.x + q.x) / 2;
+  const my = (p.y + q.y) / 2;
+  const dx = q.x - p.x;
+  const dy = q.y - p.y;
+  const L = Math.hypot(dx, dy) || 1;
+  const ux = dx / L; // unit along the side
+  const uy = dy / L;
+  const nx = -dy / L; // unit normal
+  const ny = dx / L;
+  const segs: [number, number][][] = [];
+  for (let i = 0; i < count; i++) {
+    const off = (i - (count - 1) / 2) * gap;
+    const cx = mx + ux * off;
+    const cy = my + uy * off;
+    segs.push([
+      [cx - nx * len, cy - ny * len],
+      [cx + nx * len, cy + ny * len],
+    ]);
+  }
+  return segs;
+}
