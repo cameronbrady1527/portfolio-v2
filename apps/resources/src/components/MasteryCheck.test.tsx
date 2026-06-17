@@ -56,61 +56,74 @@ afterEach(() => {
 });
 
 describe("MasteryCheck", () => {
-  it("records the mastery flag once every item is answered correctly", async () => {
+  it("presents items one at a time and records mastery once all are cleared", async () => {
     const user = userEvent.setup();
     render(<MasteryCheck skill="test-skill" />);
 
     expect(isMastered(loadProgress(KEY), "test-skill")).toBe(false);
+    expect(screen.getByTestId("mastery-status")).toHaveTextContent(
+      /question 1 of 2/i,
+    );
+    // Only the first item is shown.
+    expect(
+      screen.queryByLabelText(/answer to evaluate -6 - \(-9\)/i),
+    ).not.toBeInTheDocument();
 
-    const checks = screen.getAllByRole("button", { name: /check/i });
     await user.type(screen.getByLabelText(/answer to evaluate -4 \+ 7/i), "3");
-    await user.click(checks[0]);
+    await user.click(screen.getByRole("button", { name: /check/i }));
+    await user.click(screen.getByRole("button", { name: /next question/i }));
+
+    // Now on the second (last) item.
     await user.type(
       screen.getByLabelText(/answer to evaluate -6 - \(-9\)/i),
       "3",
     );
-    await user.click(
-      screen.getAllByRole("button", { name: /check/i })[0],
-    );
+    await user.click(screen.getByRole("button", { name: /check/i }));
 
     expect(isMastered(loadProgress(KEY), "test-skill")).toBe(true);
     expect(screen.getByTestId("mastery-status")).toHaveTextContent(/mastered/i);
   });
 
-  it("does NOT record mastery when an item is wrong (and nothing locks)", async () => {
+  it("a wrong answer does not advance or record, and nothing locks", async () => {
     const user = userEvent.setup();
     render(<MasteryCheck skill="test-skill" />);
 
-    await user.type(screen.getByLabelText(/answer to evaluate -4 \+ 7/i), "3");
-    await user.click(screen.getAllByRole("button", { name: /check/i })[0]);
-    await user.type(
-      screen.getByLabelText(/answer to evaluate -6 - \(-9\)/i),
-      "99",
-    );
-    await user.click(screen.getAllByRole("button", { name: /check/i })[0]);
+    await user.type(screen.getByLabelText(/answer to evaluate -4 \+ 7/i), "99");
+    await user.click(screen.getByRole("button", { name: /check/i }));
 
+    expect(screen.getByText(/not yet/i)).toBeInTheDocument();
     expect(isMastered(loadProgress(KEY), "test-skill")).toBe(false);
+    // Still on item 1 — a miss never advances.
+    expect(screen.getByTestId("mastery-status")).toHaveTextContent(
+      /question 1 of 2/i,
+    );
 
-    // Nothing locks: the wrong item is re-answerable. Try again, correctly.
+    // Nothing locks: try again, correctly, and proceed to mastery.
     await user.click(screen.getByRole("button", { name: /try again/i }));
+    await user.type(screen.getByLabelText(/answer to evaluate -4 \+ 7/i), "3");
+    await user.click(screen.getByRole("button", { name: /check/i }));
+    await user.click(screen.getByRole("button", { name: /next question/i }));
     await user.type(
       screen.getByLabelText(/answer to evaluate -6 - \(-9\)/i),
       "3",
     );
-    await user.click(screen.getAllByRole("button", { name: /check/i })[0]);
+    await user.click(screen.getByRole("button", { name: /check/i }));
 
     expect(isMastered(loadProgress(KEY), "test-skill")).toBe(true);
   });
 
   it("renders the mastered state on mount when already passed", () => {
-    render(<MasteryCheck skill="adding-subtracting-signed-numbers" />);
-    // Pre-seed mastery and re-render.
-    cleanup();
     window.localStorage.setItem(
       KEY,
       JSON.stringify({
         version: 1,
-        topics: { "test-skill": { masteredAt: "2026-01-01T00:00:00.000Z", best: { correct: 0, total: 0 }, answers: {} } },
+        topics: {
+          "test-skill": {
+            masteredAt: "2026-01-01T00:00:00.000Z",
+            best: { correct: 0, total: 0 },
+            answers: {},
+          },
+        },
       }),
     );
     render(<MasteryCheck skill="test-skill" />);
