@@ -6,9 +6,9 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
-import { Lock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
 import { Drill } from "./Drill";
+import { MasteryCheck } from "./MasteryCheck";
 import { resolveGenerator } from "@/lib/foundations/generators";
 
 export interface SkillStepProps {
@@ -85,17 +85,18 @@ export function SkillCard({ skill, title, level = 1, children }: SkillCardProps)
             </div>
           </li>
 
-          {/* Step 5: mastery placeholder (next slice). */}
+          {/* Step 5: Regents-level mastery check. */}
           <li className="flex gap-4">
             <StepBadge>{steps.length + 2}</StepBadge>
-            <div className="flex flex-1 flex-col gap-2">
-              <h3 className="font-display text-base font-semibold text-muted-foreground">
+            <div className="flex flex-1 flex-col gap-3">
+              <h3 className="font-display text-base font-semibold text-foreground">
                 Prove it
               </h3>
-              <p className="flex items-center gap-2 rounded-md border border-dashed border-border bg-muted/20 px-3 py-2.5 text-sm text-muted-foreground">
-                <Lock aria-hidden className="size-4 shrink-0" />
-                A Regents-level mastery check is coming to this card soon.
+              <p className="text-sm text-muted-foreground">
+                Harder, applied problems at the level you&rsquo;ll meet on the
+                Regents. Get them all right to earn this skill.
               </p>
+              <MasteryCheck skill={skill} />
             </div>
           </li>
         </ol>
