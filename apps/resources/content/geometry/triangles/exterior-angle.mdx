@@ -1,0 +1,139 @@
+---
+title: Exterior Angle
+order: 2
+description: Extend one side of a triangle and a new angle appears outside it — and it equals the two far-off interior angles added together.
+---
+
+import { ExteriorAngle } from "@cameronbrady/math-components";
+
+Push one side of a triangle straight past a corner, like extending a road beyond
+an intersection. The angle that opens up *outside* the triangle is an
+<Term id="exterior-angle">exterior angle</Term> — and it carries a surprising
+piece of information about the two corners far away from it.
+
+<ExteriorAngleFig
+  caption="Extend side BC past C and the exterior angle (120°) opens up. It exactly equals the two remote interior angles added together: 70° + 50°."
+/>
+
+## Explore
+
+Reshape the triangle and watch the exterior angle at the extended corner. Keep an
+eye on the two **remote** interior angles — the two corners that are *not* next to
+it. What relationship holds between the exterior angle and those two?
+
+<ExteriorAngle />
+
+## Make a prediction
+
+<PredictThenCheck
+  prompt="A triangle's two remote interior angles measure 70° and 45°. What is the exterior angle at the third vertex?"
+  choices={["115°", "65°", "90°", "Can't tell without the third angle"]}
+>
+
+The exterior angle is **115°** — just $70° + 45°$. The exterior angle always
+equals the sum of the two remote interior angles, so you never need the third
+(adjacent) angle to find it. Set those two interior angles in the tool and watch
+the exterior angle land on $115°$.
+
+</PredictThenCheck>
+
+## Test it
+
+In the tool, notice two facts holding at once. The exterior angle and the
+interior angle right beside it always make a straight line — they are a
+[linear pair](/geometry/angles/intersecting-lines), summing to $180°$. And the
+exterior angle always equals the two
+<Term id="remote-interior-angles">remote interior angles</Term> combined. Try to
+find a triangle where either rule fails. You can't.
+
+## Why it works
+
+Both facts come straight from the angle sum. Call the interior angles $A$, $B$,
+and $C$, and put the exterior angle at $C$. The exterior angle and $C$ form a
+linear pair, so:
+
+$$
+\text{exterior} = 180° - C
+$$
+
+But the three interior angles also total $180°$, so $180° - C = A + B$. Putting
+those together:
+
+$$
+\text{exterior} = 180° - C = A + B
+$$
+
+The "$180° - C$" cancels out the adjacent angle and leaves exactly the two remote
+ones. In the figure that is $180° - 60° = 120°$, matching $70° + 50°$.
+
+<Takeaway>
+
+An exterior angle of a triangle equals the **sum of the two remote interior
+angles**. (Equivalently, it is $180°$ minus the interior angle right next to it.)
+Because it adds two positive angles, an exterior angle is always *larger* than
+either remote interior angle on its own.
+
+</Takeaway>
+
+<WorkedExample title="A triangle has remote interior angles of 65° and 40° relative to an exterior angle. Find the exterior angle and the interior angle adjacent to it.">
+  <Step
+    check={{
+      id: "we-exterior",
+      type: "mc",
+      prompt: "What is the exterior angle?",
+      choices: ["105°", "75°", "155°"],
+      answer: 0,
+      hints: ["The exterior angle equals the two remote interior angles added together."],
+      explanation: "65° + 40° = 105°.",
+    }}
+  >
+    The exterior angle equals the sum of the two remote interior angles:
+    $65° + 40° = 105°$.
+  </Step>
+  <Step>
+    The adjacent interior angle forms a linear pair with it, so it is the
+    supplement: $180° - 105° = 75°$. (As a check, the three interior angles are
+    $65°$, $40°$, and $75°$ — and they total $180°$.)
+  </Step>
+</WorkedExample>
+
+export const practice = [
+  {
+    id: "exterior-sum",
+    type: "numeric",
+    prompt: "The two remote interior angles relative to an exterior angle measure 50° and 70°. What is the exterior angle, in degrees?",
+    answer: 120,
+    tolerance: 0,
+    unit: "°",
+    hints: ["The exterior angle equals the sum of the two remote interior angles."],
+    explanation: "50° + 70° = 120°.",
+  },
+  {
+    id: "exterior-find-remote",
+    type: "numeric",
+    prompt: "An exterior angle of a triangle measures 130°. One remote interior angle is 85°. What is the other remote interior angle, in degrees?",
+    answer: 45,
+    tolerance: 0,
+    unit: "°",
+    hints: ["The two remote interior angles add up to the exterior angle."],
+    explanation: "The remote interior angles sum to the exterior angle: 130° − 85° = 45°.",
+  },
+  {
+    id: "exterior-algebra",
+    type: "numeric",
+    prompt: "An exterior angle measures 5x°, and its two remote interior angles measure (2x + 10)° and (x + 30)°. Find x.",
+    answer: 20,
+    tolerance: 0,
+    hints: ["Set the exterior angle equal to the sum of the two remote interior angles: 5x = (2x + 10) + (x + 30)."],
+    explanation: "5x = 3x + 40, so 2x = 40 and x = 20. (The exterior angle is 100°, matching 50° + 50°.)",
+  },
+  {
+    id: "exterior-inequality",
+    type: "mc",
+    prompt: "How does an exterior angle of a triangle compare to either of its remote interior angles?",
+    choices: ["It is always larger than either one", "It is always equal to each one", "It is always smaller than either one", "It depends on the triangle"],
+    answer: 0,
+    hints: ["The exterior angle is the two remote interior angles added together — and both are positive."],
+    explanation: "Since the exterior angle is the sum of two positive angles, it must be larger than either remote interior angle by itself. This is the Exterior Angle Inequality.",
+  },
+];

@@ -1,0 +1,131 @@
+---
+title: Triangle Angle Sum
+order: 1
+description: No matter what shape a triangle takes, its three interior angles always add to 180° — and you can see exactly why by tearing the corners off.
+---
+
+import { TriangleLab } from "@cameronbrady/math-components";
+
+Stretch a triangle however you like — tall and thin, wide and flat, a perfect
+equilateral. Its three corners never agree on their sizes, but they always agree
+on one thing: their measures **add up to $180°$**, a straight line's worth of
+turn.
+
+<TriangleAngles
+  caption="Three different-looking angles — 50°, 60°, and 70° — but they always total 180°. Change the triangle's shape and the three numbers shift, yet the sum never moves."
+/>
+
+## Explore
+
+Drag a vertex or the side handles to reshape the triangle. Watch the three angle
+measures change — and watch their **sum**. Try to make a triangle whose angles
+*don't* total 180°.
+
+<TriangleLab />
+
+## Make a prediction
+
+<PredictThenCheck
+  prompt="A triangle has two angles measuring 40° and 75°. What is the third angle?"
+  choices={["65°", "115°", "75°", "It depends on the triangle's size"]}
+>
+
+The third angle is **65°**. The three must total $180°$, so the last one is
+$180° - 40° - 75° = 65°$. Size never enters into it — a tiny triangle and a huge
+one with the same two angles have the same third angle. Set two angles in the
+tool above and confirm the third lands exactly where it must.
+
+</PredictThenCheck>
+
+## Test it
+
+In the tool, push the triangle toward extremes — make one angle nearly $180°$, or
+squash it almost flat. The individual angles swing wildly, but their sum holds at
+$180°$ every time. That stubborn constant is the **Triangle Angle Sum Theorem**.
+
+## Why it works
+
+Here is the classic see-it-yourself argument: tear the three corners off a paper
+triangle and lay them side by side, points touching. They fit together into a
+perfectly straight line — no gap, no overlap.
+
+<AngleSumStrip
+  caption="The same three angles, torn off and set point-to-point at one spot. Together they sweep out a straight angle: 50° + 60° + 70° = 180°."
+/>
+
+Why must they always tile a straight line? Draw a line through the top vertex
+**parallel** to the base. The two base angles reappear at the top as
+[alternate interior angles](/geometry/angles/parallel-lines-and-a-transversal)
+across the parallel lines — and now all three angles of the triangle sit along
+that one straight line at the top, summing to $180°$. (The tool's *"Show why
+it's 180°"* reveal animates this directly: it rotates two of the angles up to the
+third and lands them on a straight line.)
+
+<Takeaway>
+
+The three interior angles of **any** triangle add to $180°$. Know two of them and
+the third is forced: it is $180°$ minus the other two.
+
+</Takeaway>
+
+<WorkedExample title="A triangle has angles measuring 90° and 53°. Find the third angle, and classify the triangle by its angles.">
+  <Step
+    check={{
+      id: "we-third-angle",
+      type: "mc",
+      prompt: "What is the measure of the third angle?",
+      choices: ["37°", "47°", "143°"],
+      answer: 0,
+      hints: ["The three angles add to 180°. Subtract the two you know."],
+      explanation: "180° − 90° − 53° = 37°.",
+    }}
+  >
+    The angles total $180°$, so the third is $180° - 90° - 53° = 37°$.
+  </Step>
+  <Step>
+    The angles are $90°$, $53°$, and $37°$. One angle is exactly $90°$, so this is
+    a **right triangle**. (A triangle can have at most one right or obtuse
+    angle — two would already use up $180°$ or more on their own.)
+  </Step>
+</WorkedExample>
+
+export const practice = [
+  {
+    id: "angle-sum-basic",
+    type: "numeric",
+    prompt: "Two angles of a triangle measure 50° and 60°. What is the third angle, in degrees?",
+    answer: 70,
+    tolerance: 0,
+    unit: "°",
+    hints: ["The three interior angles add to 180°."],
+    explanation: "180° − 50° − 60° = 70°.",
+  },
+  {
+    id: "right-triangle-third",
+    type: "numeric",
+    prompt: "A right triangle has one angle of 90° and another of 35°. What is the third angle, in degrees?",
+    answer: 55,
+    tolerance: 0,
+    unit: "°",
+    hints: ["A right angle is 90°. Subtract both known angles from 180°."],
+    explanation: "180° − 90° − 35° = 55°. (In a right triangle the two non-right angles always add to 90°.)",
+  },
+  {
+    id: "angle-sum-algebra",
+    type: "numeric",
+    prompt: "The three angles of a triangle are in the ratio x, 2x, 3x. Find x (in degrees).",
+    answer: 30,
+    tolerance: 0,
+    hints: ["The three expressions add to 180°: x + 2x + 3x = 180."],
+    explanation: "x + 2x + 3x = 6x = 180°, so x = 30°. The angles are 30°, 60°, and 90°.",
+  },
+  {
+    id: "equilateral-angle",
+    type: "mc",
+    prompt: "In an equilateral triangle, all three angles are equal. What is each angle?",
+    choices: ["60°", "45°", "90°", "120°"],
+    answer: 0,
+    hints: ["Three equal angles that add to 180° — divide."],
+    explanation: "Three equal angles summing to 180° each measure 180° ÷ 3 = 60°.",
+  },
+];

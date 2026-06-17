@@ -1,0 +1,125 @@
+---
+title: Isosceles Triangle
+order: 5
+description: Give a triangle two equal sides and its two base angles come out equal too — and the rule runs both ways.
+---
+
+import { IsoscelesTriangle } from "@cameronbrady/math-components";
+
+An <Term id="isosceles-triangle">isosceles triangle</Term> has two sides of equal
+length — its two legs. That single piece of symmetry forces a matching symmetry in
+the angles: the two <Term id="base-angles">base angles</Term>, sitting at the ends
+of the third side, always come out **equal** to each other.
+
+<IsoscelesFig
+  caption="The two legs AB and AC are equal (matching tick marks). Their symmetry forces the two base angles, ∠B and ∠C, to be equal as well."
+/>
+
+## Explore
+
+Change the apex angle and the leg length and watch the two base angles. As long as
+the two legs stay equal, **what do the base angles always do**? Then ask the
+reverse: if you force the base angles equal, what happens to the sides?
+
+<IsoscelesTriangle />
+
+## Make a prediction
+
+<PredictThenCheck
+  prompt="An isosceles triangle has an apex angle (between its two equal sides) of 40°. What does each base angle measure?"
+  choices={["70°", "40°", "140°", "100°"]}
+>
+
+Each base angle is **70°**. The three angles total $180°$, the apex takes $40°$,
+and the two equal base angles split the remaining $140°$ evenly:
+$(180° - 40°) \div 2 = 70°$. Set the apex angle to $40°$ in the tool and read the
+two base angles.
+
+</PredictThenCheck>
+
+## Test it
+
+In the tool, drag the apex angle through many values. The two base angles move in
+lock-step, always equal to each other and always equal to
+$(180° - \text{apex}) \div 2$. Now go the other way: the moment the two base
+angles are equal, the two legs are equal too. This **Base Angles Theorem** runs
+both directions.
+
+## Why it works
+
+Fold the triangle down its line of symmetry — the line from the apex to the
+midpoint of the base. The two halves land exactly on top of each other: the two
+equal legs swap places, and so the two base angles must match. That same mirror
+explains the converse. If the two base angles are equal, the triangle is
+symmetric, so the two sides opposite them have to be equal in length. Either piece
+of equality — sides *or* base angles — forces the other.
+
+<Takeaway>
+
+In an **isosceles triangle**, the two **base angles are equal** (the angles
+opposite the equal sides). It is biconditional: equal sides $\Leftrightarrow$
+equal base angles. With apex angle $a$, each base angle is
+$\dfrac{180° - a}{2}$.
+
+</Takeaway>
+
+<WorkedExample title="An isosceles triangle has a base angle of 50°. Find its apex angle, then its other base angle.">
+  <Step
+    check={{
+      id: "we-other-base",
+      type: "mc",
+      prompt: "What is the other base angle?",
+      choices: ["50°", "80°", "130°"],
+      answer: 0,
+      hints: ["The two base angles of an isosceles triangle are equal."],
+      explanation: "Base angles are congruent, so the other base angle is also 50°.",
+    }}
+  >
+    The two base angles are equal, so the other base angle is also **50°**.
+  </Step>
+  <Step>
+    The three angles total $180°$, and the two base angles use $50° + 50° = 100°$,
+    so the apex angle is $180° - 100° = 80°$.
+  </Step>
+</WorkedExample>
+
+export const practice = [
+  {
+    id: "isosceles-base-from-apex",
+    type: "numeric",
+    prompt: "An isosceles triangle has an apex angle of 40°. What does each base angle measure, in degrees?",
+    answer: 70,
+    tolerance: 0,
+    unit: "°",
+    hints: ["The two base angles are equal and share what's left after the apex: (180 − apex) ÷ 2."],
+    explanation: "(180° − 40°) ÷ 2 = 140° ÷ 2 = 70°.",
+  },
+  {
+    id: "isosceles-apex-from-base",
+    type: "numeric",
+    prompt: "An isosceles triangle has base angles of 65° each. What is the apex angle, in degrees?",
+    answer: 50,
+    tolerance: 0,
+    unit: "°",
+    hints: ["The two base angles add up, then subtract from 180°."],
+    explanation: "180° − 65° − 65° = 50°.",
+  },
+  {
+    id: "isosceles-converse",
+    type: "mc",
+    prompt: "A triangle has two angles that are equal to each other. What can you conclude about its sides?",
+    choices: ["The two sides opposite those angles are equal", "All three sides are equal", "It must be a right triangle", "Nothing can be concluded"],
+    answer: 0,
+    hints: ["The Base Angles Theorem runs both ways."],
+    explanation: "Equal base angles force the sides opposite them to be equal — this converse means the triangle is isosceles.",
+  },
+  {
+    id: "isosceles-algebra",
+    type: "numeric",
+    prompt: "An isosceles triangle has base angles measuring (3x + 5)° and (5x − 15)°. Find x.",
+    answer: 10,
+    tolerance: 0,
+    hints: ["The two base angles are equal — set the expressions equal: 3x + 5 = 5x − 15."],
+    explanation: "3x + 5 = 5x − 15 gives 20 = 2x, so x = 10. (Each base angle is then 35°, and the apex is 110°.)",
+  },
+];
