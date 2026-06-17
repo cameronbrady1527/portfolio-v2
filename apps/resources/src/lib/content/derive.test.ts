@@ -5,6 +5,7 @@ import {
   resolveSubject,
   resolveUnit,
   getBreadcrumbs,
+  groupTopicsByStrand,
   humanize,
   topicHref,
   subjectHref,
@@ -197,5 +198,67 @@ describe("getBreadcrumbs", () => {
   it("returns an empty array for an unknown subject or unit", () => {
     expect(getBreadcrumbs(index, { subject: "chemistry" })).toEqual([]);
     expect(getBreadcrumbs(index, { subject: "geometry", unit: "circles" })).toEqual([]);
+  });
+});
+
+describe("groupTopicsByStrand", () => {
+  const n = (topic: string, order: number, strand?: string): import("./derive").TopicNode => ({
+    slug: { subject: "foundations", unit: "geometry", topic },
+    title: topic,
+    order,
+    href: `/foundations/geometry/${topic}`,
+    strand,
+  });
+
+  it("buckets topics by their strand", () => {
+    const groups = groupTopicsByStrand([
+      n("signed-numbers", 1, "Number & Operations"),
+      n("fractions", 1, "Fractions"),
+      n("rounding", 3, "Number & Operations"),
+    ]);
+    const byStrand = Object.fromEntries(
+      groups.map((g) => [g.strand, g.topics.map((t) => t.slug.topic)]),
+    );
+    expect(byStrand["Number & Operations"]).toEqual(["signed-numbers", "rounding"]);
+    expect(byStrand["Fractions"]).toEqual(["fractions"]);
+  });
+
+  it("sorts sections by the smallest topic order within each (author-controlled)", () => {
+    const groups = groupTopicsByStrand([
+      n("fractions", 5, "Fractions"),
+      n("signed-numbers", 1, "Number & Operations"),
+    ]);
+    expect(groups.map((g) => g.strand)).toEqual([
+      "Number & Operations",
+      "Fractions",
+    ]);
+  });
+
+  it("sorts topics within a section by frontmatter order", () => {
+    const [group] = groupTopicsByStrand([
+      n("rounding", 3, "Number & Operations"),
+      n("signed-numbers", 1, "Number & Operations"),
+      n("order-of-ops", 2, "Number & Operations"),
+    ]);
+    expect(group.topics.map((t) => t.slug.topic)).toEqual([
+      "signed-numbers",
+      "order-of-ops",
+      "rounding",
+    ]);
+  });
+
+  it("puts topics with no strand in an ungrouped (null) section sorted last", () => {
+    const groups = groupTopicsByStrand([
+      n("loose", 1),
+      n("signed-numbers", 2, "Number & Operations"),
+    ]);
+    expect(groups[groups.length - 1].strand).toBeNull();
+    expect(groups[groups.length - 1].topics.map((t) => t.slug.topic)).toEqual(["loose"]);
+  });
+
+  it("yields a single ungrouped section when no topic has a strand", () => {
+    const groups = groupTopicsByStrand([n("a", 1), n("b", 2)]);
+    expect(groups).toHaveLength(1);
+    expect(groups[0].strand).toBeNull();
   });
 });

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getContentIndex } from "@/lib/content/load";
-import { getBreadcrumbs, resolveUnit } from "@/lib/content/derive";
+import { getBreadcrumbs, groupTopicsByStrand, resolveUnit } from "@/lib/content/derive";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { ContentIndexList } from "@/components/ContentIndexList";
+import { ContentIndexList, ContentIndexSections } from "@/components/ContentIndexList";
+import { MasteryProgress } from "@/components/MasteryProgress";
 
 type Params = Promise<{ subject: string; unit: string }>;
 
@@ -37,11 +38,19 @@ export default async function UnitPage({ params }: { params: Params }) {
   if (!node) notFound();
 
   const crumbs = getBreadcrumbs(index, { subject, unit });
-  const items = node.topics.map((topic) => ({
-    href: topic.href,
-    title: topic.title,
-    description: topic.description,
+  const sections = groupTopicsByStrand(node.topics).map((group) => ({
+    label: group.strand,
+    items: group.topics.map((topic) => ({
+      href: topic.href,
+      title: topic.title,
+      description: topic.description,
+    })),
   }));
+  const hasStrands = sections.some((s) => s.label !== null);
+
+  // Mastery is keyed by the SkillCard `skill` slug, which is the bare topic
+  // slug. Only Foundations skill cards carry mastery, so show the tally there.
+  const skillSlugs = node.topics.map((topic) => topic.slug.topic);
 
   return (
     <div className="w-full">
@@ -56,8 +65,15 @@ export default async function UnitPage({ params }: { params: Params }) {
               {node.intro ?? node.description}
             </p>
           ) : null}
+          {subject === "foundations" ? (
+            <MasteryProgress slugs={skillSlugs} className="mt-1 self-start" />
+          ) : null}
         </header>
-        <ContentIndexList items={items} />
+        {hasStrands ? (
+          <ContentIndexSections sections={sections} />
+        ) : (
+          <ContentIndexList items={sections.flatMap((s) => s.items)} />
+        )}
       </div>
     </div>
   );

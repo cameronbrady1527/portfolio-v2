@@ -12,6 +12,8 @@ export type ContentEntry = {
   order: number;
   /** Short summary from frontmatter; used for metadata / OpenGraph. */
   description?: string;
+  /** Optional grouping label within a unit (e.g. a Foundations strand). */
+  strand?: string;
 };
 
 export type Crumb = { label: string; href?: string };
@@ -22,7 +24,11 @@ export type TopicNode = {
   order: number;
   href: string;
   description?: string;
+  strand?: string;
 };
+
+/** A unit's topics grouped under a strand label (null = ungrouped). */
+export type StrandGroup = { strand: string | null; topics: TopicNode[] };
 export type UnitNode = {
   slug: string;
   label: string;
@@ -87,6 +93,7 @@ function toTopicNode(entry: ContentEntry): TopicNode {
     order: entry.order,
     href: topicHref(entry.slug),
     description: entry.description,
+    strand: entry.strand,
   };
 }
 
@@ -116,6 +123,40 @@ export function resolveTopic(entries: ContentEntry[], slug: TopicSlug): TopicNod
 // Topics order by frontmatter `order`, then title as a stable tiebreak.
 function byOrderThenTitle(a: TopicNode, b: TopicNode): number {
   return a.order - b.order || a.title.localeCompare(b.title);
+}
+
+/**
+ * Group a unit's topics into ordered strand sections. Topics carrying a `strand`
+ * are bucketed under it; topics without one fall into a single ungrouped bucket
+ * (strand: null) that always sorts LAST. Within a section, topics keep their
+ * `order` sort. Sections themselves order by the smallest `order` among their
+ * topics — so authors sequence strands the same way they sequence topics, with
+ * no separate registry. A unit with no strands yields one ungrouped section,
+ * which renders identically to a flat list.
+ */
+export function groupTopicsByStrand(topics: TopicNode[]): StrandGroup[] {
+  const buckets = new Map<string | null, TopicNode[]>();
+  for (const topic of topics) {
+    const key = topic.strand ?? null;
+    if (!buckets.has(key)) buckets.set(key, []);
+    buckets.get(key)!.push(topic);
+  }
+
+  const groups: StrandGroup[] = [...buckets.entries()].map(([strand, ts]) => ({
+    strand,
+    topics: [...ts].sort(byOrderThenTitle),
+  }));
+
+  const groupOrder = (g: StrandGroup) =>
+    g.strand === null
+      ? Number.MAX_SAFE_INTEGER
+      : Math.min(...g.topics.map((t) => t.order));
+
+  return groups.sort(
+    (a, b) =>
+      groupOrder(a) - groupOrder(b) ||
+      (a.strand ?? "￿").localeCompare(b.strand ?? "￿"),
+  );
 }
 
 /**

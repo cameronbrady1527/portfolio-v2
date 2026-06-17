@@ -11,6 +11,39 @@ export type ContentIndexItem = {
   meta?: string;
 };
 
+// A unit landing's topics grouped into a labeled section (null label = an
+// unlabeled, ungrouped section that renders as a plain grid).
+export type ContentIndexSection = {
+  label: string | null;
+  items: ContentIndexItem[];
+};
+
+// Render strand-grouped sections. A single unlabeled section looks exactly like
+// a flat ContentIndexList, so units without strands are visually unchanged.
+export function ContentIndexSections({
+  sections,
+}: {
+  sections: ContentIndexSection[];
+}) {
+  return (
+    <div className="flex flex-col gap-10">
+      {sections.map((section, i) => (
+        <section
+          key={section.label ?? `ungrouped-${i}`}
+          className="flex flex-col gap-4"
+        >
+          {section.label ? (
+            <h2 className="font-display text-xl font-semibold text-foreground">
+              {section.label}
+            </h2>
+          ) : null}
+          <ContentIndexList items={section.items} />
+        </section>
+      ))}
+    </div>
+  );
+}
+
 // Shared listing for subject/unit landing pages: a responsive grid of linked
 // cards. Mirrors the home page's topic tree so the hub feels consistent.
 export function ContentIndexList({ items }: { items: ContentIndexItem[] }) {
