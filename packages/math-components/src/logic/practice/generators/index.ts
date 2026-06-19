@@ -5,3 +5,4 @@ export { signedAddSub } from "./signed-add-sub";
 export { multDiv } from "./mult-div";
 export { orderOfOperations } from "./order-of-operations";
 export { rounding } from "./rounding";
+export { equivalentFractions } from "./equivalent-fractions";

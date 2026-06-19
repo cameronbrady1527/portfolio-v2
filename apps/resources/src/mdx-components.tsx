@@ -6,6 +6,7 @@ import { SkillCard, SkillStep } from "@/components/SkillCard";
 import { Term } from "@/components/Term";
 import { AngleCrossing, TransversalPattern, Takeaway } from "@/components/AngleDiagrams";
 import { NumberLine } from "@/components/NumberLine";
+import { FractionBar } from "@/components/FractionBar";
 import {
   TriangleAngles,
   AngleSumStrip,
@@ -32,6 +33,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     TransversalPattern,
     Takeaway,
     NumberLine,
+    FractionBar,
     TriangleAngles,
     AngleSumStrip,
     ExteriorAngleFig,

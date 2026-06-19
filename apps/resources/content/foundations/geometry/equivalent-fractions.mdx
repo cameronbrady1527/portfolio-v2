@@ -1,0 +1,77 @@
+---
+title: Equivalent Fractions
+order: 5
+strand: Fractions, Ratios & Proportions
+description: The same amount can be written as 1/2, 2/4, or 3/6. Seeing why — and building equivalents on demand — is what makes comparing, adding, and scaling fractions possible.
+---
+
+A fraction names a part of a whole, and the *same* part can be named many ways:
+half a pizza is $\frac{1}{2}$, or $\frac{2}{4}$, or $\frac{4}{8}$. Being able to
+rewrite a fraction as an equal one — on demand — is the move behind comparing
+fractions, adding them, simplifying answers, and working with ratios and scale.
+This card makes that move automatic.
+
+<SkillCard skill="equivalent-fractions" title="Equivalent Fractions">
+
+<SkillStep title="What & why">
+
+A fraction is a **division of a whole into equal parts**: the bottom number
+(denominator) says how many parts the whole is cut into, and the top
+(numerator) says how many you take. So $\frac{3}{4}$ means *cut into 4, take 3*.
+
+Here's the key idea: if you cut every part into the same number of smaller
+pieces, you have **more pieces but the same amount**. Cut each of the $4$ parts
+in two and you get $8$ parts, and the $3$ you took become $6$ — so
+$\frac{3}{4} = \frac{6}{8}$. Nothing about the *amount* changed; only how finely
+you sliced it. That's why equivalents matter everywhere in this course: to
+compare or add fractions you first re-slice them to a common size.
+
+</SkillStep>
+
+<SkillStep title="Watch how it works">
+
+**Multiply top and bottom by the same number.** To rewrite $\frac{2}{3}$ with a
+denominator of $12$, ask what times $3$ gives $12$ — that's $4$ — then do the
+same to the top:
+
+$$\frac{2}{3} = \frac{2 \times 4}{3 \times 4} = \frac{8}{12}$$
+
+The two bars below hold the *same* shaded amount; the bottom one is just sliced
+into more pieces. The dashed line shows the shaded edges landing in exactly the
+same place — that's what "equal" looks like.
+
+<FractionBar
+  fractions={[{ num: 2, den: 3 }, { num: 8, den: 12 }]}
+  caption="2/3 and 8/12 shade the same amount — the same bar, sliced finer."
+/>
+
+It works going the other way too. $\frac{1}{2}$ and $\frac{3}{6}$ are the same
+amount — six small slices, three of them taken:
+
+<FractionBar
+  fractions={[{ num: 1, den: 2 }, { num: 3, den: 6 }]}
+  caption="1/2 = 3/6: double the slices, take twice as many."
+/>
+
+</SkillStep>
+
+<SkillStep title="Reason through one together">
+
+The whole trick is "same factor, top and bottom." Find the factor first, then
+apply it. Predict before you check.
+
+<PredictThenCheck
+  prompt="Fill in the missing number: 2/3 = ?/12"
+  choices={["8", "6", "4", "9"]}
+>
+
+It's **8**. The denominator went from $3$ to $12$, which is $\times 4$. To keep
+the fraction equal you must multiply the top by the same $4$: $2 \times 4 = 8$,
+so $\frac{2}{3} = \frac{8}{12}$. Multiplying only the bottom would change the
+amount — it's the *same factor on both* that keeps it equal.
+
+</PredictThenCheck>
+
+</SkillStep>
+
+</SkillCard>

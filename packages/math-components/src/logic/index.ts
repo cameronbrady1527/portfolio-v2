@@ -64,6 +64,7 @@ export { signedAddSub } from "./practice/generators";
 export { multDiv } from "./practice/generators";
 export { orderOfOperations } from "./practice/generators";
 export { rounding } from "./practice/generators";
+export { equivalentFractions } from "./practice/generators";
 export type { Problem, ProblemGenerator } from "./practice/generators";
 
 // Practice — drill fluency state machine (pure (state, event) => state).

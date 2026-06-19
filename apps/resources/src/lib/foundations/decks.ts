@@ -12,6 +12,7 @@ import signedAddSubDeck from "../../../content/foundations/geometry/_decks/addin
 import multDivDeck from "../../../content/foundations/geometry/_decks/multiplication-division-fluency";
 import orderOfOperationsDeck from "../../../content/foundations/geometry/_decks/order-of-operations";
 import roundingDeck from "../../../content/foundations/geometry/_decks/rounding";
+import equivalentFractionsDeck from "../../../content/foundations/geometry/_decks/equivalent-fractions";
 
 /** Authoring difficulty tag. "core" = on-grade; "stretch" = harder/applied. */
 export type Difficulty = "core" | "stretch";
@@ -99,6 +100,10 @@ const DECKS: Record<string, DeckItem[]> = {
     "order-of-operations",
   ),
   rounding: validateDeck(roundingDeck, "rounding"),
+  "equivalent-fractions": validateDeck(
+    equivalentFractionsDeck,
+    "equivalent-fractions",
+  ),
 };
 
 /** Resolve a skill's validated mastery deck, failing loud if none is registered. */

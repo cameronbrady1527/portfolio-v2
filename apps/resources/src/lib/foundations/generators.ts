@@ -6,6 +6,7 @@ import {
   multDiv,
   orderOfOperations,
   rounding,
+  equivalentFractions,
   type ProblemGenerator,
 } from "@cameronbrady/math-components/logic";
 
@@ -14,6 +15,7 @@ const GENERATORS: Record<string, ProblemGenerator> = {
   "multiplication-division-fluency": multDiv,
   "order-of-operations": orderOfOperations,
   rounding,
+  "equivalent-fractions": equivalentFractions,
 };
 
 export function resolveGenerator(skill: string): ProblemGenerator {
