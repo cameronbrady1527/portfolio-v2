@@ -53,6 +53,7 @@ export function loadContentEntries(): ContentEntry[] {
           order: typeof data.order === "number" ? data.order : 0,
           description:
             typeof data.description === "string" ? data.description : undefined,
+          strand: typeof data.strand === "string" ? data.strand : undefined,
         });
       }
     }

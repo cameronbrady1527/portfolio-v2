@@ -1,16 +1,56 @@
 import { describe, expect, it } from "vitest";
 import {
+  countMastered,
   emptyProgress,
   getTopic,
+  isMastered,
   normalizeProgress,
   PROGRESS_VERSION,
   recordAnswer,
+  recordMastery,
   scoreTopic,
   type Progress,
 } from "./progress";
 
 const SLUG = "geometry/transformations/reflections";
 const fixedNow = () => "2026-06-02T00:00:00.000Z";
+
+describe("mastery flag", () => {
+  const A = "foundations/geometry/adding-subtracting-signed-numbers";
+  const B = "foundations/geometry/multiplication-division-fluency";
+
+  it("isMastered is false until a skill is recorded as mastered", () => {
+    expect(isMastered(emptyProgress(), A)).toBe(false);
+  });
+
+  it("recordMastery marks a skill mastered (with a timestamp)", () => {
+    const next = recordMastery(emptyProgress(), A, fixedNow);
+    expect(isMastered(next, A)).toBe(true);
+    expect(getTopic(next, A).masteredAt).toBe(fixedNow());
+  });
+
+  it("recordMastery is idempotent — the first mastery time is kept", () => {
+    const once = recordMastery(emptyProgress(), A, fixedNow);
+    const twice = recordMastery(once, A, () => "2099-01-01T00:00:00.000Z");
+    expect(getTopic(twice, A).masteredAt).toBe(fixedNow());
+  });
+
+  it("preserves existing answer state when marking mastery", () => {
+    const answered = recordAnswer(emptyProgress(), A, "q1", true, 1, fixedNow);
+    const mastered = recordMastery(answered, A, fixedNow);
+    expect(getTopic(mastered, A).answers.q1).toEqual({
+      answered: true,
+      correct: true,
+    });
+    expect(isMastered(mastered, A)).toBe(true);
+  });
+
+  it("countMastered counts only the mastered slugs in a given set", () => {
+    const p = recordMastery(emptyProgress(), A, fixedNow);
+    expect(countMastered(p, [A, B])).toBe(1);
+    expect(countMastered(p, [B])).toBe(0);
+  });
+});
 
 describe("emptyProgress", () => {
   it("is a fresh versioned object with no topics", () => {

@@ -1,0 +1,68 @@
+---
+title: Rounding
+order: 4
+strand: Number & Operations
+description: Round to estimate, to report a sensible answer, and to decide "how many do we need." Master place value rounding and the real-world cases where you must round up.
+---
+
+Rounding shows up two ways in this course. First as **estimation** — a quick check
+that an answer is in the right ballpark before you trust it. Second as **judgment**
+— a calculation gives $7.3$ buses, but you can't send $0.3$ of a bus, so the
+*situation* tells you to round up to $8$. This card builds both: the place-value
+rule, and the real-world sense of which way to go.
+
+<SkillCard skill="rounding" title="Rounding">
+
+<SkillStep title="What & why">
+
+To round a number to a given place, you look at **one digit** — the one
+immediately to the *right* of that place — and follow a single rule:
+
+- If it's **5 or more**, round the target digit **up**.
+- If it's **4 or less**, leave the target digit and round **down**.
+
+Either way, every digit after the target place becomes $0$. That's the whole
+mechanism. Rounding trades exactness for a cleaner, easier-to-reason-about number —
+useful for estimating, and essential when a fractional answer makes no sense in the
+real world.
+
+</SkillStep>
+
+<SkillStep title="Watch how it works">
+
+**Place value, one digit decides.** Round $3472$ to the nearest hundred. The digit
+right of the hundreds place is the tens digit, $7$. Since $7 \ge 5$, the hundreds
+round up:
+
+$$3472 \rightarrow 3500$$
+
+Round $832$ to the nearest ten instead: the ones digit is $2$, which is less than
+$5$, so it rounds down to $830$.
+
+**Real-world: round to fit the situation.** You have $100$ cans and boxes that hold
+$12$. Dividing, $100 \div 12 = 8$ remainder $4$. Eight boxes leave $4$ cans
+homeless — so you need a **ninth** box. Here you *must* round up, no matter how
+small the remainder, because a leftover still needs a container.
+
+</SkillStep>
+
+<SkillStep title="Reason through one together">
+
+When a question asks "how many do we need to hold everyone," a leftover *always*
+costs you one more. Decide before you peek.
+
+<PredictThenCheck
+  prompt="Each van holds 9 people. A team of 50 needs rides. How many vans are needed?"
+  choices={["6", "5", "5.5", "45"]}
+>
+
+It's **6**. Dividing, $50 \div 9 = 5$ remainder $5$ — five vans carry $45$ people,
+leaving $5$ still waiting. Those $5$ need a sixth van, so you round **up** to $6$.
+Notice you ignore the normal "is it 5 or more" digit rule here: any remainder at
+all forces one more, because you can't run a fraction of a van.
+
+</PredictThenCheck>
+
+</SkillStep>
+
+</SkillCard>

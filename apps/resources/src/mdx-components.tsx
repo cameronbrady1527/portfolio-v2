@@ -2,8 +2,10 @@ import type { MDXComponents } from "mdx/types";
 import { Refresher } from "@/components/Refresher";
 import { Step, WorkedExample } from "@/components/WorkedExample";
 import { PredictThenCheck } from "@/components/PredictThenCheck";
+import { SkillCard, SkillStep } from "@/components/SkillCard";
 import { Term } from "@/components/Term";
 import { AngleCrossing, TransversalPattern, Takeaway } from "@/components/AngleDiagrams";
+import { NumberLine } from "@/components/NumberLine";
 import {
   TriangleAngles,
   AngleSumStrip,
@@ -23,10 +25,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     WorkedExample,
     Step,
     PredictThenCheck,
+    SkillCard,
+    SkillStep,
     Term,
     AngleCrossing,
     TransversalPattern,
     Takeaway,
+    NumberLine,
     TriangleAngles,
     AngleSumStrip,
     ExteriorAngleFig,
