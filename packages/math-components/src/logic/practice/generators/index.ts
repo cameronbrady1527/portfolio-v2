@@ -10,3 +10,6 @@ export { addSubtractFractions } from "./add-subtract-fractions";
 export { multiplyDivideFractions } from "./multiply-divide-fractions";
 export { solveProportion } from "./solve-proportion";
 export { percents } from "./percents";
+export { substituteFormula } from "./substitute-formula";
+export { simplifyExpression } from "./simplify-expression";
+export { solveLinearEquation } from "./solve-linear-equation";

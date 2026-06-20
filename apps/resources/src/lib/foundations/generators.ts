@@ -11,6 +11,9 @@ import {
   multiplyDivideFractions,
   solveProportion,
   percents,
+  substituteFormula,
+  simplifyExpression,
+  solveLinearEquation,
   type ProblemGenerator,
 } from "@cameronbrady/math-components/logic";
 
@@ -24,6 +27,9 @@ const GENERATORS: Record<string, ProblemGenerator> = {
   "multiply-divide-fractions": multiplyDivideFractions,
   "ratios-proportions": solveProportion,
   percents,
+  "substituting-into-formulas": substituteFormula,
+  "simplifying-expressions": simplifyExpression,
+  "solving-linear-equations": solveLinearEquation,
 };
 
 export function resolveGenerator(skill: string): ProblemGenerator {

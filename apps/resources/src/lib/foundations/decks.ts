@@ -17,6 +17,9 @@ import addSubtractFractionsDeck from "../../../content/foundations/geometry/_dec
 import multiplyDivideFractionsDeck from "../../../content/foundations/geometry/_decks/multiply-divide-fractions";
 import ratiosProportionsDeck from "../../../content/foundations/geometry/_decks/ratios-proportions";
 import percentsDeck from "../../../content/foundations/geometry/_decks/percents";
+import substitutingIntoFormulasDeck from "../../../content/foundations/geometry/_decks/substituting-into-formulas";
+import simplifyingExpressionsDeck from "../../../content/foundations/geometry/_decks/simplifying-expressions";
+import solvingLinearEquationsDeck from "../../../content/foundations/geometry/_decks/solving-linear-equations";
 
 /** Authoring difficulty tag. "core" = on-grade; "stretch" = harder/applied. */
 export type Difficulty = "core" | "stretch";
@@ -121,6 +124,18 @@ const DECKS: Record<string, DeckItem[]> = {
     "ratios-proportions",
   ),
   percents: validateDeck(percentsDeck, "percents"),
+  "substituting-into-formulas": validateDeck(
+    substitutingIntoFormulasDeck,
+    "substituting-into-formulas",
+  ),
+  "simplifying-expressions": validateDeck(
+    simplifyingExpressionsDeck,
+    "simplifying-expressions",
+  ),
+  "solving-linear-equations": validateDeck(
+    solvingLinearEquationsDeck,
+    "solving-linear-equations",
+  ),
 };
 
 /** Resolve a skill's validated mastery deck, failing loud if none is registered. */

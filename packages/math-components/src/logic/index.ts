@@ -69,6 +69,9 @@ export { addSubtractFractions } from "./practice/generators";
 export { multiplyDivideFractions } from "./practice/generators";
 export { solveProportion } from "./practice/generators";
 export { percents } from "./practice/generators";
+export { substituteFormula } from "./practice/generators";
+export { simplifyExpression } from "./practice/generators";
+export { solveLinearEquation } from "./practice/generators";
 export type { Problem, ProblemGenerator } from "./practice/generators";
 
 // Practice — drill fluency state machine (pure (state, event) => state).
