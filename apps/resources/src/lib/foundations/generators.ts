@@ -17,6 +17,9 @@ import {
   powers,
   squareRoots,
   exponentRules,
+  pointsAndQuadrants,
+  distanceOnPlane,
+  midpoint,
   type ProblemGenerator,
 } from "@cameronbrady/math-components/logic";
 
@@ -36,6 +39,9 @@ const GENERATORS: Record<string, ProblemGenerator> = {
   "powers-and-exponents": powers,
   "square-roots": squareRoots,
   "exponent-rules": exponentRules,
+  "points-and-quadrants": pointsAndQuadrants,
+  "distance-on-the-plane": distanceOnPlane,
+  midpoint,
 };
 
 export function resolveGenerator(skill: string): ProblemGenerator {

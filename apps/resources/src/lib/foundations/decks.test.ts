@@ -81,6 +81,9 @@ const FOUNDATIONS_SKILLS = [
   "powers-and-exponents",
   "square-roots",
   "exponent-rules",
+  "points-and-quadrants",
+  "distance-on-the-plane",
+  "midpoint",
 ] as const;
 
 describe.each(FOUNDATIONS_SKILLS)("%s deck — math mandate", (skill) => {

@@ -16,3 +16,6 @@ export { solveLinearEquation } from "./solve-linear-equation";
 export { powers } from "./powers";
 export { squareRoots } from "./square-roots";
 export { exponentRules } from "./exponent-rules";
+export { pointsAndQuadrants } from "./points-quadrants";
+export { distanceOnPlane } from "./distance-plane";
+export { midpoint } from "./midpoint";

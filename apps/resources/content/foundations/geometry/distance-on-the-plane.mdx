@@ -1,0 +1,71 @@
+---
+title: Distance on the Coordinate Plane
+order: 17
+strand: Coordinate Plane
+description: The distance formula is just the Pythagorean theorem on the grid. Find how far apart two points are — directly when they line up, and through a right triangle when they don't.
+---
+
+How far apart are two points? When they share a row or column it's a simple
+subtraction. When they sit diagonally, the segment between them is the hypotenuse
+of a right triangle — so the **distance formula is the Pythagorean theorem in
+disguise**. This card connects the two, building on
+[square roots](/foundations/geometry/square-roots).
+
+<SkillCard skill="distance-on-the-plane" title="Distance on the Coordinate Plane">
+
+<SkillStep title="What & why">
+
+If two points line up **horizontally** (same $y$) or **vertically** (same $x$),
+the distance is just the difference of the coordinates that change — count the
+units.
+
+For a **diagonal**, drop a right triangle: the horizontal change $\Delta x$ and
+the vertical change $\Delta y$ are the legs, and the distance is the hypotenuse.
+That's exactly the Pythagorean theorem:
+
+$$d = \sqrt{(\Delta x)^2 + (\Delta y)^2}$$
+
+So "distance between two points" is never a new idea — it's $a^2 + b^2 = c^2$
+applied to the grid.
+
+</SkillStep>
+
+<SkillStep title="Watch how it works">
+
+Take $(0, 0)$ and $(3, 4)$. The horizontal change is $3$, the vertical change is
+$4$ — the legs of a right triangle whose hypotenuse joins the points:
+
+<CoordinateGrid
+  points={[{ x: 0, y: 0, label: "A" }, { x: 3, y: 4, label: "B" }]}
+  segment
+  range={6}
+  caption="Δx = 3 and Δy = 4 are the legs; the segment AB is the hypotenuse."
+/>
+
+$$d = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = \sqrt{25} = 5$$
+
+Axis-aligned points are the easy case: $(1, 2)$ to $(6, 2)$ share a $y$, so the
+distance is just $|6 - 1| = 5$ — no triangle needed.
+
+</SkillStep>
+
+<SkillStep title="Reason through one together">
+
+Find $\Delta x$ and $\Delta y$, then apply the Pythagorean theorem. Predict before
+you check.
+
+<PredictThenCheck
+  prompt="Find the distance between (0, 0) and (6, 8)."
+  choices={["10", "14", "48", "100"]}
+>
+
+It's **10**. The changes are $\Delta x = 6$ and $\Delta y = 8$, so
+$d = \sqrt{6^2 + 8^2} = \sqrt{36 + 64} = \sqrt{100} = 10$. Adding the legs
+($6 + 8 = 14$) skips the theorem, and $100$ is $d^2$ — you still have to take the
+square root.
+
+</PredictThenCheck>
+
+</SkillStep>
+
+</SkillCard>

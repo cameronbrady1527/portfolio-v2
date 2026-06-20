@@ -23,6 +23,9 @@ import solvingLinearEquationsDeck from "../../../content/foundations/geometry/_d
 import powersAndExponentsDeck from "../../../content/foundations/geometry/_decks/powers-and-exponents";
 import squareRootsDeck from "../../../content/foundations/geometry/_decks/square-roots";
 import exponentRulesDeck from "../../../content/foundations/geometry/_decks/exponent-rules";
+import pointsAndQuadrantsDeck from "../../../content/foundations/geometry/_decks/points-and-quadrants";
+import distanceOnThePlaneDeck from "../../../content/foundations/geometry/_decks/distance-on-the-plane";
+import midpointDeck from "../../../content/foundations/geometry/_decks/midpoint";
 
 /** Authoring difficulty tag. "core" = on-grade; "stretch" = harder/applied. */
 export type Difficulty = "core" | "stretch";
@@ -145,6 +148,15 @@ const DECKS: Record<string, DeckItem[]> = {
   ),
   "square-roots": validateDeck(squareRootsDeck, "square-roots"),
   "exponent-rules": validateDeck(exponentRulesDeck, "exponent-rules"),
+  "points-and-quadrants": validateDeck(
+    pointsAndQuadrantsDeck,
+    "points-and-quadrants",
+  ),
+  "distance-on-the-plane": validateDeck(
+    distanceOnThePlaneDeck,
+    "distance-on-the-plane",
+  ),
+  midpoint: validateDeck(midpointDeck, "midpoint"),
 };
 
 /** Resolve a skill's validated mastery deck, failing loud if none is registered. */
