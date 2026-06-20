@@ -20,6 +20,9 @@ import percentsDeck from "../../../content/foundations/geometry/_decks/percents"
 import substitutingIntoFormulasDeck from "../../../content/foundations/geometry/_decks/substituting-into-formulas";
 import simplifyingExpressionsDeck from "../../../content/foundations/geometry/_decks/simplifying-expressions";
 import solvingLinearEquationsDeck from "../../../content/foundations/geometry/_decks/solving-linear-equations";
+import powersAndExponentsDeck from "../../../content/foundations/geometry/_decks/powers-and-exponents";
+import squareRootsDeck from "../../../content/foundations/geometry/_decks/square-roots";
+import exponentRulesDeck from "../../../content/foundations/geometry/_decks/exponent-rules";
 
 /** Authoring difficulty tag. "core" = on-grade; "stretch" = harder/applied. */
 export type Difficulty = "core" | "stretch";
@@ -136,6 +139,12 @@ const DECKS: Record<string, DeckItem[]> = {
     solvingLinearEquationsDeck,
     "solving-linear-equations",
   ),
+  "powers-and-exponents": validateDeck(
+    powersAndExponentsDeck,
+    "powers-and-exponents",
+  ),
+  "square-roots": validateDeck(squareRootsDeck, "square-roots"),
+  "exponent-rules": validateDeck(exponentRulesDeck, "exponent-rules"),
 };
 
 /** Resolve a skill's validated mastery deck, failing loud if none is registered. */

@@ -72,6 +72,9 @@ export { percents } from "./practice/generators";
 export { substituteFormula } from "./practice/generators";
 export { simplifyExpression } from "./practice/generators";
 export { solveLinearEquation } from "./practice/generators";
+export { powers } from "./practice/generators";
+export { squareRoots } from "./practice/generators";
+export { exponentRules } from "./practice/generators";
 export type { Problem, ProblemGenerator } from "./practice/generators";
 
 // Practice — drill fluency state machine (pure (state, event) => state).

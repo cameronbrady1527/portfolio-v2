@@ -13,3 +13,6 @@ export { percents } from "./percents";
 export { substituteFormula } from "./substitute-formula";
 export { simplifyExpression } from "./simplify-expression";
 export { solveLinearEquation } from "./solve-linear-equation";
+export { powers } from "./powers";
+export { squareRoots } from "./square-roots";
+export { exponentRules } from "./exponent-rules";

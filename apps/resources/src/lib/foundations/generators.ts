@@ -14,6 +14,9 @@ import {
   substituteFormula,
   simplifyExpression,
   solveLinearEquation,
+  powers,
+  squareRoots,
+  exponentRules,
   type ProblemGenerator,
 } from "@cameronbrady/math-components/logic";
 
@@ -30,6 +33,9 @@ const GENERATORS: Record<string, ProblemGenerator> = {
   "substituting-into-formulas": substituteFormula,
   "simplifying-expressions": simplifyExpression,
   "solving-linear-equations": solveLinearEquation,
+  "powers-and-exponents": powers,
+  "square-roots": squareRoots,
+  "exponent-rules": exponentRules,
 };
 
 export function resolveGenerator(skill: string): ProblemGenerator {
