@@ -7,6 +7,10 @@ import {
   orderOfOperations,
   rounding,
   equivalentFractions,
+  addSubtractFractions,
+  multiplyDivideFractions,
+  solveProportion,
+  percents,
   type ProblemGenerator,
 } from "@cameronbrady/math-components/logic";
 
@@ -16,6 +20,10 @@ const GENERATORS: Record<string, ProblemGenerator> = {
   "order-of-operations": orderOfOperations,
   rounding,
   "equivalent-fractions": equivalentFractions,
+  "add-subtract-fractions": addSubtractFractions,
+  "multiply-divide-fractions": multiplyDivideFractions,
+  "ratios-proportions": solveProportion,
+  percents,
 };
 
 export function resolveGenerator(skill: string): ProblemGenerator {

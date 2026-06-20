@@ -13,6 +13,10 @@ import multDivDeck from "../../../content/foundations/geometry/_decks/multiplica
 import orderOfOperationsDeck from "../../../content/foundations/geometry/_decks/order-of-operations";
 import roundingDeck from "../../../content/foundations/geometry/_decks/rounding";
 import equivalentFractionsDeck from "../../../content/foundations/geometry/_decks/equivalent-fractions";
+import addSubtractFractionsDeck from "../../../content/foundations/geometry/_decks/add-subtract-fractions";
+import multiplyDivideFractionsDeck from "../../../content/foundations/geometry/_decks/multiply-divide-fractions";
+import ratiosProportionsDeck from "../../../content/foundations/geometry/_decks/ratios-proportions";
+import percentsDeck from "../../../content/foundations/geometry/_decks/percents";
 
 /** Authoring difficulty tag. "core" = on-grade; "stretch" = harder/applied. */
 export type Difficulty = "core" | "stretch";
@@ -104,6 +108,19 @@ const DECKS: Record<string, DeckItem[]> = {
     equivalentFractionsDeck,
     "equivalent-fractions",
   ),
+  "add-subtract-fractions": validateDeck(
+    addSubtractFractionsDeck,
+    "add-subtract-fractions",
+  ),
+  "multiply-divide-fractions": validateDeck(
+    multiplyDivideFractionsDeck,
+    "multiply-divide-fractions",
+  ),
+  "ratios-proportions": validateDeck(
+    ratiosProportionsDeck,
+    "ratios-proportions",
+  ),
+  percents: validateDeck(percentsDeck, "percents"),
 };
 
 /** Resolve a skill's validated mastery deck, failing loud if none is registered. */

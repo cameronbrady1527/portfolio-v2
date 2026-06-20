@@ -71,6 +71,10 @@ const FOUNDATIONS_SKILLS = [
   "order-of-operations",
   "rounding",
   "equivalent-fractions",
+  "add-subtract-fractions",
+  "multiply-divide-fractions",
+  "ratios-proportions",
+  "percents",
 ] as const;
 
 describe.each(FOUNDATIONS_SKILLS)("%s deck — math mandate", (skill) => {

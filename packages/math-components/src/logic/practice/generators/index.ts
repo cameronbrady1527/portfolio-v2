@@ -6,3 +6,7 @@ export { multDiv } from "./mult-div";
 export { orderOfOperations } from "./order-of-operations";
 export { rounding } from "./rounding";
 export { equivalentFractions } from "./equivalent-fractions";
+export { addSubtractFractions } from "./add-subtract-fractions";
+export { multiplyDivideFractions } from "./multiply-divide-fractions";
+export { solveProportion } from "./solve-proportion";
+export { percents } from "./percents";

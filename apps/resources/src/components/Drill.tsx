@@ -149,7 +149,7 @@ export function Drill({
           <input
             id="drill-answer"
             type="text"
-            inputMode="numeric"
+            inputMode={problem.type === "numeric" ? "numeric" : "text"}
             autoComplete="off"
             autoFocus
             disabled={answered}
