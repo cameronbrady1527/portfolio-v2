@@ -78,6 +78,7 @@ export { exponentRules } from "./practice/generators";
 export { pointsAndQuadrants } from "./practice/generators";
 export { distanceOnPlane } from "./practice/generators";
 export { midpoint } from "./practice/generators";
+export { slope } from "./practice/generators";
 export type { Problem, ProblemGenerator } from "./practice/generators";
 
 // Practice — drill fluency state machine (pure (state, event) => state).

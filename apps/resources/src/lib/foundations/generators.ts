@@ -20,6 +20,7 @@ import {
   pointsAndQuadrants,
   distanceOnPlane,
   midpoint,
+  slope,
   type ProblemGenerator,
 } from "@cameronbrady/math-components/logic";
 
@@ -42,6 +43,7 @@ const GENERATORS: Record<string, ProblemGenerator> = {
   "points-and-quadrants": pointsAndQuadrants,
   "distance-on-the-plane": distanceOnPlane,
   midpoint,
+  slope,
 };
 
 export function resolveGenerator(skill: string): ProblemGenerator {

@@ -26,6 +26,7 @@ import exponentRulesDeck from "../../../content/foundations/geometry/_decks/expo
 import pointsAndQuadrantsDeck from "../../../content/foundations/geometry/_decks/points-and-quadrants";
 import distanceOnThePlaneDeck from "../../../content/foundations/geometry/_decks/distance-on-the-plane";
 import midpointDeck from "../../../content/foundations/geometry/_decks/midpoint";
+import slopeDeck from "../../../content/foundations/geometry/_decks/slope";
 
 /** Authoring difficulty tag. "core" = on-grade; "stretch" = harder/applied. */
 export type Difficulty = "core" | "stretch";
@@ -157,6 +158,7 @@ const DECKS: Record<string, DeckItem[]> = {
     "distance-on-the-plane",
   ),
   midpoint: validateDeck(midpointDeck, "midpoint"),
+  slope: validateDeck(slopeDeck, "slope"),
 };
 
 /** Resolve a skill's validated mastery deck, failing loud if none is registered. */

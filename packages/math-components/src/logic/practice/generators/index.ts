@@ -19,3 +19,4 @@ export { exponentRules } from "./exponent-rules";
 export { pointsAndQuadrants } from "./points-quadrants";
 export { distanceOnPlane } from "./distance-plane";
 export { midpoint } from "./midpoint";
+export { slope } from "./slope";
