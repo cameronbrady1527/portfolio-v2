@@ -1,0 +1,78 @@
+---
+title: Slope
+order: 19
+strand: Coordinate Plane
+description: Slope measures how steep a line is and which way it leans — rise over run, the change in y divided by the change in x between any two points.
+---
+
+How steep is a line, and which way does it lean? **Slope** answers both with one
+number: the **rise** (vertical change) divided by the **run** (horizontal
+change) between any two points on the line. It builds directly on
+[points and quadrants](/foundations/geometry/points-and-quadrants) — you read two
+points off the grid, then compare how much $y$ changes to how much $x$ changes.
+
+<SkillCard skill="slope" title="Slope">
+
+<SkillStep title="What & why">
+
+Pick any two points on a line. The **slope** is how much it climbs for how much
+it moves across:
+
+$$m = \frac{\text{rise}}{\text{run}} = \frac{\Delta y}{\Delta x} = \frac{y_2 - y_1}{x_2 - x_1}$$
+
+The number carries two pieces of meaning at once:
+
+- **Sign** — the *direction*. A line rising left-to-right has **positive** slope;
+  one falling left-to-right has **negative** slope.
+- **Size** — the *steepness*. A slope of $3$ is steeper than $\tfrac{1}{2}$.
+
+Two special lines: a **horizontal** line never rises, so $\Delta y = 0$ and the
+slope is $0$. A **vertical** line never runs, so $\Delta x = 0$ — and since you
+can't divide by zero, its slope is **undefined**.
+
+</SkillStep>
+
+<SkillStep title="Watch how it works">
+
+Take $(0, 0)$ and $(4, 2)$. Going from the first point to the second, $y$ rises
+by $2$ and $x$ runs by $4$:
+
+<CoordinateGrid
+  points={[{ x: 0, y: 0, label: "A" }, { x: 4, y: 2, label: "B" }]}
+  segment
+  range={6}
+  caption="From A to B the line rises 2 and runs 4 — slope = 2/4 = 1/2."
+/>
+
+$$m = \frac{\Delta y}{\Delta x} = \frac{2 - 0}{4 - 0} = \frac{2}{4} = \frac{1}{2}$$
+
+The order of the points doesn't matter as long as you stay consistent: from $B$
+to $A$ the rise is $-2$ and the run is $-4$, and $\tfrac{-2}{-4}$ is still
+$\tfrac{1}{2}$.
+
+When the line **falls**, the slope comes out negative. From $(0, 5)$ to $(2, 1)$
+the rise is $1 - 5 = -4$ over a run of $2$, so $m = \tfrac{-4}{2} = -2$ — a steep
+downhill line.
+
+</SkillStep>
+
+<SkillStep title="Reason through one together">
+
+Find $\Delta y$ and $\Delta x$, divide, and watch the sign. Predict before you
+check.
+
+<PredictThenCheck
+  prompt="Find the slope of the line through (1, 4) and (3, 0)."
+  choices={["-2", "2", "-1/2", "-4"]}
+>
+
+It's **−2**. The rise is $\Delta y = 0 - 4 = -4$ and the run is
+$\Delta x = 3 - 1 = 2$, so $m = \tfrac{-4}{2} = -2$. Dropping the sign gives $2$
+(but the line clearly falls); flipping rise and run gives $-\tfrac{1}{2}$; and
+$-4$ is just $\Delta y$ — you still have to divide by the run.
+
+</PredictThenCheck>
+
+</SkillStep>
+
+</SkillCard>

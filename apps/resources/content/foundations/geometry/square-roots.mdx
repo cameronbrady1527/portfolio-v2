@@ -1,0 +1,66 @@
+---
+title: Square Roots
+order: 14
+strand: Exponents & Roots
+description: A square root undoes a square. Find exact roots of perfect squares and estimate the rest between whole numbers — the key to the Pythagorean theorem and the distance formula.
+---
+
+A **square root** asks the reverse of squaring: "what number, times itself, gives
+this?" You'll reach for it constantly in geometry — the Pythagorean theorem and
+the distance formula both end with a square root. This card builds two things:
+instant recall of the perfect squares, and a method to **estimate** the roots
+that aren't whole.
+
+<SkillCard skill="square-roots" title="Square Roots">
+
+<SkillStep title="What & why">
+
+Squaring and square-rooting are **inverse** operations: since $7^2 = 49$, we have
+$\sqrt{49} = 7$. A **perfect square** is a number whose square root is a whole
+number — $1, 4, 9, 16, 25, 36, 49, 64, 81, 100, \dots$ Knowing these on sight is
+half the skill.
+
+Most numbers aren't perfect squares, and their roots aren't whole. For those, you
+**estimate** by trapping the number between the two nearest perfect squares — that
+tells you which two whole numbers the root lies between. (Geometry rarely needs the
+exact decimal; knowing $\sqrt{50}$ is "a bit more than $7$" is usually enough.)
+
+</SkillStep>
+
+<SkillStep title="Watch how it works">
+
+**Perfect squares — recall the pair.** $\sqrt{64} = 8$ because $8^2 = 64$.
+
+**Estimate by trapping.** Where is $\sqrt{50}$? Find the perfect squares just below
+and above $50$:
+
+$$49 < 50 < 64 \quad\Rightarrow\quad 7 < \sqrt{50} < 8$$
+
+So $\sqrt{50}$ lies between $7$ and $8$ (and closer to $7$, since $50$ is just past
+$49$).
+
+**Where it pays off.** A right triangle with legs $6$ and $8$ has hypotenuse
+$\sqrt{6^2 + 8^2} = \sqrt{36 + 64} = \sqrt{100} = 10$ — squares going in, a square
+root coming out.
+
+</SkillStep>
+
+<SkillStep title="Reason through one together">
+
+To place a non-perfect root, find the perfect square just below and just above.
+Predict before you check.
+
+<PredictThenCheck
+  prompt="Between which two consecutive whole numbers does √50 lie?"
+  choices={["7 and 8", "6 and 7", "8 and 9", "24 and 25"]}
+>
+
+It's **7 and 8**. The nearest perfect squares around $50$ are $49 = 7^2$ and
+$64 = 8^2$, and $49 < 50 < 64$, so $7 < \sqrt{50} < 8$. The "$24$ and $25$" trap
+comes from halving $50$ instead of square-rooting it — a root is not half.
+
+</PredictThenCheck>
+
+</SkillStep>
+
+</SkillCard>

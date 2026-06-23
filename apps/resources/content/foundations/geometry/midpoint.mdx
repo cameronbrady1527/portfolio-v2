@@ -1,0 +1,68 @@
+---
+title: Midpoint
+order: 18
+strand: Coordinate Plane
+description: The midpoint of a segment is the average of its endpoints. Halve the run and the rise to land dead center — the basis for bisectors, centers, and symmetry.
+---
+
+The **midpoint** is the point exactly halfway between two others. Finding it is one
+of the friendliest moves in coordinate geometry: just **average** the
+$x$-coordinates and average the $y$-coordinates. It's the foundation for
+perpendicular bisectors, centers of figures, and symmetry — and it builds right on
+the [coordinate plane](/foundations/geometry/points-and-quadrants).
+
+<SkillCard skill="midpoint" title="Midpoint">
+
+<SkillStep title="What & why">
+
+Halfway between two numbers is their **average** — halfway between $2$ and $8$ is
+$\frac{2 + 8}{2} = 5$. The midpoint of a segment just does this in both directions
+at once:
+
+$$M = \left(\frac{x_1 + x_2}{2}, \ \frac{y_1 + y_2}{2}\right)$$
+
+Average the $x$'s for the midpoint's $x$, average the $y$'s for its $y$. The one
+trap is **adding without halving** — the sum of the endpoints overshoots the
+middle by double.
+
+</SkillStep>
+
+<SkillStep title="Watch how it works">
+
+Take the segment from $(2, 2)$ to $(8, 6)$. Average each coordinate:
+
+$$M = \left(\frac{2 + 8}{2}, \ \frac{2 + 6}{2}\right) = (5, 4)$$
+
+The midpoint $(5, 4)$ lands squarely in the center of the segment:
+
+<CoordinateGrid
+  points={[{ x: 2, y: 2, label: "A" }, { x: 8, y: 6, label: "B" }, { x: 5, y: 4, label: "M" }]}
+  segment
+  range={9}
+  caption="M (5, 4) is the average of A (2, 2) and B (8, 6) — dead center."
+/>
+
+Watch the signs when a coordinate is negative: the midpoint of $(-4, 1)$ and
+$(6, 9)$ has $x = \frac{-4 + 6}{2} = 1$.
+
+</SkillStep>
+
+<SkillStep title="Reason through one together">
+
+Average the $x$'s and the $y$'s separately — don't forget to halve. Predict before
+you check.
+
+<PredictThenCheck
+  prompt="What is the midpoint of (2, 2) and (8, 6)?"
+  choices={["(5, 4)", "(10, 8)", "(3, 2)", "(6, 4)"]}
+>
+
+It's **(5, 4)**. Average each coordinate: $x = \frac{2 + 8}{2} = 5$ and
+$y = \frac{2 + 6}{2} = 4$. The $(10, 8)$ trap is adding the endpoints without
+dividing by $2$ — that gives a corner of the bounding box, not the center.
+
+</PredictThenCheck>
+
+</SkillStep>
+
+</SkillCard>

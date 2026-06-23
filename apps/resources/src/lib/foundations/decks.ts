@@ -12,6 +12,21 @@ import signedAddSubDeck from "../../../content/foundations/geometry/_decks/addin
 import multDivDeck from "../../../content/foundations/geometry/_decks/multiplication-division-fluency";
 import orderOfOperationsDeck from "../../../content/foundations/geometry/_decks/order-of-operations";
 import roundingDeck from "../../../content/foundations/geometry/_decks/rounding";
+import equivalentFractionsDeck from "../../../content/foundations/geometry/_decks/equivalent-fractions";
+import addSubtractFractionsDeck from "../../../content/foundations/geometry/_decks/add-subtract-fractions";
+import multiplyDivideFractionsDeck from "../../../content/foundations/geometry/_decks/multiply-divide-fractions";
+import ratiosProportionsDeck from "../../../content/foundations/geometry/_decks/ratios-proportions";
+import percentsDeck from "../../../content/foundations/geometry/_decks/percents";
+import substitutingIntoFormulasDeck from "../../../content/foundations/geometry/_decks/substituting-into-formulas";
+import simplifyingExpressionsDeck from "../../../content/foundations/geometry/_decks/simplifying-expressions";
+import solvingLinearEquationsDeck from "../../../content/foundations/geometry/_decks/solving-linear-equations";
+import powersAndExponentsDeck from "../../../content/foundations/geometry/_decks/powers-and-exponents";
+import squareRootsDeck from "../../../content/foundations/geometry/_decks/square-roots";
+import exponentRulesDeck from "../../../content/foundations/geometry/_decks/exponent-rules";
+import pointsAndQuadrantsDeck from "../../../content/foundations/geometry/_decks/points-and-quadrants";
+import distanceOnThePlaneDeck from "../../../content/foundations/geometry/_decks/distance-on-the-plane";
+import midpointDeck from "../../../content/foundations/geometry/_decks/midpoint";
+import slopeDeck from "../../../content/foundations/geometry/_decks/slope";
 
 /** Authoring difficulty tag. "core" = on-grade; "stretch" = harder/applied. */
 export type Difficulty = "core" | "stretch";
@@ -99,6 +114,51 @@ const DECKS: Record<string, DeckItem[]> = {
     "order-of-operations",
   ),
   rounding: validateDeck(roundingDeck, "rounding"),
+  "equivalent-fractions": validateDeck(
+    equivalentFractionsDeck,
+    "equivalent-fractions",
+  ),
+  "add-subtract-fractions": validateDeck(
+    addSubtractFractionsDeck,
+    "add-subtract-fractions",
+  ),
+  "multiply-divide-fractions": validateDeck(
+    multiplyDivideFractionsDeck,
+    "multiply-divide-fractions",
+  ),
+  "ratios-proportions": validateDeck(
+    ratiosProportionsDeck,
+    "ratios-proportions",
+  ),
+  percents: validateDeck(percentsDeck, "percents"),
+  "substituting-into-formulas": validateDeck(
+    substitutingIntoFormulasDeck,
+    "substituting-into-formulas",
+  ),
+  "simplifying-expressions": validateDeck(
+    simplifyingExpressionsDeck,
+    "simplifying-expressions",
+  ),
+  "solving-linear-equations": validateDeck(
+    solvingLinearEquationsDeck,
+    "solving-linear-equations",
+  ),
+  "powers-and-exponents": validateDeck(
+    powersAndExponentsDeck,
+    "powers-and-exponents",
+  ),
+  "square-roots": validateDeck(squareRootsDeck, "square-roots"),
+  "exponent-rules": validateDeck(exponentRulesDeck, "exponent-rules"),
+  "points-and-quadrants": validateDeck(
+    pointsAndQuadrantsDeck,
+    "points-and-quadrants",
+  ),
+  "distance-on-the-plane": validateDeck(
+    distanceOnThePlaneDeck,
+    "distance-on-the-plane",
+  ),
+  midpoint: validateDeck(midpointDeck, "midpoint"),
+  slope: validateDeck(slopeDeck, "slope"),
 };
 
 /** Resolve a skill's validated mastery deck, failing loud if none is registered. */

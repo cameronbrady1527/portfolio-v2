@@ -64,6 +64,21 @@ export { signedAddSub } from "./practice/generators";
 export { multDiv } from "./practice/generators";
 export { orderOfOperations } from "./practice/generators";
 export { rounding } from "./practice/generators";
+export { equivalentFractions } from "./practice/generators";
+export { addSubtractFractions } from "./practice/generators";
+export { multiplyDivideFractions } from "./practice/generators";
+export { solveProportion } from "./practice/generators";
+export { percents } from "./practice/generators";
+export { substituteFormula } from "./practice/generators";
+export { simplifyExpression } from "./practice/generators";
+export { solveLinearEquation } from "./practice/generators";
+export { powers } from "./practice/generators";
+export { squareRoots } from "./practice/generators";
+export { exponentRules } from "./practice/generators";
+export { pointsAndQuadrants } from "./practice/generators";
+export { distanceOnPlane } from "./practice/generators";
+export { midpoint } from "./practice/generators";
+export { slope } from "./practice/generators";
 export type { Problem, ProblemGenerator } from "./practice/generators";
 
 // Practice — drill fluency state machine (pure (state, event) => state).

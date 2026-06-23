@@ -70,6 +70,21 @@ const FOUNDATIONS_SKILLS = [
   "multiplication-division-fluency",
   "order-of-operations",
   "rounding",
+  "equivalent-fractions",
+  "add-subtract-fractions",
+  "multiply-divide-fractions",
+  "ratios-proportions",
+  "percents",
+  "substituting-into-formulas",
+  "simplifying-expressions",
+  "solving-linear-equations",
+  "powers-and-exponents",
+  "square-roots",
+  "exponent-rules",
+  "points-and-quadrants",
+  "distance-on-the-plane",
+  "midpoint",
+  "slope",
 ] as const;
 
 describe.each(FOUNDATIONS_SKILLS)("%s deck — math mandate", (skill) => {

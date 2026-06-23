@@ -1,0 +1,69 @@
+---
+title: Points & Quadrants
+order: 16
+strand: Coordinate Plane
+description: Every point on the plane is named by an ordered pair, and the axes split it into four quadrants. Reading coordinates and naming quadrants is the language of all coordinate geometry.
+---
+
+The coordinate plane is where algebra and geometry meet — every shape becomes a
+set of points you can measure and transform. It starts with two simple ideas: a
+point is named by an **ordered pair** $(x, y)$, and the two axes divide the plane
+into four **quadrants**. Get fluent with both and the rest of coordinate geometry
+has a place to stand.
+
+<SkillCard skill="points-and-quadrants" title="Points & Quadrants">
+
+<SkillStep title="What & why">
+
+A point's address is an **ordered pair** $(x, y)$: the first number is how far
+**right or left** (the $x$-coordinate), the second is how far **up or down** (the
+$y$-coordinate). Order matters — $(3, 5)$ and $(5, 3)$ are different places.
+
+The $x$- and $y$-axes cross at the **origin** $(0, 0)$ and cut the plane into four
+**quadrants**, numbered counterclockwise from the top right with Roman numerals.
+Each has its own sign pattern:
+
+- **Quadrant I** $(+, +)$ · **Quadrant II** $(-, +)$
+- **Quadrant III** $(-, -)$ · **Quadrant IV** $(+, -)$
+
+A point *on* an axis (an $x$ or $y$ of $0$) belongs to no quadrant.
+
+</SkillStep>
+
+<SkillStep title="Watch how it works">
+
+Read the signs and the quadrant follows. $(4, 7)$ is right and up — Quadrant I.
+$(-5, 3)$ is left and up — Quadrant II.
+
+<CoordinateGrid
+  points={[{ x: 4, y: 7 }, { x: -5, y: 3 }]}
+  showQuadrants
+  range={8}
+  caption="(4, 7) sits in Quadrant I; (−5, 3) in Quadrant II."
+/>
+
+The signs are the whole story: a *negative* $x$ pushes you left, a *negative* $y$
+pushes you down. Track those two signs and you can name any point's quadrant
+without plotting it.
+
+</SkillStep>
+
+<SkillStep title="Reason through one together">
+
+Check each coordinate's sign, then read off the quadrant. Predict before you
+check.
+
+<PredictThenCheck
+  prompt="Which quadrant contains the point (−4, 6)?"
+  choices={["Quadrant II", "Quadrant I", "Quadrant III", "Quadrant IV"]}
+>
+
+It's **Quadrant II**. The $x$-coordinate $-4$ is negative (left of the $y$-axis)
+and the $y$-coordinate $6$ is positive (above the $x$-axis). Left-and-up is the
+top-left region — Quadrant II. The sign pair $(-, +)$ points there directly.
+
+</PredictThenCheck>
+
+</SkillStep>
+
+</SkillCard>
