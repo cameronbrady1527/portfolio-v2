@@ -1,5 +1,86 @@
 # @cameronbrady/math-components
 
+## 0.3.0
+
+### Minor Changes
+
+- 47d4c71: Add the Foundations `slope` generator to the `logic` entry point — a pure,
+  deterministic `(level, rng) => Problem` function:
+  - `slope` — the slope of the line through two lattice points, slope = rise/run =
+    Δy/Δx. Level 1 gives positive integer slopes; level 2 adds zero (horizontal)
+    and negative slopes; level 3 gives reduced fractional slopes. It never emits a
+    vertical line (undefined slope); that special case lives in the mastery deck as
+    a multiple-choice item. Answers are `expression`-typed so an integer ("3") and
+    a fraction ("2/3") grade through one path and any equivalent value counts.
+
+  Same seed reproduces the same problem. This extends the Unit 0 (Foundations for
+  Geometry) Coordinate Plane strand with the Slope Skill Card.
+
+- 49e3983: Add the Foundations Strand 2 (Fractions, Ratios & Proportions) generators to the
+  `logic` entry point — pure, deterministic `(level, rng) => Problem` functions:
+  - `equivalentFractions` — fill in the missing numerator/denominator of an
+    equivalent fraction (numeric).
+  - `addSubtractFractions` / `multiplyDivideFractions` — fraction arithmetic with
+    exact reduced answers (`expression`, so any equivalent form grades correct).
+  - `solveProportion` — solve a proportion for x by cross-multiplication (numeric,
+    whole-number unknown by construction).
+  - `percents` — percent of a number, "what percent", and "percent of what",
+    framed as the proportion part/whole = p/100 (numeric).
+
+  Every generator emits a `grade()`-checkable question; same seed reproduces the
+  same problem.
+
+- caa443f: Add the Foundations Strand 3 (Expressions & Equations) generators to the `logic`
+  entry point — pure, deterministic `(level, rng) => Problem` functions:
+  - `substituteFormula` — substitute values (including negatives) into an
+    expression or formula and evaluate (numeric).
+  - `simplifyExpression` — combine like terms and distribute, giving the simplified
+    `px + q` (`expression`).
+  - `solveLinearEquation` — solve a linear equation for x by inverse operations
+    (one-step → two-step → multi-step with distribution / variables on both sides);
+    the solution is a whole number by construction (numeric).
+
+  Every generator emits a `grade()`-checkable question; same seed reproduces the
+  same problem.
+
+- 73dc4e0: Add the Foundations Strand 4 (Exponents & Roots) generators to the `logic` entry
+  point — pure, deterministic `(level, rng) => Problem` functions:
+  - `powers` — evaluate a base raised to a whole-number exponent, including
+    negative bases and powers of ten (numeric).
+  - `squareRoots` — exact roots of perfect squares and estimating a non-perfect
+    root between consecutive whole numbers (numeric).
+  - `exponentRules` — the product, quotient, and power-of-a-power laws, asked for
+    the resulting exponent (numeric).
+
+  Every generator emits a `grade()`-checkable question; same seed reproduces the
+  same problem.
+
+- 09ad7f4: Add the Foundations Strand 5 (Coordinate Plane) generators to the `logic` entry
+  point — pure, deterministic `(level, rng) => Problem` functions:
+  - `pointsAndQuadrants` — identify a point's quadrant from its signs, including
+    the quadrant of a reflected image (numeric, 1–4).
+  - `distanceOnPlane` — distance between two points: axis-aligned differences and
+    diagonal distances built from Pythagorean triples so the result is whole
+    (numeric).
+  - `midpoint` — a coordinate of a segment's midpoint, built to be a whole number
+    (numeric).
+
+  Every generator emits a `grade()`-checkable question; same seed reproduces the
+  same problem. This completes the Unit 0 (Foundations for Geometry) generator set.
+
+- 46d2b46: Add the Foundations (Unit 0) practice toolkit to the `logic` entry point:
+  - **Seeded problem generators** (`(level, rng) => Problem`, pure and
+    deterministic): `signedAddSub`, `multDiv`, `orderOfOperations`, and
+    `rounding`, plus the shared `Problem` / `ProblemGenerator` types.
+  - **`mulberry32`** seeded PRNG for reproducible practice streams.
+  - **Drill fluency state machine** — `initFluency` / `fluencyReducer` with
+    `DEFAULT_FLUENCY_THRESHOLD` and the `FluencyState` / `FluencyEvent` types.
+  - **Per-skill mastery flag** on progress — `recordMastery`, `isMastered`,
+    `countMastered`.
+
+  Every generator emits a `grade()`-checkable question, so the same seed always
+  reproduces the same problem and every stated answer is machine-verifiable.
+
 ## 0.2.1
 
 ### Patch Changes
