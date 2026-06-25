@@ -24,6 +24,8 @@ interface PreparedBase {
 export type PreparedMcItem = PreparedBase & {
   mode: "mc";
   choicesHtml: string[];
+  /** Per-choice figures rendered to inline HTML, when the choices are figures. */
+  choiceFiguresHtml?: string[];
   answer: number;
   explanationHtml: string;
 };
@@ -58,6 +60,7 @@ export function prepareBank(slug: string): PreparedRegentsItem[] {
         ...base,
         mode: "mc",
         choicesHtml: item.choices.map(texToHtml),
+        choiceFiguresHtml: item.choiceFigures?.map(figureToHtml),
         answer: item.answer,
         explanationHtml: texToHtml(item.explanation),
       };

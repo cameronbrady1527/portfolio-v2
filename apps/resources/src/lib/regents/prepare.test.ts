@@ -64,4 +64,12 @@ describe("prepareBank — figures", () => {
     expect(reg.solutionFigureHtml).toContain("<svg"); // the scatter plot
     expect(reg.solutionFigureHtml).toContain("<circle"); // plotted data points
   });
+
+  it("renders one figure per choice for a figure-choice MC item", () => {
+    const item = prepareBank("linear-vs-exponential")[0];
+    expect(item.mode).toBe("mc");
+    if (item.mode !== "mc") return;
+    expect(item.choiceFiguresHtml).toHaveLength(item.choicesHtml.length);
+    expect(item.choiceFiguresHtml?.every((h) => h.includes("<table"))).toBe(true);
+  });
 });

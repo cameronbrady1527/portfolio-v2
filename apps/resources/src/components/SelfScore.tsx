@@ -242,32 +242,40 @@ function McBody({
         disabled={answered}
         aria-label="Answer choices"
       >
-        {item.choicesHtml.map((c, ci) => (
-          <label
-            key={ci}
-            className={cn(
-              "flex cursor-pointer items-center gap-3 rounded-md border border-border p-2.5 text-sm has-[:checked]:border-primary",
-              answered && ci === item.answer && "border-emerald-500 bg-emerald-50",
-              answered && ci === choice && ci !== item.answer && "border-rose-400 bg-rose-50",
-            )}
-          >
-            <input
-              type="radio"
-              name={`ss-${item.id}`}
-              value={ci}
-              checked={choice === ci}
-              onChange={() => onChoose(ci)}
-              className="size-4 accent-primary"
-            />
-            <Html html={c} />
-            {answered && ci === item.answer ? (
-              <span className="sr-only"> (correct answer)</span>
-            ) : null}
-            {answered && ci === choice && ci !== item.answer ? (
-              <span className="sr-only"> (your answer)</span>
-            ) : null}
-          </label>
-        ))}
+        {item.choicesHtml.map((c, ci) => {
+          const figure = item.choiceFiguresHtml?.[ci];
+          return (
+            <label
+              key={ci}
+              className={cn(
+                "cursor-pointer rounded-md border border-border p-2.5 text-sm has-[:checked]:border-primary",
+                answered && ci === item.answer && "border-emerald-500 bg-emerald-50",
+                answered && ci === choice && ci !== item.answer && "border-rose-400 bg-rose-50",
+              )}
+            >
+              <span className="flex items-center gap-3">
+                <input
+                  type="radio"
+                  name={`ss-${item.id}`}
+                  value={ci}
+                  checked={choice === ci}
+                  onChange={() => onChoose(ci)}
+                  className="size-4 shrink-0 accent-primary"
+                />
+                <Html html={c} />
+                {answered && ci === item.answer ? (
+                  <span className="sr-only"> (correct answer)</span>
+                ) : null}
+                {answered && ci === choice && ci !== item.answer ? (
+                  <span className="sr-only"> (your answer)</span>
+                ) : null}
+              </span>
+              {figure ? (
+                <div className="mt-2 pl-7" dangerouslySetInnerHTML={{ __html: figure }} />
+              ) : null}
+            </label>
+          );
+        })}
       </fieldset>
 
       {!answered ? (

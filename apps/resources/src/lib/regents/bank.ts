@@ -17,6 +17,7 @@ import type { Figure } from "./figure";
 import solvingQuadratics from "../../../content/regents/algebra-i/_bank/solving-quadratics";
 import systemsOfEquations from "../../../content/regents/algebra-i/_bank/systems-of-equations";
 import statistics from "../../../content/regents/algebra-i/_bank/statistics";
+import linearVsExponential from "../../../content/regents/algebra-i/_bank/linear-vs-exponential";
 
 /** A single credit level of an official constructed-response rubric. */
 export interface RubricLevel {
@@ -49,7 +50,12 @@ interface RegentsItemBase {
 /** Auto-graded multiple-choice item (Part I). */
 export type RegentsMcItem = RegentsItemBase & {
   mode: "mc";
+  /** Choice text (LaTeX). When `choiceFigures` is set, these are the short
+   * accessible labels (e.g. "Table (1)") shown alongside each figure. */
   choices: string[];
+  /** Optional per-choice figures (e.g. four tables or graphs to choose between);
+   * must line up 1:1 with `choices`. */
+  choiceFigures?: Figure[];
   /** Index of the correct choice. */
   answer: number;
   explanation: string;
@@ -116,6 +122,17 @@ export function validateBank(items: unknown, slug: string): RegentsItem[] {
         "mc answer index out of range",
       );
       ok(typeof it.explanation === "string" && !!it.explanation, where, "mc needs explanation");
+      if (it.choiceFigures !== undefined) {
+        ok(
+          Array.isArray(it.choiceFigures) &&
+            it.choiceFigures.length === (it.choices as unknown[]).length &&
+            it.choiceFigures.every(
+              (f) => f && typeof (f as Figure).kind === "string",
+            ),
+          where,
+          "choiceFigures must be one figure per choice",
+        );
+      }
     } else if (it.mode === "self-score") {
       ok(typeof it.answerSummary === "string" && !!it.answerSummary, where, "needs answerSummary");
       ok(typeof it.modelSolution === "string" && !!it.modelSolution, where, "needs modelSolution");
@@ -160,6 +177,7 @@ const BANKS: Record<string, RegentsItem[]> = {
   "solving-quadratics": validateBank(solvingQuadratics, "solving-quadratics"),
   "systems-of-equations": validateBank(systemsOfEquations, "systems-of-equations"),
   statistics: validateBank(statistics, "statistics"),
+  "linear-vs-exponential": validateBank(linearVsExponential, "linear-vs-exponential"),
 };
 
 /** Resolve a bank's validated items, failing loud if none is registered. */
