@@ -14,6 +14,7 @@
 // the `standard` code is secondary "exam info" (per the agreed code-exposure UX).
 
 import solvingQuadratics from "../../../content/regents/algebra-i/_bank/solving-quadratics";
+import systemsOfEquations from "../../../content/regents/algebra-i/_bank/systems-of-equations";
 
 /** A single credit level of an official constructed-response rubric. */
 export interface RubricLevel {
@@ -141,6 +142,7 @@ export type RegentsBankMeta = {
 // Validated at module load so an authoring mistake breaks the build immediately.
 const BANKS: Record<string, RegentsItem[]> = {
   "solving-quadratics": validateBank(solvingQuadratics, "solving-quadratics"),
+  "systems-of-equations": validateBank(systemsOfEquations, "systems-of-equations"),
 };
 
 /** Resolve a bank's validated items, failing loud if none is registered. */

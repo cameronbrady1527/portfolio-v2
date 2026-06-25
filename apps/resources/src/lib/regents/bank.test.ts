@@ -98,3 +98,19 @@ describe("solving-quadratics bank", () => {
     expect(standards.has("AI-A.REI.1")).toBe(true);
   });
 });
+
+describe("systems-of-equations bank", () => {
+  const bank = resolveBank("systems-of-equations");
+
+  it("resolves with well-formed cited items spanning linear + linear-quadratic", () => {
+    expect(bank.length).toBeGreaterThanOrEqual(5);
+    const ids = bank.map((i) => i.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const it of bank) {
+      expect(it.examCitation, it.id).toMatch(/^regents-algI-\d+-q\d+$/);
+    }
+    const standards = new Set(bank.map((i) => i.standard));
+    expect(standards.has("AI-A.REI.6")).toBe(true); // linear
+    expect(standards.has("AI-A.REI.7")).toBe(true); // linear-quadratic
+  });
+});
