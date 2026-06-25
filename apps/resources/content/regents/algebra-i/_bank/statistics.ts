@@ -93,6 +93,32 @@ const bank: RegentsItem[] = [
       { credits: 0, criteria: "A response with no relevant course-level work." },
     ],
   },
+  {
+    id: "stat-mc-0126-q18",
+    mode: "mc",
+    standard: "AI-S.ID.5",
+    topic: "Two-way frequency tables",
+    examCitation: "regents-algI-0126-q18",
+    part: "I",
+    credits: 2,
+    prompt:
+      "The two-way frequency table below summarizes concession-stand sales for a football game. Of the people making a purchase at the concession stand, what is the relative frequency of them buying pizza and a water?",
+    figure: {
+      kind: "table",
+      headers: ["", "Soda", "Water", "Coffee", "Total"],
+      rows: [
+        ["Hot dogs", 50, 62, 46, 158],
+        ["Pizza", 120, 58, 4, 182],
+        ["No food", 30, 20, 10, 60],
+        ["Total", 200, 140, 60, 400],
+      ],
+      caption: "Concession Stand Sales",
+    },
+    choices: ["0.58", "0.35", "0.455", "0.145"],
+    answer: 3,
+    explanation:
+      "Pizza-and-water is the Pizza row, Water column: 58 people, out of 400 total purchases. 58 / 400 = 0.145. The other choices are the marginal totals (140/400, 182/400).",
+  },
 ];
 
 export default bank;
