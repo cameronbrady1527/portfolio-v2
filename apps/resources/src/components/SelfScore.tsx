@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, Info, X } from "lucide-react";
 import { Button, cn } from "@repo/ui";
+import { MathText } from "@/components/Tex";
 import { resolveBank, type RegentsItem } from "@/lib/regents/bank";
 import {
   overallReadiness,
@@ -108,7 +109,9 @@ export function SelfScore({ bank, className }: SelfScoreProps) {
           ) : null}
         </header>
 
-        <p className="text-sm text-foreground">{item.prompt}</p>
+        <p className="text-sm text-foreground">
+          <MathText>{item.prompt}</MathText>
+        </p>
 
         {item.mode === "mc" ? (
           <McBody
@@ -196,7 +199,7 @@ function McBody({
               onChange={() => onChoose(ci)}
               className="size-4 accent-primary"
             />
-            <span>{c}</span>
+            <MathText>{c}</MathText>
           </label>
         ))}
       </fieldset>
@@ -223,7 +226,9 @@ function McBody({
             {correct ? <Check aria-hidden className="size-4" /> : <X aria-hidden className="size-4" />}
             <span>{correct ? "Correct" : "Not quite"}</span>
           </p>
-          <p className="text-sm text-muted-foreground">{item.explanation}</p>
+          <p className="text-sm text-muted-foreground">
+            <MathText>{item.explanation}</MathText>
+          </p>
         </div>
       )}
     </div>
@@ -264,8 +269,12 @@ function SelfScoreBody({
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Model solution
         </p>
-        <p className="mt-1 text-sm font-medium text-foreground">{item.answerSummary}</p>
-        <p className="mt-1 text-sm text-muted-foreground">{item.modelSolution}</p>
+        <p className="mt-1 text-sm font-medium text-foreground">
+          <MathText>{item.answerSummary}</MathText>
+        </p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          <MathText>{item.modelSolution}</MathText>
+        </p>
       </div>
 
       {/* Official rubric */}
@@ -279,7 +288,7 @@ function SelfScoreBody({
               <span className="mt-0.5 shrink-0 rounded bg-muted px-1.5 font-mono text-xs font-semibold text-foreground">
                 {level.credits}
               </span>
-              <span className="text-muted-foreground">{level.criteria}</span>
+              <MathText className="text-muted-foreground">{level.criteria}</MathText>
             </li>
           ))}
         </ul>

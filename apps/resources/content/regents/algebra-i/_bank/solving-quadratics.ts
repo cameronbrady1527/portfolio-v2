@@ -6,8 +6,10 @@
 // model solutions are authored (clean, typeset) rather than scanned student work;
 // rubrics are transcribed from the official NYSED Rating Guides. SME-ratified.
 //
-// Provenance is the point — do not edit prompts/answers without re-checking the
-// source PDF in /tmp/regents/exams (decoded text in /tmp/regents/decoded-*.txt).
+// Math is written as inline LaTeX ($…$), rendered by <MathText> (KaTeX) — the
+// same authoring convention as the .mdx content. Use String.raw so backslashes
+// survive the TypeScript string. Do not edit prompts/answers without re-checking
+// the source PDF in /tmp/regents/exams (decoded text in /tmp/regents/decoded-*.txt).
 
 import type { RegentsItem, RubricLevel } from "@/lib/regents/bank";
 
@@ -15,7 +17,7 @@ import type { RegentsItem, RubricLevel } from "@/lib/regents/bank";
 const QUADRATIC_FORMULA_RUBRIC: RubricLevel[] = [
   { credits: 4, criteria: "Correct answer in simplest radical form, with correct work using the quadratic formula." },
   { credits: 3, criteria: "Appropriate work, but ONE computational or simplification error; OR only one solution is stated." },
-  { credits: 2, criteria: "Two or more errors; OR work reaches (−b ± √discriminant)/2a with no further work; OR the correct answer by a method OTHER than the quadratic formula." },
+  { credits: 2, criteria: String.raw`Two or more errors; OR work reaches $\dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a}$ with no further work; OR the correct answer by a method OTHER than the quadratic formula.` },
   { credits: 1, criteria: "A correct substitution into the quadratic formula, but no further correct work; OR the final answer with no work shown." },
   { credits: 0, criteria: "A response with no relevant course-level work." },
 ];
@@ -30,11 +32,9 @@ const bank: RegentsItem[] = [
     examCitation: "regents-algI-0624-q33",
     part: "III",
     credits: 4,
-    prompt:
-      "Use the quadratic formula to solve the equation 3x² − 10x + 5 = 0. Express the answer in simplest radical form.",
-    answerSummary: "x = (5 ± √10)/3",
-    modelSolution:
-      "With a = 3, b = −10, c = 5: x = (10 ± √(100 − 60))/6 = (10 ± √40)/6 = (10 ± 2√10)/6 = (5 ± √10)/3.",
+    prompt: String.raw`Use the quadratic formula to solve the equation $3x^2 - 10x + 5 = 0$. Express the answer in simplest radical form.`,
+    answerSummary: String.raw`$x = \dfrac{5 \pm \sqrt{10}}{3}$`,
+    modelSolution: String.raw`With $a = 3$, $b = -10$, $c = 5$, the discriminant is $b^2 - 4ac = 100 - 60 = 40$. So $x = \dfrac{10 \pm \sqrt{40}}{6} = \dfrac{10 \pm 2\sqrt{10}}{6} = \dfrac{5 \pm \sqrt{10}}{3}$.`,
     rubric: QUADRATIC_FORMULA_RUBRIC,
   },
   {
@@ -45,13 +45,11 @@ const bank: RegentsItem[] = [
     examCitation: "regents-algI-0624-q29",
     part: "II",
     credits: 2,
-    prompt:
-      "Use the method of completing the square to determine the exact values of x for the equation x² + 10x − 30 = 0.",
-    answerSummary: "x = −5 ± √55",
-    modelSolution:
-      "x² + 10x = 30. Add (10/2)² = 25 to both sides: x² + 10x + 25 = 55, so (x + 5)² = 55. Then x + 5 = ±√55, giving x = −5 ± √55.",
+    prompt: String.raw`Use the method of completing the square to determine the exact values of $x$ for the equation $x^2 + 10x - 30 = 0$.`,
+    answerSummary: String.raw`$x = -5 \pm \sqrt{55}$`,
+    modelSolution: String.raw`$x^2 + 10x = 30$. Add $\left(\tfrac{10}{2}\right)^2 = 25$ to both sides: $x^2 + 10x + 25 = 55$, so $(x + 5)^2 = 55$. Then $x + 5 = \pm\sqrt{55}$, giving $x = -5 \pm \sqrt{55}$.`,
     rubric: [
-      { credits: 2, criteria: "x = −5 ± √55, with correct work (completing the square)." },
+      { credits: 2, criteria: String.raw`$x = -5 \pm \sqrt{55}$, with correct work (completing the square).` },
       { credits: 1, criteria: "One computational error; OR one conceptual error; OR only one solution stated; OR the correct answer by a method OTHER than completing the square; OR the correct answer with no work." },
       { credits: 0, criteria: "A response with no relevant course-level work." },
     ],
@@ -64,10 +62,9 @@ const bank: RegentsItem[] = [
     examCitation: "regents-algI-0125-q33",
     part: "III",
     credits: 4,
-    prompt: "Using the quadratic formula, solve x² + 4x − 3 = 0.",
-    answerSummary: "x = −2 ± √7",
-    modelSolution:
-      "With a = 1, b = 4, c = −3: x = (−4 ± √(16 + 12))/2 = (−4 ± √28)/2 = (−4 ± 2√7)/2 = −2 ± √7.",
+    prompt: String.raw`Using the quadratic formula, solve $x^2 + 4x - 3 = 0$.`,
+    answerSummary: String.raw`$x = -2 \pm \sqrt{7}$`,
+    modelSolution: String.raw`With $a = 1$, $b = 4$, $c = -3$, the discriminant is $16 + 12 = 28$. So $x = \dfrac{-4 \pm \sqrt{28}}{2} = \dfrac{-4 \pm 2\sqrt{7}}{2} = -2 \pm \sqrt{7}$.`,
     rubric: QUADRATIC_FORMULA_RUBRIC,
   },
   {
@@ -78,11 +75,9 @@ const bank: RegentsItem[] = [
     examCitation: "regents-algI-0625-q32",
     part: "III",
     credits: 4,
-    prompt:
-      "Using the quadratic formula, solve 6x² + 2x − 1 = 0. Express the answer in simplest radical form.",
-    answerSummary: "x = (−1 ± √7)/6",
-    modelSolution:
-      "With a = 6, b = 2, c = −1: x = (−2 ± √(4 + 24))/12 = (−2 ± √28)/12 = (−2 ± 2√7)/12 = (−1 ± √7)/6.",
+    prompt: String.raw`Using the quadratic formula, solve $6x^2 + 2x - 1 = 0$. Express the answer in simplest radical form.`,
+    answerSummary: String.raw`$x = \dfrac{-1 \pm \sqrt{7}}{6}$`,
+    modelSolution: String.raw`With $a = 6$, $b = 2$, $c = -1$, the discriminant is $4 + 24 = 28$. So $x = \dfrac{-2 \pm \sqrt{28}}{12} = \dfrac{-2 \pm 2\sqrt{7}}{12} = \dfrac{-1 \pm \sqrt{7}}{6}$.`,
     rubric: QUADRATIC_FORMULA_RUBRIC,
   },
   {
@@ -93,11 +88,9 @@ const bank: RegentsItem[] = [
     examCitation: "regents-algI-0126-q32",
     part: "III",
     credits: 4,
-    prompt:
-      "Use the quadratic formula to solve 2x² − 4x − 3 = 0, and express the answer in simplest radical form.",
-    answerSummary: "x = (2 ± √10)/2",
-    modelSolution:
-      "With a = 2, b = −4, c = −3: x = (4 ± √(16 + 24))/4 = (4 ± √40)/4 = (4 ± 2√10)/4 = (2 ± √10)/2.",
+    prompt: String.raw`Use the quadratic formula to solve $2x^2 - 4x - 3 = 0$, and express the answer in simplest radical form.`,
+    answerSummary: String.raw`$x = \dfrac{2 \pm \sqrt{10}}{2}$`,
+    modelSolution: String.raw`With $a = 2$, $b = -4$, $c = -3$, the discriminant is $16 + 24 = 40$. So $x = \dfrac{4 \pm \sqrt{40}}{4} = \dfrac{4 \pm 2\sqrt{10}}{4} = \dfrac{2 \pm \sqrt{10}}{2}$.`,
     rubric: QUADRATIC_FORMULA_RUBRIC,
   },
 
@@ -110,11 +103,15 @@ const bank: RegentsItem[] = [
     examCitation: "regents-algI-0824-q8",
     part: "I",
     credits: 2,
-    prompt: "Which equation has the same solutions as x² + 6x − 18 = 0?",
-    choices: ["(x + 3)² = 24", "(x + 3)² = 27", "(x + 6)² = 24", "(x + 6)² = 27"],
+    prompt: String.raw`Which equation has the same solutions as $x^2 + 6x - 18 = 0$?`,
+    choices: [
+      String.raw`$(x + 3)^2 = 24$`,
+      String.raw`$(x + 3)^2 = 27$`,
+      String.raw`$(x + 6)^2 = 24$`,
+      String.raw`$(x + 6)^2 = 27$`,
+    ],
     answer: 1,
-    explanation:
-      "x² + 6x = 18; add (6/2)² = 9 to both sides → (x + 3)² = 27.",
+    explanation: String.raw`$x^2 + 6x = 18$; add $\left(\tfrac{6}{2}\right)^2 = 9$ to both sides to get $(x + 3)^2 = 27$.`,
   },
   {
     id: "sq-mc-0625-q11",
@@ -124,11 +121,15 @@ const bank: RegentsItem[] = [
     examCitation: "regents-algI-0625-q11",
     part: "I",
     credits: 2,
-    prompt: "Which equation is equivalent to x² − 6x = 27?",
-    choices: ["(x − 3)² = 27 − 9", "(x − 3)² = 27 + 9", "(x − 3)² = 27 + 36", "(x − 3)² = 27 − 36"],
+    prompt: String.raw`Which equation is equivalent to $x^2 - 6x = 27$?`,
+    choices: [
+      String.raw`$(x - 3)^2 = 27 - 9$`,
+      String.raw`$(x - 3)^2 = 27 + 9$`,
+      String.raw`$(x - 3)^2 = 27 + 36$`,
+      String.raw`$(x - 3)^2 = 27 - 36$`,
+    ],
     answer: 1,
-    explanation:
-      "Add (6/2)² = 9 to BOTH sides to complete the square → (x − 3)² = 27 + 9.",
+    explanation: String.raw`Add $\left(\tfrac{6}{2}\right)^2 = 9$ to BOTH sides to complete the square, giving $(x - 3)^2 = 27 + 9$.`,
   },
   {
     id: "sq-mc-0126-q23",
@@ -138,10 +139,15 @@ const bank: RegentsItem[] = [
     examCitation: "regents-algI-0126-q23",
     part: "I",
     credits: 2,
-    prompt: "Which equation has the same solution as x² − 6x = 24?",
-    choices: ["(x − 3)² = 24", "(x − 6)² = 24", "(x − 3)² = 33", "(x − 6)² = 60"],
+    prompt: String.raw`Which equation has the same solution as $x^2 - 6x = 24$?`,
+    choices: [
+      String.raw`$(x - 3)^2 = 24$`,
+      String.raw`$(x - 6)^2 = 24$`,
+      String.raw`$(x - 3)^2 = 33$`,
+      String.raw`$(x - 6)^2 = 60$`,
+    ],
     answer: 2,
-    explanation: "Add (6/2)² = 9 to both sides → (x − 3)² = 24 + 9 = 33.",
+    explanation: String.raw`Add $\left(\tfrac{6}{2}\right)^2 = 9$ to both sides: $(x - 3)^2 = 24 + 9 = 33$.`,
   },
   {
     id: "sq-mc-0126-q17",
@@ -151,12 +157,15 @@ const bank: RegentsItem[] = [
     examCitation: "regents-algI-0126-q17",
     part: "I",
     credits: 2,
-    prompt:
-      "The point (x, −6) lies on the graph of a parabola whose equation is y = −x² − x + 6. The value of x can be",
-    choices: ["−3 or 2", "−4 or 3", "3, only", "−4, only"],
+    prompt: String.raw`The point $(x, -6)$ lies on the graph of a parabola whose equation is $y = -x^2 - x + 6$. The value of $x$ can be`,
+    choices: [
+      String.raw`$-3$ or $2$`,
+      String.raw`$-4$ or $3$`,
+      String.raw`$3$, only`,
+      String.raw`$-4$, only`,
+    ],
     answer: 1,
-    explanation:
-      "Set −6 = −x² − x + 6 → x² + x − 12 = 0 → (x + 4)(x − 3) = 0 → x = −4 or 3.",
+    explanation: String.raw`Set $-6 = -x^2 - x + 6$, which gives $x^2 + x - 12 = 0$, then $(x + 4)(x - 3) = 0$, so $x = -4$ or $3$.`,
   },
 
   // ---- Multiple choice — sibling skill: justify a solving step (AI-A.REI.1) ----
@@ -168,8 +177,7 @@ const bank: RegentsItem[] = [
     examCitation: "regents-algI-0824-q6",
     part: "I",
     credits: 2,
-    prompt:
-      "When solving the equation 4x² − 16 = 0, Laura wrote 4x² = 16 as her first step. Which property justifies Laura's first step?",
+    prompt: String.raw`When solving the equation $4x^2 - 16 = 0$, Laura wrote $4x^2 = 16$ as her first step. Which property justifies Laura's first step?`,
     choices: [
       "distributive property of multiplication over addition",
       "multiplication property of equality",
@@ -177,7 +185,7 @@ const bank: RegentsItem[] = [
       "addition property of equality",
     ],
     answer: 3,
-    explanation: "She added 16 to both sides — the addition property of equality.",
+    explanation: String.raw`She added $16$ to both sides — the addition property of equality.`,
   },
   {
     id: "sq-mc-0625-q8",
@@ -187,8 +195,7 @@ const bank: RegentsItem[] = [
     examCitation: "regents-algI-0625-q8",
     part: "I",
     credits: 2,
-    prompt:
-      "Chloe is solving the equation x² + 5x = 3x + 3. Her first step gives x² + 2x − 3 = 0. Which property justifies this step?",
+    prompt: String.raw`Chloe is solving the equation $x^2 + 5x = 3x + 3$. Her first step gives $x^2 + 2x - 3 = 0$. Which property justifies this step?`,
     choices: [
       "the zero product property",
       "the commutative property",
@@ -196,8 +203,7 @@ const bank: RegentsItem[] = [
       "the subtraction property of equality",
     ],
     answer: 3,
-    explanation:
-      "She subtracted 3x + 3 from both sides — the subtraction property of equality.",
+    explanation: String.raw`She subtracted $3x + 3$ from both sides — the subtraction property of equality.`,
   },
   {
     id: "sq-mc-0125-q14",
@@ -207,8 +213,7 @@ const bank: RegentsItem[] = [
     examCitation: "regents-algI-0125-q14",
     part: "I",
     credits: 2,
-    prompt:
-      "Stephanie is solving the equation x² − 12 = 7x − 8. Her first step gives x² − 4 = 7x. Which property justifies her first step?",
+    prompt: String.raw`Stephanie is solving the equation $x^2 - 12 = 7x - 8$. Her first step gives $x^2 - 4 = 7x$. Which property justifies her first step?`,
     choices: [
       "associative property",
       "commutative property",
@@ -216,7 +221,7 @@ const bank: RegentsItem[] = [
       "addition property of equality",
     ],
     answer: 3,
-    explanation: "She added 8 to both sides — the addition property of equality.",
+    explanation: String.raw`She added $8$ to both sides — the addition property of equality.`,
   },
 ];
 
