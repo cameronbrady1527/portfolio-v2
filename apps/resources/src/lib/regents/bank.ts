@@ -13,6 +13,7 @@
 // (`regents-algI-<MMYY>-qNN`); the plain-English `topic` is the primary label and
 // the `standard` code is secondary "exam info" (per the agreed code-exposure UX).
 
+import type { Figure } from "./figure";
 import solvingQuadratics from "../../../content/regents/algebra-i/_bank/solving-quadratics";
 import systemsOfEquations from "../../../content/regents/algebra-i/_bank/systems-of-equations";
 
@@ -36,6 +37,9 @@ interface RegentsItemBase {
   /** The item's credit value (2 for MC/short, 4 medium, 6 long). */
   credits: number;
   prompt: string;
+  /** Optional figure — a GIVEN figure for MC, or the answer figure (shown with
+   * the model solution) for a self-score item. Rendered to SVG at build time. */
+  figure?: Figure;
 }
 
 /** Auto-graded multiple-choice item (Part I). */
@@ -90,6 +94,15 @@ export function validateBank(items: unknown, slug: string): RegentsItem[] {
     ok(["I", "II", "III", "IV"].includes(it.part as string), where, "bad part");
     ok(typeof it.credits === "number" && it.credits > 0, where, "credits must be > 0");
     ok(typeof it.prompt === "string" && !!it.prompt, where, "missing prompt");
+    if (it.figure !== undefined) {
+      ok(
+        typeof it.figure === "object" &&
+          it.figure !== null &&
+          typeof (it.figure as Figure).kind === "string",
+        where,
+        "figure must be an object with a kind",
+      );
+    }
     if (it.mode === "mc") {
       ok(Array.isArray(it.choices) && it.choices.length >= 2, where, "mc needs choices");
       ok(

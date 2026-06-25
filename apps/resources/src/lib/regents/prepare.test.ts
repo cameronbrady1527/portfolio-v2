@@ -47,3 +47,14 @@ describe("prepareBank", () => {
     }
   });
 });
+
+describe("prepareBank — figures", () => {
+  it("renders an item's figure to inline SVG", () => {
+    const withFigure = prepareBank("systems-of-equations").find(
+      (i) => i.figureHtml,
+    );
+    expect(withFigure, "expected a systems item with a figure").toBeDefined();
+    expect(withFigure?.figureHtml).toContain("<svg");
+    expect(withFigure?.figureHtml).toContain("<path"); // the graphed curves
+  });
+});

@@ -233,6 +233,9 @@ function McBody({
 }) {
   return (
     <div className="flex flex-col gap-3">
+      {item.figureHtml ? (
+        <div dangerouslySetInnerHTML={{ __html: item.figureHtml }} />
+      ) : null}
       <fieldset
         className="flex flex-col gap-2"
         disabled={answered}
@@ -342,6 +345,9 @@ function SelfScoreBody({
           className="mt-1 block overflow-x-auto text-sm text-muted-foreground"
           html={item.modelSolutionHtml}
         />
+        {item.figureHtml ? (
+          <div className="mt-2" dangerouslySetInnerHTML={{ __html: item.figureHtml }} />
+        ) : null}
       </div>
 
       {/* Official rubric */}

@@ -63,6 +63,39 @@ const bank: RegentsItem[] = [
     rubric: LINEAR_QUADRATIC_RUBRIC,
   },
 
+  {
+    id: "sys-cr-0624-q31",
+    mode: "self-score",
+    standard: "AI-A.REI.7",
+    topic: "Systems — graph a linear-quadratic system",
+    examCitation: "regents-algI-0624-q31",
+    part: "III",
+    credits: 4,
+    prompt: String.raw`Graph the system $y = x^2 - 3x - 6$ and $y = x - 1$ on a set of axes, and state the coordinates of all solutions.`,
+    answerSummary: String.raw`$(-1, -2)$ and $(5, 4)$`,
+    modelSolution: String.raw`The parabola and line meet where $x^2 - 3x - 6 = x - 1$, i.e. $x^2 - 4x - 5 = 0$, so $(x - 5)(x + 1) = 0$ and $x = 5$ or $x = -1$. Using $y = x - 1$, the intersection points are $(5, 4)$ and $(-1, -2)$ — the solutions, shown below.`,
+    figure: {
+      kind: "plot",
+      range: 10,
+      curves: [
+        { kind: "parabola", a: 1, b: -3, c: -6 },
+        { kind: "line", m: 1, b: -1 },
+      ],
+      points: [
+        { x: -1, y: -2, label: "(-1, -2)" },
+        { x: 5, y: 4, label: "(5, 4)" },
+      ],
+      caption: "y = x² − 3x − 6 (blue) meets y = x − 1 (orange) at (−1, −2) and (5, 4).",
+    },
+    rubric: [
+      { credits: 4, criteria: String.raw`Correct graphs are drawn, and $(-1, -2)$ and $(5, 4)$ are stated.` },
+      { credits: 3, criteria: "One graphing error; OR only one point's coordinates are stated correctly; OR the solutions are indicated on the graph but the coordinates are not stated." },
+      { credits: 2, criteria: String.raw`Both equations are graphed correctly but no further work; OR $(-1, -2)$ and $(5, 4)$ are stated, but a method other than graphing is used.` },
+      { credits: 1, criteria: String.raw`One equation is graphed correctly but no further work; OR $(-1, -2)$ and $(5, 4)$ are stated with no work shown.` },
+      { credits: 0, criteria: "A response with no relevant course-level work." },
+    ],
+  },
+
   // ---- Linear systems (AI-A.REI.6) ----
   {
     id: "sys-mc-0126-q10",
