@@ -1,0 +1,374 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import { Check, ChevronDown, Info, X } from "lucide-react";
+import { Button, cn } from "@repo/ui";
+import { resolveBank, type RegentsItem } from "@/lib/regents/bank";
+import {
+  overallReadiness,
+  type CreditAttempt,
+} from "@/lib/regents/readiness";
+
+// The Regents bank experience: real released items, one at a time. Multiple
+// choice is auto-graded; constructed-response is ATTEMPT-GATED then SELF-SCORED
+// against the official NYSED rubric beside an authored model solution — because
+// show-your-work can't be auto-graded, and learning HOW points are awarded is
+// the skill. Readiness is reported as a per-standard band + a projected exam
+// level, never a pass/fail verdict.
+
+const BAND_LABEL: Record<string, string> = {
+  "not-started": "Not started",
+  developing: "Developing",
+  approaching: "Approaching",
+  proficient: "Proficient",
+  mastery: "Mastery",
+};
+
+export interface SelfScoreProps {
+  /** Bank slug — the registry key (e.g. "solving-quadratics"). */
+  bank: string;
+  className?: string;
+}
+
+export function SelfScore({ bank, className }: SelfScoreProps) {
+  const items = useMemo(() => resolveBank(bank), [bank]);
+  const total = items.length;
+
+  const [index, setIndex] = useState(0);
+  const [attempts, setAttempts] = useState<Record<string, CreditAttempt>>({});
+  const [revealed, setRevealed] = useState<Record<string, boolean>>({});
+  const [mcChoice, setMcChoice] = useState<Record<string, number>>({});
+  const [showInfo, setShowInfo] = useState(false);
+
+  const item = items[index];
+  const attempt = attempts[item.id];
+  const readiness = useMemo(
+    () => overallReadiness(Object.values(attempts)),
+    [attempts],
+  );
+
+  function record(earned: number) {
+    setAttempts((a) => ({
+      ...a,
+      [item.id]: { itemId: item.id, standard: item.standard, earned, max: item.credits },
+    }));
+  }
+
+  return (
+    <section
+      aria-label="Regents practice"
+      className={cn("flex flex-col gap-4", className)}
+    >
+      {/* Progress + topic. Topic label is primary; the standard code is secondary. */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="text-sm text-muted-foreground">
+          Question {index + 1} of {total}
+        </span>
+        <span aria-hidden className="flex items-center gap-1.5">
+          {items.map((it, i) => (
+            <span
+              key={it.id}
+              className={cn(
+                "size-2 rounded-full",
+                attempts[it.id]
+                  ? attempts[it.id].earned === it.credits
+                    ? "bg-emerald-600"
+                    : "bg-amber-500"
+                  : i === index
+                    ? "bg-primary"
+                    : "bg-border",
+              )}
+            />
+          ))}
+        </span>
+      </div>
+
+      <article className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
+        <header className="flex flex-col gap-1">
+          <h3 className="text-sm font-semibold text-foreground">{item.topic}</h3>
+          <button
+            type="button"
+            onClick={() => setShowInfo((s) => !s)}
+            aria-expanded={showInfo}
+            className="flex w-fit items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+          >
+            <Info aria-hidden className="size-3.5" />
+            Exam info
+            <ChevronDown
+              aria-hidden
+              className={cn("size-3.5 transition-transform", showInfo && "rotate-180")}
+            />
+          </button>
+          {showInfo ? (
+            <p className="text-xs text-muted-foreground">
+              {item.standard} · Part {item.part} · {item.credits}{" "}
+              {item.credits === 1 ? "credit" : "credits"} ·{" "}
+              <span className="font-mono">{item.examCitation}</span>
+            </p>
+          ) : null}
+        </header>
+
+        <p className="text-sm text-foreground">{item.prompt}</p>
+
+        {item.mode === "mc" ? (
+          <McBody
+            item={item}
+            choice={mcChoice[item.id]}
+            answered={attempt !== undefined}
+            onChoose={(ci) => setMcChoice((m) => ({ ...m, [item.id]: ci }))}
+            onCheck={() =>
+              record(mcChoice[item.id] === item.answer ? item.credits : 0)
+            }
+          />
+        ) : (
+          <SelfScoreBody
+            item={item}
+            revealed={revealed[item.id] === true}
+            earned={attempt?.earned}
+            onReveal={() => setRevealed((r) => ({ ...r, [item.id]: true }))}
+            onScore={record}
+          />
+        )}
+      </article>
+
+      {/* Navigation */}
+      <div className="flex items-center justify-between gap-2">
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          disabled={index === 0}
+          onClick={() => setIndex((i) => Math.max(0, i - 1))}
+        >
+          Previous
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          disabled={index === total - 1}
+          onClick={() => setIndex((i) => Math.min(total - 1, i + 1))}
+        >
+          Next
+        </Button>
+      </div>
+
+      <ReadinessPanel readiness={readiness} answered={Object.keys(attempts).length} />
+    </section>
+  );
+}
+
+function McBody({
+  item,
+  choice,
+  answered,
+  onChoose,
+  onCheck,
+}: {
+  item: Extract<RegentsItem, { mode: "mc" }>;
+  choice: number | undefined;
+  answered: boolean;
+  onChoose: (ci: number) => void;
+  onCheck: () => void;
+}) {
+  const correct = answered && choice === item.answer;
+  return (
+    <div className="flex flex-col gap-3">
+      <fieldset
+        className="flex flex-col gap-2"
+        disabled={answered}
+        aria-label={`Answer to ${item.prompt}`}
+      >
+        {item.choices.map((c, ci) => (
+          <label
+            key={ci}
+            className={cn(
+              "flex cursor-pointer items-center gap-3 rounded-md border border-border p-2.5 text-sm has-[:checked]:border-primary",
+              answered && ci === item.answer && "border-emerald-500 bg-emerald-50",
+              answered && ci === choice && ci !== item.answer && "border-rose-400 bg-rose-50",
+            )}
+          >
+            <input
+              type="radio"
+              name={`ss-${item.id}`}
+              value={ci}
+              checked={choice === ci}
+              onChange={() => onChoose(ci)}
+              className="size-4 accent-primary"
+            />
+            <span>{c}</span>
+          </label>
+        ))}
+      </fieldset>
+
+      {!answered ? (
+        <Button
+          type="button"
+          size="sm"
+          disabled={choice === undefined}
+          onClick={onCheck}
+          className="w-fit"
+        >
+          Check
+        </Button>
+      ) : (
+        <div className="flex flex-col gap-1.5" data-testid="mc-feedback">
+          <p
+            role="status"
+            className={cn(
+              "flex items-center gap-2 text-sm font-medium",
+              correct ? "text-emerald-700" : "text-rose-700",
+            )}
+          >
+            {correct ? <Check aria-hidden className="size-4" /> : <X aria-hidden className="size-4" />}
+            <span>{correct ? "Correct" : "Not quite"}</span>
+          </p>
+          <p className="text-sm text-muted-foreground">{item.explanation}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SelfScoreBody({
+  item,
+  revealed,
+  earned,
+  onReveal,
+  onScore,
+}: {
+  item: Extract<RegentsItem, { mode: "self-score" }>;
+  revealed: boolean;
+  earned: number | undefined;
+  onReveal: () => void;
+  onScore: (credits: number) => void;
+}) {
+  if (!revealed) {
+    return (
+      <div className="flex flex-col gap-2">
+        <p className="text-xs text-muted-foreground">
+          Work it out on paper first — this is a show-your-work question. When
+          you&apos;re done, reveal the rubric and model solution to score yourself.
+        </p>
+        <Button type="button" size="sm" variant="outline" onClick={onReveal} className="w-fit">
+          Reveal rubric &amp; solution
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-4" data-testid="self-score-reveal">
+      {/* Model solution */}
+      <div className="rounded-md border border-border bg-muted/20 p-3">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Model solution
+        </p>
+        <p className="mt-1 text-sm font-medium text-foreground">{item.answerSummary}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{item.modelSolution}</p>
+      </div>
+
+      {/* Official rubric */}
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Official rubric ({item.credits}-credit)
+        </p>
+        <ul className="mt-1.5 flex flex-col gap-1.5">
+          {item.rubric.map((level) => (
+            <li key={level.credits} className="flex gap-2 text-sm">
+              <span className="mt-0.5 shrink-0 rounded bg-muted px-1.5 font-mono text-xs font-semibold text-foreground">
+                {level.credits}
+              </span>
+              <span className="text-muted-foreground">{level.criteria}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Self-score */}
+      <div className="flex flex-col gap-2">
+        <p className="text-sm font-medium text-foreground">
+          How many credits did your work earn?
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {Array.from({ length: item.credits + 1 }, (_, c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => onScore(c)}
+              aria-pressed={earned === c}
+              className={cn(
+                "size-9 rounded-md border text-sm font-semibold",
+                earned === c
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-background text-foreground hover:border-primary",
+              )}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+        {earned !== undefined ? (
+          <p role="status" className="text-sm text-muted-foreground" data-testid="self-score-recorded">
+            Recorded {earned} of {item.credits}. Be honest — the rubric is how a
+            real scorer would award it.
+          </p>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function ReadinessPanel({
+  readiness,
+  answered,
+}: {
+  readiness: ReturnType<typeof overallReadiness>;
+  answered: number;
+}) {
+  if (answered === 0) {
+    return (
+      <p className="rounded-md border border-dashed border-border px-3 py-2.5 text-sm text-muted-foreground">
+        Answer some questions to see your projected Regents readiness.
+      </p>
+    );
+  }
+  return (
+    <div
+      data-testid="readiness"
+      className="flex flex-col gap-3 rounded-md border border-border bg-muted/20 p-3"
+    >
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-sm font-medium text-foreground">
+          Projected performance level
+        </span>
+        <span className="flex items-baseline gap-1">
+          <span className="text-2xl font-bold text-primary">{readiness.level}</span>
+          <span className="text-xs text-muted-foreground">/ 5</span>
+        </span>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        A practice projection from {readiness.earned} of {readiness.max} credits
+        self-scored so far — not an official score.
+      </p>
+      <ul className="flex flex-col gap-1">
+        {readiness.byStandard.map((s) => (
+          <li key={s.standard} className="flex items-center justify-between gap-2 text-sm">
+            <span className="font-mono text-xs text-muted-foreground">{s.standard}</span>
+            <span
+              className={cn(
+                "rounded-full px-2 py-0.5 text-xs font-medium",
+                s.band === "mastery" && "bg-emerald-100 text-emerald-800",
+                s.band === "proficient" && "bg-sky-100 text-sky-800",
+                s.band === "approaching" && "bg-amber-100 text-amber-800",
+                s.band === "developing" && "bg-rose-100 text-rose-800",
+              )}
+            >
+              {BAND_LABEL[s.band]}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
