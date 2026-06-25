@@ -44,7 +44,22 @@ export type TableFigure = {
   caption?: string;
 };
 
-export type Figure = PlotFigure | ScatterFigure | TableFigure;
+export type NumberLineFigure = {
+  kind: "number-line";
+  min: number;
+  max: number;
+  /** Tick spacing (default 1). Halves render as ½ / 1½ … */
+  step?: number;
+  /** A shaded ray: dot at `at` (filled if `closed`), shaded toward `dir`. */
+  ray?: { at: number; dir: "left" | "right"; closed: boolean };
+  caption?: string;
+};
+
+export type Figure =
+  | PlotFigure
+  | ScatterFigure
+  | TableFigure
+  | NumberLineFigure;
 
 const SIZE = 300;
 const PAD = 16;
@@ -223,6 +238,50 @@ function renderTable(fig: TableFigure): string {
   );
 }
 
+function fmtTick(v: number): string {
+  if (Number.isInteger(v)) return String(v);
+  const whole = Math.trunc(v);
+  if (Math.abs(Math.abs(v - whole) - 0.5) < 1e-9) {
+    return whole === 0 ? (v < 0 ? "-½" : "½") : `${whole}½`;
+  }
+  return String(+v.toFixed(2));
+}
+
+function renderNumberLine(fig: NumberLineFigure): string {
+  const W = 300;
+  const H = 56;
+  const padX = 24;
+  const y = 24;
+  const { min, max } = fig;
+  const step = fig.step ?? 1;
+  const sx = (x: number) => +(padX + ((x - min) / (max - min)) * (W - 2 * padX)).toFixed(2);
+  const left = padX - 8;
+  const right = W - padX + 8;
+  const parts: string[] = [
+    `<line x1="${left}" y1="${y}" x2="${right}" y2="${y}" stroke="${INK}" stroke-width="1.5"/>`,
+    `<path d="M${left},${y} l6,-3 l0,6 z" fill="${INK}"/>`,
+    `<path d="M${right},${y} l-6,-3 l0,6 z" fill="${INK}"/>`,
+  ];
+  for (let v = min; v <= max + 1e-9; v += step) {
+    const x = sx(v);
+    parts.push(
+      `<line x1="${x}" y1="${y - 4}" x2="${x}" y2="${y + 4}" stroke="${INK}"/>`,
+      `<text x="${x}" y="${y + 16}" fill="${AXIS}" font-size="9" text-anchor="middle">${esc(fmtTick(v))}</text>`,
+    );
+  }
+  if (fig.ray) {
+    const { at, dir, closed } = fig.ray;
+    const x0 = sx(at);
+    const xe = dir === "left" ? left : right;
+    parts.push(
+      `<line x1="${x0}" y1="${y}" x2="${xe}" y2="${y}" stroke="${FIT}" stroke-width="3"/>`,
+      `<path d="M${xe},${y} l${dir === "left" ? 6 : -6},-3 l0,6 z" fill="${FIT}"/>`,
+      `<circle cx="${x0}" cy="${y}" r="4" fill="${closed ? FIT : "#fffdf7"}" stroke="${FIT}" stroke-width="2"/>`,
+    );
+  }
+  return svg(parts.join(""), fig.caption ?? "Number line", fig.caption, W, H);
+}
+
 /** Render a figure to a trusted, self-contained HTML string (server only). */
 export function figureToHtml(figure: Figure): string {
   switch (figure.kind) {
@@ -232,6 +291,8 @@ export function figureToHtml(figure: Figure): string {
       return renderScatter(figure);
     case "table":
       return renderTable(figure);
+    case "number-line":
+      return renderNumberLine(figure);
     default: {
       const never: never = figure;
       throw new Error(`figureToHtml: unsupported figure ${JSON.stringify(never)}`);

@@ -18,6 +18,7 @@ import solvingQuadratics from "../../../content/regents/algebra-i/_bank/solving-
 import systemsOfEquations from "../../../content/regents/algebra-i/_bank/systems-of-equations";
 import statistics from "../../../content/regents/algebra-i/_bank/statistics";
 import linearVsExponential from "../../../content/regents/algebra-i/_bank/linear-vs-exponential";
+import linearInequalities from "../../../content/regents/algebra-i/_bank/linear-inequalities";
 
 /** A single credit level of an official constructed-response rubric. */
 export interface RubricLevel {
@@ -178,6 +179,7 @@ const BANKS: Record<string, RegentsItem[]> = {
   "systems-of-equations": validateBank(systemsOfEquations, "systems-of-equations"),
   statistics: validateBank(statistics, "statistics"),
   "linear-vs-exponential": validateBank(linearVsExponential, "linear-vs-exponential"),
+  "linear-inequalities": validateBank(linearInequalities, "linear-inequalities"),
 };
 
 /** Resolve a bank's validated items, failing loud if none is registered. */

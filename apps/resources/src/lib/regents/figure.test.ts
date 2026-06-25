@@ -63,6 +63,23 @@ describe("figureToHtml — table", () => {
   });
 });
 
+describe("figureToHtml — number-line", () => {
+  it("renders an axis, ticks, a shaded ray, and an endpoint dot", () => {
+    const svg = figureToHtml({
+      kind: "number-line",
+      min: 0,
+      max: 3,
+      step: 0.5,
+      ray: { at: 0.5, dir: "left", closed: true },
+      caption: "x ≤ ½",
+    });
+    expect(svg).toContain("<svg");
+    expect((svg.match(/<line /g) ?? []).length).toBeGreaterThan(3); // axis + ticks + ray
+    expect(svg).toContain("<circle"); // the endpoint dot
+    expect(svg).toContain("½"); // half-tick label
+  });
+});
+
 describe("figureToHtml — escaping", () => {
   it("escapes markup in captions", () => {
     const svg = figureToHtml({ kind: "plot", caption: "<script>" });
