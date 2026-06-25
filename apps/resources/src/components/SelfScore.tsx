@@ -3,11 +3,15 @@
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, Info, X } from "lucide-react";
 import { Button, cn } from "@repo/ui";
-import { MathText } from "@/components/Tex";
-import { resolveBank, type RegentsItem } from "@/lib/regents/bank";
+import type {
+  PreparedMcItem,
+  PreparedRegentsItem,
+  PreparedSelfScoreItem,
+} from "@/lib/regents/prepare";
 import {
   overallReadiness,
   type CreditAttempt,
+  type ReadinessBand,
 } from "@/lib/regents/readiness";
 
 // The Regents bank experience: real released items, one at a time. Multiple
@@ -15,9 +19,10 @@ import {
 // against the official NYSED rubric beside an authored model solution — because
 // show-your-work can't be auto-graded, and learning HOW points are awarded is
 // the skill. Readiness is reported as a per-standard band + a projected exam
-// level, never a pass/fail verdict.
+// level, never a pass/fail verdict. Math arrives pre-rendered to HTML from the
+// server (no client KaTeX).
 
-const BAND_LABEL: Record<string, string> = {
+const BAND_LABEL: Record<ReadinessBand, string> = {
   "not-started": "Not started",
   developing: "Developing",
   approaching: "Approaching",
@@ -25,14 +30,18 @@ const BAND_LABEL: Record<string, string> = {
   mastery: "Mastery",
 };
 
+/** Render server-prepared math/prose HTML (trusted: authored, build-rendered). */
+function Html({ html, className }: { html: string; className?: string }) {
+  return <span className={className} dangerouslySetInnerHTML={{ __html: html }} />;
+}
+
 export interface SelfScoreProps {
-  /** Bank slug — the registry key (e.g. "solving-quadratics"). */
-  bank: string;
+  /** Bank items with math pre-rendered to HTML (see lib/regents/prepare). */
+  items: PreparedRegentsItem[];
   className?: string;
 }
 
-export function SelfScore({ bank, className }: SelfScoreProps) {
-  const items = useMemo(() => resolveBank(bank), [bank]);
+export function SelfScore({ items, className }: SelfScoreProps) {
   const total = items.length;
 
   const [index, setIndex] = useState(0);
@@ -86,7 +95,7 @@ export function SelfScore({ bank, className }: SelfScoreProps) {
 
       <article className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
         <header className="flex flex-col gap-1">
-          <h3 className="text-sm font-semibold text-foreground">{item.topic}</h3>
+          <h2 className="text-sm font-semibold text-foreground">{item.topic}</h2>
           <button
             type="button"
             onClick={() => setShowInfo((s) => !s)}
@@ -109,9 +118,7 @@ export function SelfScore({ bank, className }: SelfScoreProps) {
           ) : null}
         </header>
 
-        <p className="text-sm text-foreground">
-          <MathText>{item.prompt}</MathText>
-        </p>
+        <Html className="text-sm text-foreground" html={item.promptHtml} />
 
         {item.mode === "mc" ? (
           <McBody
@@ -168,7 +175,7 @@ function McBody({
   onChoose,
   onCheck,
 }: {
-  item: Extract<RegentsItem, { mode: "mc" }>;
+  item: PreparedMcItem;
   choice: number | undefined;
   answered: boolean;
   onChoose: (ci: number) => void;
@@ -180,9 +187,9 @@ function McBody({
       <fieldset
         className="flex flex-col gap-2"
         disabled={answered}
-        aria-label={`Answer to ${item.prompt}`}
+        aria-label="Answer choices"
       >
-        {item.choices.map((c, ci) => (
+        {item.choicesHtml.map((c, ci) => (
           <label
             key={ci}
             className={cn(
@@ -199,7 +206,7 @@ function McBody({
               onChange={() => onChoose(ci)}
               className="size-4 accent-primary"
             />
-            <MathText>{c}</MathText>
+            <Html html={c} />
           </label>
         ))}
       </fieldset>
@@ -226,9 +233,7 @@ function McBody({
             {correct ? <Check aria-hidden className="size-4" /> : <X aria-hidden className="size-4" />}
             <span>{correct ? "Correct" : "Not quite"}</span>
           </p>
-          <p className="text-sm text-muted-foreground">
-            <MathText>{item.explanation}</MathText>
-          </p>
+          <Html className="text-sm text-muted-foreground" html={item.explanationHtml} />
         </div>
       )}
     </div>
@@ -242,7 +247,7 @@ function SelfScoreBody({
   onReveal,
   onScore,
 }: {
-  item: Extract<RegentsItem, { mode: "self-score" }>;
+  item: PreparedSelfScoreItem;
   revealed: boolean;
   earned: number | undefined;
   onReveal: () => void;
@@ -263,18 +268,25 @@ function SelfScoreBody({
   }
 
   return (
-    <div className="flex flex-col gap-4" data-testid="self-score-reveal">
+    <div
+      className="flex flex-col gap-4"
+      data-testid="self-score-reveal"
+      role="group"
+      aria-label="Rubric and model solution"
+    >
       {/* Model solution */}
       <div className="rounded-md border border-border bg-muted/20 p-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Model solution
         </p>
-        <p className="mt-1 text-sm font-medium text-foreground">
-          <MathText>{item.answerSummary}</MathText>
-        </p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          <MathText>{item.modelSolution}</MathText>
-        </p>
+        <Html
+          className="mt-1 block overflow-x-auto text-sm font-medium text-foreground"
+          html={item.answerSummaryHtml}
+        />
+        <Html
+          className="mt-1 block overflow-x-auto text-sm text-muted-foreground"
+          html={item.modelSolutionHtml}
+        />
       </div>
 
       {/* Official rubric */}
@@ -288,7 +300,7 @@ function SelfScoreBody({
               <span className="mt-0.5 shrink-0 rounded bg-muted px-1.5 font-mono text-xs font-semibold text-foreground">
                 {level.credits}
               </span>
-              <MathText className="text-muted-foreground">{level.criteria}</MathText>
+              <Html className="min-w-0 text-muted-foreground" html={level.criteriaHtml} />
             </li>
           ))}
         </ul>
@@ -296,18 +308,23 @@ function SelfScoreBody({
 
       {/* Self-score */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium text-foreground">
+        <p id={`score-label-${item.id}`} className="text-sm font-medium text-foreground">
           How many credits did your work earn?
         </p>
-        <div className="flex flex-wrap gap-2">
+        <div
+          role="group"
+          aria-labelledby={`score-label-${item.id}`}
+          className="flex flex-wrap gap-2"
+        >
           {Array.from({ length: item.credits + 1 }, (_, c) => (
             <button
               key={c}
               type="button"
               onClick={() => onScore(c)}
               aria-pressed={earned === c}
+              aria-label={`${c} of ${item.credits} credits`}
               className={cn(
-                "size-9 rounded-md border text-sm font-semibold",
+                "size-10 rounded-md border text-sm font-semibold",
                 earned === c
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-border bg-background text-foreground hover:border-primary",

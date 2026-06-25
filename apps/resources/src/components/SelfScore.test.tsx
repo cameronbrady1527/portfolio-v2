@@ -1,12 +1,13 @@
 /** @vitest-environment jsdom */
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import { SelfScore } from "./SelfScore";
-import type { RegentsItem } from "@/lib/regents/bank";
+import type { PreparedRegentsItem } from "@/lib/regents/prepare";
 
-const testBank: RegentsItem[] = [
+// Prepared items carry pre-rendered HTML; plain text stands in for the math here.
+const items: PreparedRegentsItem[] = [
   {
     id: "mc1",
     mode: "mc",
@@ -15,10 +16,10 @@ const testBank: RegentsItem[] = [
     examCitation: "regents-algI-0624-q1",
     part: "I",
     credits: 2,
-    prompt: "What are the solutions to x² = 9?",
-    choices: ["±3", "3 only"],
+    promptHtml: "What are the solutions to x squared = 9?",
+    choicesHtml: ["plus or minus 3", "3 only"],
     answer: 0,
-    explanation: "x = ±3.",
+    explanationHtml: "x = plus or minus 3.",
   },
   {
     id: "ss1",
@@ -28,44 +29,35 @@ const testBank: RegentsItem[] = [
     examCitation: "regents-algI-0624-q33",
     part: "III",
     credits: 4,
-    prompt: "Solve 3x² − 10x + 5 = 0.",
-    answerSummary: "x = (5 ± √10)/3",
-    modelSolution: "Apply the quadratic formula with a=3, b=−10, c=5.",
+    promptHtml: "Solve the quadratic.",
+    answerSummaryHtml: "x = five plus root ten over three",
+    modelSolutionHtml: "Apply the quadratic formula with a, b, c.",
     rubric: [
-      { credits: 4, criteria: "Correct answer with correct work." },
-      { credits: 0, criteria: "No relevant work." },
+      { credits: 4, criteriaHtml: "Correct answer with correct work." },
+      { credits: 0, criteriaHtml: "No relevant work." },
     ],
   },
 ];
-
-vi.mock("@/lib/regents/bank", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/regents/bank")>();
-  return {
-    ...actual,
-    resolveBank: (slug: string) =>
-      slug === "test" ? testBank : actual.resolveBank(slug),
-  };
-});
 
 afterEach(cleanup);
 
 describe("SelfScore — multiple choice", () => {
   it("auto-grades a chosen answer and shows the explanation", async () => {
     const user = userEvent.setup();
-    render(<SelfScore bank="test" />);
+    render(<SelfScore items={items} />);
 
-    await user.click(screen.getByLabelText("±3"));
+    await user.click(screen.getByLabelText("plus or minus 3"));
     await user.click(screen.getByRole("button", { name: "Check" }));
 
     expect(screen.getByText("Correct")).toBeInTheDocument();
-    expect(screen.getByText("x = ±3.")).toBeInTheDocument();
+    expect(screen.getByText("x = plus or minus 3.")).toBeInTheDocument();
   });
 });
 
 describe("SelfScore — constructed response", () => {
   it("gates the model solution behind a reveal, then records a self-score", async () => {
     const user = userEvent.setup();
-    render(<SelfScore bank="test" />);
+    render(<SelfScore items={items} />);
 
     // Move to the self-score item.
     await user.click(screen.getByRole("button", { name: "Next" }));
@@ -77,10 +69,10 @@ describe("SelfScore — constructed response", () => {
 
     // Now the rubric + model solution are visible.
     expect(screen.getByText(/Apply the quadratic formula/)).toBeInTheDocument();
-    expect(screen.getByText("x = (5 ± √10)/3")).toBeInTheDocument();
+    expect(screen.getByText("x = five plus root ten over three")).toBeInTheDocument();
 
     // Self-score full credit → it's recorded and readiness appears.
-    await user.click(screen.getByRole("button", { name: "4" }));
+    await user.click(screen.getByRole("button", { name: "4 of 4 credits" }));
     expect(screen.getByTestId("self-score-recorded")).toHaveTextContent("Recorded 4 of 4");
     expect(screen.getByTestId("readiness")).toHaveTextContent("Mastery");
   });

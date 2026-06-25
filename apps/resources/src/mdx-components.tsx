@@ -8,7 +8,7 @@ import { AngleCrossing, TransversalPattern, Takeaway } from "@/components/AngleD
 import { NumberLine } from "@/components/NumberLine";
 import { FractionBar } from "@/components/FractionBar";
 import { CoordinateGrid } from "@/components/CoordinateGrid";
-import { SelfScore } from "@/components/SelfScore";
+import { SelfScoreSection as SelfScore } from "@/components/SelfScoreSection";
 import {
   TriangleAngles,
   AngleSumStrip,
