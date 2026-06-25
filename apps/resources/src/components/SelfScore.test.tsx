@@ -1,5 +1,5 @@
 /** @vitest-environment jsdom */
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
@@ -39,6 +39,7 @@ const items: PreparedRegentsItem[] = [
   },
 ];
 
+beforeEach(() => localStorage.clear());
 afterEach(cleanup);
 
 describe("SelfScore — multiple choice", () => {
@@ -75,5 +76,33 @@ describe("SelfScore — constructed response", () => {
     await user.click(screen.getByRole("button", { name: "4 of 4 credits" }));
     expect(screen.getByTestId("self-score-recorded")).toHaveTextContent("Recorded 4 of 4");
     expect(screen.getByTestId("readiness")).toHaveTextContent("Mastery");
+  });
+});
+
+describe("SelfScore — persistence", () => {
+  async function scoreSelfScoreItem() {
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "Next" }));
+    await user.click(screen.getByRole("button", { name: /Reveal rubric/ }));
+    await user.click(screen.getByRole("button", { name: "4 of 4 credits" }));
+    return user;
+  }
+
+  it("restores recorded readiness after a reload (remount)", async () => {
+    const first = render(<SelfScore items={items} />);
+    await scoreSelfScoreItem();
+    expect(screen.getByTestId("readiness")).toHaveTextContent("Mastery");
+    first.unmount();
+
+    // Remount = a fresh page load; readiness is rehydrated from localStorage.
+    render(<SelfScore items={items} />);
+    expect(await screen.findByTestId("readiness")).toHaveTextContent("Mastery");
+  });
+
+  it("clears this bank's progress on Start over", async () => {
+    render(<SelfScore items={items} />);
+    const user = await scoreSelfScoreItem();
+    await user.click(screen.getByRole("button", { name: "Start over" }));
+    expect(screen.queryByTestId("readiness")).not.toBeInTheDocument();
   });
 });

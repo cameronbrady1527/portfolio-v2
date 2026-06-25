@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Check, ChevronDown, Info, X } from "lucide-react";
 import { Button, cn } from "@repo/ui";
 import type {
@@ -13,6 +13,15 @@ import {
   type CreditAttempt,
   type ReadinessBand,
 } from "@/lib/regents/readiness";
+import {
+  loadRegentsProgress,
+  recordAttempt,
+  saveRegentsProgress,
+} from "@/lib/regents/store";
+
+// localStorage namespace for Regents self-scored progress (mirrors the
+// Foundations "resources:progress" key, kept separate since credit is partial).
+const REGENTS_PROGRESS_KEY = "resources:regents";
 
 // The Regents bank experience: real released items, one at a time. Multiple
 // choice is auto-graded; constructed-response is ATTEMPT-GATED then SELF-SCORED
@@ -57,11 +66,43 @@ export function SelfScore({ items, className }: SelfScoreProps) {
     [attempts],
   );
 
+  // Hydrate this bank's recorded attempts from localStorage on mount, so
+  // readiness survives a reload. Filtered to THIS widget's items (the store may
+  // hold other banks too). Runs client-side only — never during SSR.
+  const itemIds = useMemo(() => new Set(items.map((i) => i.id)), [items]);
+  useEffect(() => {
+    const stored = loadRegentsProgress(REGENTS_PROGRESS_KEY).attempts;
+    const mine = Object.values(stored).filter((a) => itemIds.has(a.itemId));
+    if (mine.length > 0) {
+      setAttempts(Object.fromEntries(mine.map((a) => [a.itemId, a])));
+    }
+  }, [itemIds]);
+
   function record(earned: number) {
-    setAttempts((a) => ({
-      ...a,
-      [item.id]: { itemId: item.id, standard: item.standard, earned, max: item.credits },
-    }));
+    const next: CreditAttempt = {
+      itemId: item.id,
+      standard: item.standard,
+      earned,
+      max: item.credits,
+    };
+    setAttempts((a) => ({ ...a, [item.id]: next }));
+    saveRegentsProgress(
+      REGENTS_PROGRESS_KEY,
+      recordAttempt(loadRegentsProgress(REGENTS_PROGRESS_KEY), next),
+    );
+  }
+
+  // Clear THIS bank's recorded attempts (so the set can be practiced again),
+  // leaving any other bank's stored progress intact.
+  function reset() {
+    setAttempts({});
+    setRevealed({});
+    setMcChoice({});
+    const stored = loadRegentsProgress(REGENTS_PROGRESS_KEY);
+    const kept = Object.fromEntries(
+      Object.entries(stored.attempts).filter(([id]) => !itemIds.has(id)),
+    );
+    saveRegentsProgress(REGENTS_PROGRESS_KEY, { ...stored, attempts: kept });
   }
 
   return (
@@ -125,6 +166,7 @@ export function SelfScore({ items, className }: SelfScoreProps) {
             item={item}
             choice={mcChoice[item.id]}
             answered={attempt !== undefined}
+            correct={attempt ? attempt.earned === item.credits : false}
             onChoose={(ci) => setMcChoice((m) => ({ ...m, [item.id]: ci }))}
             onCheck={() =>
               record(mcChoice[item.id] === item.answer ? item.credits : 0)
@@ -133,7 +175,7 @@ export function SelfScore({ items, className }: SelfScoreProps) {
         ) : (
           <SelfScoreBody
             item={item}
-            revealed={revealed[item.id] === true}
+            revealed={revealed[item.id] === true || attempt !== undefined}
             earned={attempt?.earned}
             onReveal={() => setRevealed((r) => ({ ...r, [item.id]: true }))}
             onScore={record}
@@ -163,7 +205,11 @@ export function SelfScore({ items, className }: SelfScoreProps) {
         </Button>
       </div>
 
-      <ReadinessPanel readiness={readiness} answered={Object.keys(attempts).length} />
+      <ReadinessPanel
+        readiness={readiness}
+        answered={Object.keys(attempts).length}
+        onReset={reset}
+      />
     </section>
   );
 }
@@ -172,16 +218,19 @@ function McBody({
   item,
   choice,
   answered,
+  correct,
   onChoose,
   onCheck,
 }: {
   item: PreparedMcItem;
   choice: number | undefined;
   answered: boolean;
+  /** Derived from the recorded attempt (earned === credits), so it survives a
+   * reload where the chosen index isn't restored. */
+  correct: boolean;
   onChoose: (ci: number) => void;
   onCheck: () => void;
 }) {
-  const correct = answered && choice === item.answer;
   return (
     <div className="flex flex-col gap-3">
       <fieldset
@@ -354,9 +403,11 @@ function SelfScoreBody({
 function ReadinessPanel({
   readiness,
   answered,
+  onReset,
 }: {
   readiness: ReturnType<typeof overallReadiness>;
   answered: number;
+  onReset: () => void;
 }) {
   if (answered === 0) {
     return (
@@ -402,6 +453,13 @@ function ReadinessPanel({
           </li>
         ))}
       </ul>
+      <button
+        type="button"
+        onClick={onReset}
+        className="w-fit text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+      >
+        Start over
+      </button>
     </div>
   );
 }
