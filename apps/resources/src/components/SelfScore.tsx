@@ -207,6 +207,12 @@ function McBody({
               className="size-4 accent-primary"
             />
             <Html html={c} />
+            {answered && ci === item.answer ? (
+              <span className="sr-only"> (correct answer)</span>
+            ) : null}
+            {answered && ci === choice && ci !== item.answer ? (
+              <span className="sr-only"> (your answer)</span>
+            ) : null}
           </label>
         ))}
       </fieldset>
@@ -388,6 +394,7 @@ function ReadinessPanel({
                 s.band === "proficient" && "bg-sky-100 text-sky-800",
                 s.band === "approaching" && "bg-amber-100 text-amber-800",
                 s.band === "developing" && "bg-rose-100 text-rose-800",
+                s.band === "not-started" && "bg-muted text-muted-foreground",
               )}
             >
               {BAND_LABEL[s.band]}

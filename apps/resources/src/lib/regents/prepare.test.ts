@@ -15,6 +15,16 @@ describe("texToHtml", () => {
       "addition property of equality",
     );
   });
+
+  it("renders a literal dollar sign written as \\$ (currency, not math)", () => {
+    const html = texToHtml(String.raw`It costs \$5 to enter.`);
+    expect(html).toBe("It costs $5 to enter.");
+    expect(html).not.toContain("katex");
+  });
+
+  it("throws (fails loud) on an unbalanced $ rather than mis-rendering", () => {
+    expect(() => texToHtml("cost is $5 and rising")).toThrowError(/unbalanced/);
+  });
 });
 
 describe("prepareBank", () => {

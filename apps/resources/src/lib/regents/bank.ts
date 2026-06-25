@@ -111,10 +111,16 @@ export function validateBank(items: unknown, slug: string): RegentsItem[] {
         where,
         "needs a rubric (credit levels with criteria)",
       );
+      const rubric = it.rubric as RubricLevel[];
       ok(
-        (it.rubric as RubricLevel[])[0].credits === it.credits,
+        rubric[0].credits === it.credits,
         where,
         "top rubric level must equal the item's credits",
+      );
+      ok(
+        rubric.every((l, k) => k === 0 || l.credits < rubric[k - 1].credits),
+        where,
+        "rubric credit levels must be strictly descending (highest first)",
       );
     } else {
       throw new Error(`Malformed ${where}: mode must be "mc" or "self-score".`);

@@ -40,10 +40,14 @@ export interface StandardReadiness {
   itemCount: number;
 }
 
-// Credit-fraction band cutoffs. 0.65 = the Regents pass line; 0.85 = "mastery".
-const PROFICIENT = 0.65;
-const MASTERY = 0.85;
+// Credit-fraction cutoffs — the whole calibration lives here (flagged for SME
+// tuning). 0.65 = the Regents pass line; 0.85 = "mastery". Bands and projected
+// levels share these so the two never drift apart.
 const APPROACHING = 0.5;
+const PROFICIENT = 0.65; // also Level 3 (pass)
+const MASTERY = 0.85; // also Level 5
+const LEVEL2 = 0.4;
+const LEVEL4 = 0.7;
 
 function bandFor(fraction: number, attempted: boolean): ReadinessBand {
   if (!attempted) return "not-started";
@@ -79,9 +83,9 @@ export function projectedLevel(attempts: CreditAttempt[]): ProjectedLevel {
   const max = attempts.reduce((s, a) => s + a.max, 0);
   const f = max > 0 ? earned / max : 0;
   if (f >= MASTERY) return 5;
-  if (f >= 0.7) return 4;
+  if (f >= LEVEL4) return 4;
   if (f >= PROFICIENT) return 3;
-  if (f >= 0.4) return 2;
+  if (f >= LEVEL2) return 2;
   return 1;
 }
 
