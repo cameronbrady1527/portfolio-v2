@@ -96,6 +96,23 @@ const bank: RegentsItem[] = [
     answer: 2,
     explanation: String.raw`"Subtracted from" means $(x^2 + 2x - 5) - (2x^2 - 3x + 4) = x^2 + 2x - 5 - 2x^2 + 3x - 4 = -x^2 + 5x - 9$.`,
   },
+  {
+    id: "poly-cr-0126-q27",
+    mode: "self-score",
+    standard: "AI-A.APR.1",
+    topic: "Multiplying polynomials",
+    examCitation: "regents-algI-0126-q27",
+    part: "II",
+    credits: 2,
+    prompt: String.raw`Determine the product of $(2x + 3)$ and $(-6x^2 + 5x - 1)$. Express the product in standard form.`,
+    answerSummary: String.raw`$-12x^3 - 8x^2 + 13x - 3$`,
+    modelSolution: String.raw`Distribute each term of $(2x + 3)$: $2x(-6x^2 + 5x - 1) = -12x^3 + 10x^2 - 2x$ and $3(-6x^2 + 5x - 1) = -18x^2 + 15x - 3$. Combine like terms: $-12x^3 + (10 - 18)x^2 + (-2 + 15)x - 3 = -12x^3 - 8x^2 + 13x - 3$.`,
+    rubric: [
+      { credits: 2, criteria: String.raw`$-12x^3 - 8x^2 + 13x - 3$, with correct work shown.` },
+      { credits: 1, criteria: "Appropriate work, but one computational error; OR one conceptual error; OR the product is not expressed in standard form." },
+      { credits: 0, criteria: "A response with no relevant course-level work." },
+    ],
+  },
 ];
 
 export default bank;
