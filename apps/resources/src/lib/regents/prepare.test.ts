@@ -49,12 +49,19 @@ describe("prepareBank", () => {
 });
 
 describe("prepareBank — figures", () => {
-  it("renders an item's figure to inline SVG", () => {
-    const withFigure = prepareBank("systems-of-equations").find(
-      (i) => i.figureHtml,
+  it("renders an answer figure (the system's solution graph) to inline SVG", () => {
+    const graphed = prepareBank("systems-of-equations").find(
+      (i) => i.solutionFigureHtml,
     );
-    expect(withFigure, "expected a systems item with a figure").toBeDefined();
-    expect(withFigure?.figureHtml).toContain("<svg");
-    expect(withFigure?.figureHtml).toContain("<path"); // the graphed curves
+    expect(graphed, "expected a systems item with an answer graph").toBeDefined();
+    expect(graphed?.solutionFigureHtml).toContain("<svg");
+    expect(graphed?.solutionFigureHtml).toContain("<path");
+  });
+
+  it("renders a given table and an answer scatter for a statistics item", () => {
+    const reg = prepareBank("statistics")[0];
+    expect(reg.figureHtml).toContain("<table"); // the given data table
+    expect(reg.solutionFigureHtml).toContain("<svg"); // the scatter plot
+    expect(reg.solutionFigureHtml).toContain("<circle"); // plotted data points
   });
 });

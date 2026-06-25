@@ -74,7 +74,7 @@ const bank: RegentsItem[] = [
     prompt: String.raw`Graph the system $y = x^2 - 3x - 6$ and $y = x - 1$ on a set of axes, and state the coordinates of all solutions.`,
     answerSummary: String.raw`$(-1, -2)$ and $(5, 4)$`,
     modelSolution: String.raw`The parabola and line meet where $x^2 - 3x - 6 = x - 1$, i.e. $x^2 - 4x - 5 = 0$, so $(x - 5)(x + 1) = 0$ and $x = 5$ or $x = -1$. Using $y = x - 1$, the intersection points are $(5, 4)$ and $(-1, -2)$ — the solutions, shown below.`,
-    figure: {
+    solutionFigure: {
       kind: "plot",
       range: 10,
       curves: [

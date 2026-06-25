@@ -3,7 +3,7 @@
 // ships ZERO KaTeX. Mirrors the .mdx content's build-time math rendering.
 
 import { resolveBank } from "./bank";
-import { figureToSvg } from "./figure";
+import { figureToHtml } from "./figure";
 import { texToHtml } from "../tex-to-html";
 
 interface PreparedBase {
@@ -15,8 +15,10 @@ interface PreparedBase {
   credits: number;
   /** Prompt rendered to HTML (prose + math). */
   promptHtml: string;
-  /** Figure rendered to a self-contained SVG string, if the item has one. */
+  /** GIVEN figure rendered to inline HTML/SVG, shown with the prompt. */
   figureHtml?: string;
+  /** ANSWER figure rendered to inline HTML/SVG, shown in the model solution. */
+  solutionFigureHtml?: string;
 }
 
 export type PreparedMcItem = PreparedBase & {
@@ -46,7 +48,10 @@ export function prepareBank(slug: string): PreparedRegentsItem[] {
       part: item.part,
       credits: item.credits,
       promptHtml: texToHtml(item.prompt),
-      figureHtml: item.figure ? figureToSvg(item.figure) : undefined,
+      figureHtml: item.figure ? figureToHtml(item.figure) : undefined,
+      solutionFigureHtml: item.solutionFigure
+        ? figureToHtml(item.solutionFigure)
+        : undefined,
     };
     if (item.mode === "mc") {
       return {

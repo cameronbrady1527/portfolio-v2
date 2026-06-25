@@ -16,6 +16,7 @@
 import type { Figure } from "./figure";
 import solvingQuadratics from "../../../content/regents/algebra-i/_bank/solving-quadratics";
 import systemsOfEquations from "../../../content/regents/algebra-i/_bank/systems-of-equations";
+import statistics from "../../../content/regents/algebra-i/_bank/statistics";
 
 /** A single credit level of an official constructed-response rubric. */
 export interface RubricLevel {
@@ -37,9 +38,12 @@ interface RegentsItemBase {
   /** The item's credit value (2 for MC/short, 4 medium, 6 long). */
   credits: number;
   prompt: string;
-  /** Optional figure — a GIVEN figure for MC, or the answer figure (shown with
-   * the model solution) for a self-score item. Rendered to SVG at build time. */
+  /** Optional GIVEN figure (data table, a graph to read), shown with the prompt.
+   * Rendered to HTML at build time. */
   figure?: Figure;
+  /** Optional ANSWER figure, shown inside a self-score item's model solution
+   * (so it stays behind the attempt gate). */
+  solutionFigure?: Figure;
 }
 
 /** Auto-graded multiple-choice item (Part I). */
@@ -94,13 +98,12 @@ export function validateBank(items: unknown, slug: string): RegentsItem[] {
     ok(["I", "II", "III", "IV"].includes(it.part as string), where, "bad part");
     ok(typeof it.credits === "number" && it.credits > 0, where, "credits must be > 0");
     ok(typeof it.prompt === "string" && !!it.prompt, where, "missing prompt");
-    if (it.figure !== undefined) {
+    for (const f of [it.figure, it.solutionFigure]) {
+      if (f === undefined) continue;
       ok(
-        typeof it.figure === "object" &&
-          it.figure !== null &&
-          typeof (it.figure as Figure).kind === "string",
+        typeof f === "object" && f !== null && typeof (f as Figure).kind === "string",
         where,
-        "figure must be an object with a kind",
+        "a figure must be an object with a kind",
       );
     }
     if (it.mode === "mc") {
@@ -156,6 +159,7 @@ export type RegentsBankMeta = {
 const BANKS: Record<string, RegentsItem[]> = {
   "solving-quadratics": validateBank(solvingQuadratics, "solving-quadratics"),
   "systems-of-equations": validateBank(systemsOfEquations, "systems-of-equations"),
+  statistics: validateBank(statistics, "statistics"),
 };
 
 /** Resolve a bank's validated items, failing loud if none is registered. */

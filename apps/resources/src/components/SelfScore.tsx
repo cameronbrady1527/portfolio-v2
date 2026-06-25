@@ -161,6 +161,10 @@ export function SelfScore({ items, className }: SelfScoreProps) {
 
         <Html className="text-sm text-foreground" html={item.promptHtml} />
 
+        {item.figureHtml ? (
+          <div dangerouslySetInnerHTML={{ __html: item.figureHtml }} />
+        ) : null}
+
         {item.mode === "mc" ? (
           <McBody
             item={item}
@@ -233,9 +237,6 @@ function McBody({
 }) {
   return (
     <div className="flex flex-col gap-3">
-      {item.figureHtml ? (
-        <div dangerouslySetInnerHTML={{ __html: item.figureHtml }} />
-      ) : null}
       <fieldset
         className="flex flex-col gap-2"
         disabled={answered}
@@ -345,8 +346,11 @@ function SelfScoreBody({
           className="mt-1 block overflow-x-auto text-sm text-muted-foreground"
           html={item.modelSolutionHtml}
         />
-        {item.figureHtml ? (
-          <div className="mt-2" dangerouslySetInnerHTML={{ __html: item.figureHtml }} />
+        {item.solutionFigureHtml ? (
+          <div
+            className="mt-2"
+            dangerouslySetInnerHTML={{ __html: item.solutionFigureHtml }}
+          />
         ) : null}
       </div>
 
