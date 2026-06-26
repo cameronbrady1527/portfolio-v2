@@ -8,6 +8,7 @@ import { AngleCrossing, TransversalPattern, Takeaway } from "@/components/AngleD
 import { NumberLine } from "@/components/NumberLine";
 import { FractionBar } from "@/components/FractionBar";
 import { CoordinateGrid } from "@/components/CoordinateGrid";
+import { SelfScoreSection as SelfScore } from "@/components/SelfScoreSection";
 import {
   TriangleAngles,
   AngleSumStrip,
@@ -36,6 +37,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     NumberLine,
     FractionBar,
     CoordinateGrid,
+    SelfScore,
     TriangleAngles,
     AngleSumStrip,
     ExteriorAngleFig,
