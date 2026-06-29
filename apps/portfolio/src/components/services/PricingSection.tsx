@@ -18,15 +18,15 @@ const PricingContactSection = () => {
   const availabilityItems = [
     {
       icon: <Clock className="h-5 w-5 text-blue-500" />,
-      text: "Weekday evenings 4PM-9PM, flexible weekends"
-    },
-    {
-      icon: <MapPin className="h-5 w-5 text-green-500" />,
-      text: "In-person sessions in Dutchess County, NY"
+      text: "Limited availability — select evenings and weekends, which varies with my teaching schedule"
     },
     {
       icon: <Globe className="h-5 w-5 text-purple-500" />,
-      text: "Virtual sessions available worldwide"
+      text: "Virtual sessions preferred — available anywhere"
+    },
+    {
+      icon: <MapPin className="h-5 w-5 text-green-500" />,
+      text: "In-person in New York City when schedules line up"
     }
   ];
 

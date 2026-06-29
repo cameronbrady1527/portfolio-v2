@@ -15,25 +15,25 @@ export default function WhatIDo() {
 
   const areas: Area[] = [
     {
-      icon: Brain,
-      title: 'AI Research',
-      description: 'Machine learning systems for early detection of neurological disorders',
-      color: 'purple',
-      current: 'Alzheimer\'s Prevention ML Systems'
+      icon: GraduationCap,
+      title: 'Teaching',
+      description: 'High school math in the classroom, plus one-on-one tutoring in math and computer science.',
+      color: 'green',
+      current: 'Geometry at Belmont Prep'
     },
     {
       icon: Code,
-      title: 'Development',
-      description: 'Building intelligent applications and research assistance tools',
+      title: 'Building',
+      description: 'Free, open-source math tools and virtual manipulatives — built for my students, shared with everyone.',
       color: 'blue',
-      current: 'Research Assistance AI'
+      current: 'Math Resources'
     },
     {
-      icon: GraduationCap,
-      title: 'Teaching',
-      description: 'Academic tutoring and curriculum development for students',
-      color: 'green',
-      current: 'Client Programs'
+      icon: Brain,
+      title: 'Research & AI',
+      description: 'Machine learning projects, including early detection of neurological disorders.',
+      color: 'purple',
+      current: 'Alzheimer\'s Detection ML'
     }
   ];
 
@@ -82,7 +82,7 @@ export default function WhatIDo() {
         >
           <h2 className="text-4xl font-light text-slate-800 mb-4">What I Do</h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            Focused on three core areas where technology meets impact
+            Teaching, building, and research — three threads of the same goal: helping people learn
           </p>
         </motion.div>
 

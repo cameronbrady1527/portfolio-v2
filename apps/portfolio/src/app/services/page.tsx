@@ -20,6 +20,29 @@ const ServicesPage = () => {
 
         <SubjectsSection />
 
+        {/* Free resources callout */}
+        <section className="py-12">
+          <div className="container mx-auto px-6">
+            <div className="max-w-4xl mx-auto rounded-2xl border border-slate-200 bg-white/70 backdrop-blur-sm p-8 text-center shadow-sm">
+              <h2 className="text-2xl font-semibold text-slate-800 mb-2">
+                Free practice between sessions
+              </h2>
+              <p className="text-slate-600 max-w-2xl mx-auto mb-5">
+                I build interactive math tools, virtual manipulatives, and Regents practice for my own
+                students — and publish them free for anyone to use, anytime.
+              </p>
+              <a
+                href="https://resources.cameronbrady.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition-colors text-sm font-medium"
+              >
+                Explore the Math Resources →
+              </a>
+            </div>
+          </div>
+        </section>
+
         <ApproachSection />
 
         <TestimonialsSection />

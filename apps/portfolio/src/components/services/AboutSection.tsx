@@ -27,9 +27,9 @@ const AboutSection = () => {
       color: "from-green-500 to-teal-500"
     },
     {
-      year: "2024-Present",
-      title: "Professional Educator",
-      description: "K-12 substitute teacher and private tutor pursuing NYS certification in Mathematics Education",
+      year: "2026-Present",
+      title: "High School Math Teacher",
+      description: "Teaching geometry in NYC while tutoring and earning my M.S.T. and NYS math certification",
       icon: <Award className="h-6 w-6" />,
       color: "from-orange-500 to-yellow-500"
     }

@@ -132,9 +132,9 @@ const generateConfirmationEmail = (data: z.infer<typeof baseContactSchema> & { s
         "We can start building your confidence right away!"
       ];
       details = {
-        "Rate": "$60/hour",
-        "Formats": "In-person (Dutchess County) & Virtual", 
-        "Availability": "Weekday evenings & flexible weekends"
+        "Rate": "Starting at $60/hour",
+        "Formats": "Virtual (preferred) & in-person in NYC",
+        "Availability": "Limited — select evenings & weekends"
       };
       break;
 

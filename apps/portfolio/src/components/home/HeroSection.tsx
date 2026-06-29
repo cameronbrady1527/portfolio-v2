@@ -11,9 +11,9 @@ export default function HeroSection() {
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
   const roles = [
-    'Academic Tutor',
-    'Educator',
-    'Fullstack Developer',
+    'Math Teacher',
+    'Tutor',
+    'Developer',
   ];
 
   useEffect(() => {
@@ -51,8 +51,9 @@ export default function HeroSection() {
           
           {/* Value proposition */}
           <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Educator, tutor, nonprofit founder, and fullstack freelance developer. Combining educational experience
-            and technical expertise with a passion for making meaningful impact for students, clients, and communities.
+            High school math teacher, tutor, and developer — building free, open-source math tools for my
+            students and classrooms everywhere. What drives me is making a real, lasting difference for the
+            people and communities I work with.
           </p>
 
           {/* CTA links */}
