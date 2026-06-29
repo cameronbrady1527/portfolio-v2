@@ -23,7 +23,7 @@ export const CTASection = () => {
             <h3 className="text-2xl font-light text-slate-800">Let&apos;s Connect</h3>
           </div>
           <p className="text-slate-600 mb-6 leading-relaxed">
-            Looking for a dedicated educator, private tutor, or a developer for a project? I would love to explore what I can do for you!
+            Looking for a tutor, a collaborator on the math resources, or a developer for a project? I&apos;d love to hear from you.
           </p>
           <NavLink
             href="/contact"
@@ -66,7 +66,7 @@ export const CTASection = () => {
             <h3 className="text-2xl font-light text-slate-800">View My Work</h3>
           </div>
           <p className="text-slate-600 mb-6 leading-relaxed">
-            Explore my portfolio of projects spanning AI research, full-stack development, and machine learning systems.
+            Explore my work — from the open math tools I build for students to full-stack apps and machine learning research.
           </p>
           <NavLink
             href="/projects"

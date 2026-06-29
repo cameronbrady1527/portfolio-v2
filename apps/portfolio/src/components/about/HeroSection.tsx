@@ -32,12 +32,14 @@ export const HeroSection = () => {
           className="text-center"
         >
           <h1 className="text-5xl md:text-6xl font-light text-slate-800 mb-6">
-            Educator. Builder. Community Leader.
+            Hi, I&rsquo;m Cameron.
           </h1>
           <p className="text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
-            Educator, tutor, and nonprofit founder with 7+ years of teaching experience in
-            math, CS, and sciences. Cornell graduate combining classroom expertise with
-            technical skills to make meaningful impact for students and communities.
+            This fall I start as a geometry teacher at Belmont Preparatory High
+            School in New York City. I got here partly by accident — and, I&rsquo;ve
+            come to realize, partly on purpose my whole life. I teach math, tutor,
+            and build free, open math tools for my students and classrooms
+            everywhere.
           </p>
         </motion.div>
       </div>

@@ -6,9 +6,9 @@ import { GraduationCap, Brain, Code, Briefcase, BookOpen, TreePine, LucideIcon }
 import { AboutContext } from '@/contexts/AppDataContext';
 
 const EXPERIENCE_GROUPS = [
-  { header: "Teaching & Education", start: 0, end: 3 },
-  { header: "Community Leadership & Service", start: 3, end: 5 },
-  { header: "Technical Experience", start: 5, end: 6 },
+  { header: "Teaching & Education", start: 0, end: 6 },
+  { header: "Community Leadership & Service", start: 6, end: 8 },
+  { header: "Technical Experience", start: 8, end: 10 },
 ];
 
 export const ExperienceSection = () => {
