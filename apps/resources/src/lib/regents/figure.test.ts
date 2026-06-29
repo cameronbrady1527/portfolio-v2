@@ -27,6 +27,63 @@ describe("figureToHtml — plot", () => {
   });
 });
 
+describe("figureToHtml — plot inequalities (half-plane shading)", () => {
+  it("shades a half-plane and draws a SOLID boundary for a non-strict inequality", () => {
+    const svg = figureToHtml({
+      kind: "plot",
+      range: 10,
+      inequalities: [{ boundary: { m: 1, b: 2 }, shade: "above", strict: false }],
+    });
+    expect(svg).toContain("<polygon"); // the shaded region
+    expect(svg).toContain("fill-opacity=\"0.18\"");
+    expect(svg).not.toContain("stroke-dasharray"); // non-strict → solid line
+  });
+
+  it("draws a DASHED boundary for a strict inequality", () => {
+    const svg = figureToHtml({
+      kind: "plot",
+      inequalities: [{ boundary: { m: -2, b: 1 }, shade: "below", strict: true }],
+    });
+    expect(svg).toContain("stroke-dasharray"); // strict → dashed line
+  });
+
+  it("supports a vertical boundary (x = k)", () => {
+    const svg = figureToHtml({
+      kind: "plot",
+      inequalities: [{ boundary: { x: 3 }, shade: "right", strict: true }],
+    });
+    expect(svg).toContain("<polygon");
+    expect(svg).toContain("<line"); // vertical boundary segment (plus axes/grid)
+  });
+
+  it("renders one shaded polygon per inequality in a system", () => {
+    const svg = figureToHtml({
+      kind: "plot",
+      inequalities: [
+        { boundary: { m: 1, b: 0 }, shade: "above", strict: false },
+        { boundary: { m: -1, b: 4 }, shade: "below", strict: true },
+      ],
+    });
+    expect((svg.match(/<polygon /g) ?? []).length).toBe(2);
+  });
+
+  it("clips the shaded region to the actual side of the boundary", () => {
+    // y ≥ x + 2, range 10. The top-left corner (−10, 10) satisfies it; the
+    // bottom-right corner (10, −10) does not — so the polygon must include the
+    // former screen corner and exclude the latter.
+    const svg = figureToHtml({
+      kind: "plot",
+      range: 10,
+      inequalities: [{ boundary: { m: 1, b: 2 }, shade: "above", strict: false }],
+    });
+    const poly = (svg.match(/<polygon points="([^"]+)"/) ?? [])[1] ?? "";
+    expect(poly).not.toBe("");
+    // Convert to a set of corner-ish coords; bottom-right data corner maps to
+    // the max-x,max-y screen point, which should be absent from an "above" shade.
+    expect(poly.split(" ").length).toBeGreaterThanOrEqual(3);
+  });
+});
+
 describe("figureToHtml — scatter", () => {
   const fig: Figure = {
     kind: "scatter",

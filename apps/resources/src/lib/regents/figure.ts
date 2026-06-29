@@ -1,8 +1,9 @@
 // Figures for the Regents bank, rendered to STATIC HTML/SVG at build time
 // (server-side, like the math) so the browser ships no figure-drawing JS.
-// Kinds: "plot" (coordinate plane with lines/parabolas/points), "scatter" (a
-// scatter plot with an optional best-fit line over arbitrary ranges), and
-// "table" (a data table). Extend the `Figure` union and switch in figureToHtml.
+// Kinds: "plot" (coordinate plane with lines/parabolas/points, plus shaded
+// half-planes for linear inequalities), "scatter" (a scatter plot with an
+// optional best-fit line over arbitrary ranges), and "table" (a data table).
+// Extend the `Figure` union and switch in figureToHtml.
 
 export type FigurePoint = {
   x: number;
@@ -16,11 +17,27 @@ export type FigureCurve =
   | { kind: "line"; m: number; b: number } // y = m·x + b
   | { kind: "parabola"; a: number; b: number; c: number }; // y = a·x² + b·x + c
 
+/**
+ * A linear inequality drawn as a shaded half-plane with a boundary line.
+ * The boundary is either a non-vertical line `y = m·x + b` (shade `"above"` for
+ * `y > …`, `"below"` for `y < …`) or a vertical line `x = k` (shade `"right"`
+ * for `x > k`, `"left"` for `x < k`). `strict` (`<`/`>`) draws a DASHED
+ * boundary; non-strict (`≤`/`≥`) draws a SOLID one. Fills are translucent, so a
+ * system's solution set reads as the darker overlap of its half-planes.
+ */
+export type FigureInequality = {
+  boundary: { m: number; b: number } | { x: number };
+  shade: "above" | "below" | "left" | "right";
+  strict: boolean;
+};
+
 export type PlotFigure = {
   kind: "plot";
   /** Axes span −range..range on both axes (default 10). */
   range?: number;
   curves?: FigureCurve[];
+  /** Shaded half-planes for linear inequalities / systems of inequalities. */
+  inequalities?: FigureInequality[];
   points?: FigurePoint[];
   caption?: string;
 };
@@ -120,6 +137,46 @@ function sampledPath(
   return d;
 }
 
+// A signed test for a half-plane: g(x,y) ≥ 0 ⇔ the point is on the shaded side.
+function shadeTest(ineq: FigureInequality): (x: number, y: number) => number {
+  const bnd = ineq.boundary;
+  if ("x" in bnd) {
+    const k = bnd.x;
+    return ineq.shade === "left" ? (x) => k - x : (x) => x - k;
+  }
+  const { m, b } = bnd;
+  return ineq.shade === "below"
+    ? (x, y) => m * x + b - y
+    : (x, y) => y - (m * x + b);
+}
+
+// Clip the plot's [−R,R]² box to the half-plane g(x,y) ≥ 0 (Sutherland–Hodgman),
+// returning the resulting (convex) polygon's vertices in DATA coordinates.
+function clipBoxToHalfPlane(
+  R: number,
+  g: (x: number, y: number) => number,
+): [number, number][] {
+  const box: [number, number][] = [
+    [-R, -R],
+    [R, -R],
+    [R, R],
+    [-R, R],
+  ];
+  const out: [number, number][] = [];
+  for (let i = 0; i < box.length; i++) {
+    const a = box[i];
+    const b = box[(i + 1) % box.length];
+    const ga = g(a[0], a[1]);
+    const gb = g(b[0], b[1]);
+    if (ga >= 0) out.push(a);
+    if ((ga < 0 && gb > 0) || (ga > 0 && gb < 0)) {
+      const t = ga / (ga - gb);
+      out.push([a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])]);
+    }
+  }
+  return out;
+}
+
 function renderPlot(fig: PlotFigure): string {
   const R = fig.range ?? 10;
   const span = SIZE - 2 * PAD;
@@ -147,6 +204,27 @@ function renderPlot(fig: PlotFigure): string {
       `<text x="${sx(0) - 5}" y="${sy(v) + 3}" fill="${AXIS}" font-size="8" text-anchor="end">${v}</text>`,
     );
   }
+  (fig.inequalities ?? []).forEach((ineq, i) => {
+    const color = CURVE[i % CURVE.length];
+    const poly = clipBoxToHalfPlane(R, shadeTest(ineq));
+    if (poly.length >= 3) {
+      const pts = poly.map(([x, y]) => `${sx(x)},${sy(y)}`).join(" ");
+      parts.push(`<polygon points="${pts}" fill="${color}" fill-opacity="0.18"/>`);
+    }
+    const dash = ineq.strict ? ` stroke-dasharray="5,4"` : "";
+    if ("x" in ineq.boundary) {
+      const k = ineq.boundary.x;
+      if (k >= -R && k <= R) {
+        parts.push(
+          `<line x1="${sx(k)}" y1="${sy(R)}" x2="${sx(k)}" y2="${sy(-R)}" stroke="${color}" stroke-width="2"${dash}/>`,
+        );
+      }
+    } else {
+      const { m, b } = ineq.boundary;
+      const d = sampledPath((x) => m * x + b, -R, R, -R, R, sx, sy);
+      if (d) parts.push(`<path d="${d}" fill="none" stroke="${color}" stroke-width="2"${dash}/>`);
+    }
+  });
   (fig.curves ?? []).forEach((c, i) => {
     const d = sampledPath((x) => evalCurve(c, x), -R, R, -R, R, sx, sy);
     if (d) parts.push(`<path d="${d}" fill="none" stroke="${CURVE[i % CURVE.length]}" stroke-width="2"/>`);
