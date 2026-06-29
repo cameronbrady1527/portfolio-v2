@@ -13,6 +13,7 @@ import {
   type CreditAttempt,
   type ReadinessBand,
 } from "@/lib/regents/readiness";
+import { standardLabel } from "@/lib/regents/standards";
 import {
   loadRegentsProgress,
   recordAttempt,
@@ -58,6 +59,9 @@ export function SelfScore({ items, className }: SelfScoreProps) {
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
   const [mcChoice, setMcChoice] = useState<Record<string, number>>({});
   const [showInfo, setShowInfo] = useState(false);
+  // The projected score stays hidden until every item is answered OR the student
+  // explicitly reveals it — so a one-question sample never flashes a bold level.
+  const [scoreShown, setScoreShown] = useState(false);
 
   const item = items[index];
   const attempt = attempts[item.id];
@@ -98,6 +102,7 @@ export function SelfScore({ items, className }: SelfScoreProps) {
     setAttempts({});
     setRevealed({});
     setMcChoice({});
+    setScoreShown(false);
     const stored = loadRegentsProgress(REGENTS_PROGRESS_KEY);
     const kept = Object.fromEntries(
       Object.entries(stored.attempts).filter(([id]) => !itemIds.has(id)),
@@ -209,9 +214,12 @@ export function SelfScore({ items, className }: SelfScoreProps) {
         </Button>
       </div>
 
-      <ReadinessPanel
+      <ReadinessSection
         readiness={readiness}
         answered={Object.keys(attempts).length}
+        total={total}
+        shown={scoreShown || Object.keys(attempts).length === total}
+        onShow={() => setScoreShown(true)}
         onReset={reset}
       />
     </section>
@@ -418,20 +426,77 @@ function SelfScoreBody({
   );
 }
 
-function ReadinessPanel({
+// The friendly standard name, with the raw NYSED code tucked into a tooltip that
+// appears on hover (anywhere in the row) or when the info icon is focused by
+// keyboard — code-secondary UX without crowding the panel with jargon.
+function StandardTag({ code }: { code: string }) {
+  return (
+    <span className="group relative inline-flex items-center gap-1">
+      <span className="text-foreground">{standardLabel(code)}</span>
+      <button
+        type="button"
+        aria-label={`NYSED standard ${code}`}
+        className="inline-flex rounded-full text-muted-foreground/50 hover:text-muted-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+      >
+        <Info aria-hidden className="size-3" />
+      </button>
+      <span
+        role="tooltip"
+        className="pointer-events-none absolute left-0 top-full z-10 mt-1 hidden whitespace-nowrap rounded bg-foreground px-2 py-1 font-mono text-[11px] text-background shadow-md group-hover:block group-focus-within:block"
+      >
+        {code}
+      </span>
+    </span>
+  );
+}
+
+// Gate the projected score: nothing until a question is answered; then a
+// "Show score" affordance until the bank is finished (or revealed early), so the
+// volatile one-question projection never flashes. Once shown it updates live.
+function ReadinessSection({
   readiness,
   answered,
+  total,
+  shown,
+  onShow,
   onReset,
 }: {
   readiness: ReturnType<typeof overallReadiness>;
   answered: number;
+  total: number;
+  shown: boolean;
+  onShow: () => void;
   onReset: () => void;
 }) {
   if (answered === 0) {
     return (
       <p className="rounded-md border border-dashed border-border px-3 py-2.5 text-sm text-muted-foreground">
-        Answer some questions to see your projected Regents readiness.
+        Your score appears when you finish.
       </p>
+    );
+  }
+  if (!shown) {
+    return (
+      <div
+        data-testid="readiness-gate"
+        className="flex flex-col gap-3 rounded-md border border-dashed border-border px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <span className="text-sm text-muted-foreground">
+          {answered} of {total} answered.
+        </span>
+        <div className="flex items-center gap-3">
+          <Button type="button" size="sm" onClick={onShow} className="w-fit">
+            Show score
+          </Button>
+          <button
+            type="button"
+            onClick={onReset}
+            className="text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+          >
+            Start over
+          </button>
+        </div>
+      </div>
     );
   }
   return (
@@ -441,7 +506,7 @@ function ReadinessPanel({
     >
       <div className="flex items-center justify-between gap-3">
         <span className="text-sm font-medium text-foreground">
-          Projected performance level
+          Projected level
         </span>
         <span className="flex items-baseline gap-1">
           <span className="text-2xl font-bold text-primary">{readiness.level}</span>
@@ -449,13 +514,12 @@ function ReadinessPanel({
         </span>
       </div>
       <p className="text-xs text-muted-foreground">
-        A practice projection from {readiness.earned} of {readiness.max} credits
-        self-scored so far — not an official score.
+        A practice estimate, not an official score.
       </p>
       <ul className="flex flex-col gap-1">
         {readiness.byStandard.map((s) => (
           <li key={s.standard} className="flex items-center justify-between gap-2 text-sm">
-            <span className="font-mono text-xs text-muted-foreground">{s.standard}</span>
+            <StandardTag code={s.standard} />
             <span
               className={cn(
                 "rounded-full px-2 py-0.5 text-xs font-medium",

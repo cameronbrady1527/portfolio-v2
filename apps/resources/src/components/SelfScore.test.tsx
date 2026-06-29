@@ -72,10 +72,33 @@ describe("SelfScore — constructed response", () => {
     expect(screen.getByText(/Apply the quadratic formula/)).toBeInTheDocument();
     expect(screen.getByText("x = five plus root ten over three")).toBeInTheDocument();
 
-    // Self-score full credit → it's recorded and readiness appears.
+    // Self-score full credit → it's recorded.
     await user.click(screen.getByRole("button", { name: "4 of 4 credits" }));
     expect(screen.getByTestId("self-score-recorded")).toHaveTextContent("Recorded 4 of 4");
+
+    // The score is gated (only 1 of 2 answered); reveal it to see readiness.
+    expect(screen.queryByTestId("readiness")).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Show score" }));
     expect(screen.getByTestId("readiness")).toHaveTextContent("Mastery");
+  });
+});
+
+describe("SelfScore — score gating", () => {
+  it("hides the projected score until it is revealed", async () => {
+    const user = userEvent.setup();
+    render(<SelfScore items={items} />);
+
+    // Answer the first MC item.
+    await user.click(screen.getByLabelText("plus or minus 3"));
+    await user.click(screen.getByRole("button", { name: "Check" }));
+
+    // With items unfinished, the projected level is gated behind "Show score".
+    expect(screen.queryByTestId("readiness")).not.toBeInTheDocument();
+    expect(screen.getByTestId("readiness-gate")).toHaveTextContent("1 of 2 answered");
+
+    await user.click(screen.getByRole("button", { name: "Show score" }));
+    expect(screen.getByTestId("readiness")).toBeInTheDocument();
+    expect(screen.queryByTestId("readiness-gate")).not.toBeInTheDocument();
   });
 });
 
@@ -90,19 +113,26 @@ describe("SelfScore — persistence", () => {
 
   it("restores recorded readiness after a reload (remount)", async () => {
     const first = render(<SelfScore items={items} />);
-    await scoreSelfScoreItem();
+    const user = await scoreSelfScoreItem();
+    await user.click(screen.getByRole("button", { name: "Show score" }));
     expect(screen.getByTestId("readiness")).toHaveTextContent("Mastery");
     first.unmount();
 
-    // Remount = a fresh page load; readiness is rehydrated from localStorage.
+    // Remount = a fresh page load; the attempt is rehydrated from localStorage,
+    // and the score is re-gated until revealed again.
     render(<SelfScore items={items} />);
-    expect(await screen.findByTestId("readiness")).toHaveTextContent("Mastery");
+    await userEvent.setup().click(
+      await screen.findByRole("button", { name: "Show score" }),
+    );
+    expect(screen.getByTestId("readiness")).toHaveTextContent("Mastery");
   });
 
-  it("clears this bank's progress on Start over", async () => {
+  it("clears this bank's progress on Start over (from the gate)", async () => {
     render(<SelfScore items={items} />);
     const user = await scoreSelfScoreItem();
+    // "Start over" is offered on the gate even before the score is revealed.
     await user.click(screen.getByRole("button", { name: "Start over" }));
     expect(screen.queryByTestId("readiness")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("readiness-gate")).not.toBeInTheDocument();
   });
 });

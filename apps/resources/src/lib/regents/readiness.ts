@@ -7,8 +7,9 @@
 //   - an overall PROJECTED PERFORMANCE LEVEL 1–5 (mirroring how the real exam
 //     reports), shown as a projection, never a verdict.
 //
-// Pure (no DOM). Thresholds below are a transparent FIRST-PASS calibration —
-// flagged for SME tuning (Level 3 ≈ 65 "proficient/pass"; mastery ≈ 85%+).
+// Pure (no DOM). The projected level is calibrated to the OFFICIAL NYSED raw→
+// scale conversion (see the LEVEL* constants) — not a naive "percent correct",
+// because the real curve is steeply nonlinear (passing needs ~34% of credits).
 
 /** What a student has self-scored on one bank item. */
 export interface CreditAttempt {
@@ -40,14 +41,27 @@ export interface StandardReadiness {
   itemCount: number;
 }
 
-// Credit-fraction cutoffs — the whole calibration lives here (flagged for SME
-// tuning). 0.65 = the Regents pass line; 0.85 = "mastery". Bands and projected
-// levels share these so the two never drift apart.
+// Per-standard mastery-learning bands — "how solid is this standard for you?"
+// These answer a LEARNING question (do you know it cold?) and are deliberately
+// stricter than the exam's pass line. Flagged for SME tuning.
 const APPROACHING = 0.5;
-const PROFICIENT = 0.65; // also Level 3 (pass)
-const MASTERY = 0.85; // also Level 5
-const LEVEL2 = 0.4;
-const LEVEL4 = 0.7;
+const PROFICIENT = 0.65;
+const MASTERY = 0.85;
+
+// Projected exam performance level (1–5). Each threshold is the fraction of RAW
+// credits that earned that NYSED performance level on the OFFICIAL Regents raw→
+// scale conversion chart (Algebra I, June 2024; 86 raw credits). The curve is
+// steeply nonlinear, so these sit far below a naive "percent correct":
+//   L5 ≥ scale 85 = raw 69 → 0.80
+//   L4 ≥ scale 75 = raw 50 → 0.58
+//   L3 ≥ scale 65 = raw 29 → 0.34   ← the pass line (NOT 65% of credits)
+//   L2 ≥ scale 55 = raw 18 → 0.21
+// Cut SCALE scores (65/75/85) are fixed across administrations; only the raw→
+// scale mapping shifts a few credits each exam, so SME may re-average later.
+const LEVEL5 = 0.8;
+const LEVEL4 = 0.58;
+const LEVEL3 = 0.34;
+const LEVEL2 = 0.21;
 
 function bandFor(fraction: number, attempted: boolean): ReadinessBand {
   if (!attempted) return "not-started";
@@ -82,9 +96,9 @@ export function projectedLevel(attempts: CreditAttempt[]): ProjectedLevel {
   const earned = attempts.reduce((s, a) => s + a.earned, 0);
   const max = attempts.reduce((s, a) => s + a.max, 0);
   const f = max > 0 ? earned / max : 0;
-  if (f >= MASTERY) return 5;
+  if (f >= LEVEL5) return 5;
   if (f >= LEVEL4) return 4;
-  if (f >= PROFICIENT) return 3;
+  if (f >= LEVEL3) return 3;
   if (f >= LEVEL2) return 2;
   return 1;
 }
