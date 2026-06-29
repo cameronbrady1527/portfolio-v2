@@ -17,9 +17,6 @@ export function SiteHeader() {
           aria-label="Primary"
           className="flex items-center gap-4 font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground"
         >
-          <Link href="/about" className="transition-colors hover:text-primary">
-            About
-          </Link>
           <a
             href="https://cameronbrady.dev"
             className="transition-colors hover:text-primary"
