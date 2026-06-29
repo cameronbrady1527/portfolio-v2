@@ -11,6 +11,7 @@ import {
   saveProgress,
 } from "@cameronbrady/math-components/logic";
 import { resolveDeck } from "@/lib/foundations/decks";
+import { MathAnswerInput } from "./MathAnswerInput";
 
 // The hub's localStorage namespace (same key PracticeSet writes under).
 const RESOURCES_PROGRESS_KEY = "resources:progress";
@@ -180,16 +181,13 @@ export function MasteryCheck({ skill, className }: MasteryCheckProps) {
               <label htmlFor={`mastery-${question.id}`} className="sr-only">
                 {`Answer to ${question.prompt}`}
               </label>
-              <input
+              <MathAnswerInput
                 id={`mastery-${question.id}`}
-                type="text"
-                inputMode={question.type === "numeric" ? "text" : undefined}
-                autoComplete="off"
                 disabled={correct}
                 value={response}
                 onChange={(e) => setResponse(e.target.value)}
                 placeholder="Your answer"
-                className="w-44 rounded-md border border-border bg-background px-3 py-2 font-mono text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:opacity-60"
+                className="w-44 text-sm"
               />
               {"unit" in question && question.unit ? (
                 <span className="text-sm text-muted-foreground">
