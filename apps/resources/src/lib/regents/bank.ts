@@ -26,6 +26,12 @@ import exponentialFunctions from "../../../content/regents/algebra-i/_bank/expon
 import factoring from "../../../content/regents/algebra-i/_bank/factoring";
 import linearFunctions from "../../../content/regents/algebra-i/_bank/linear-functions";
 import sequences from "../../../content/regents/algebra-i/_bank/sequences";
+import oneVariableEquations from "../../../content/regents/algebra-i/_bank/one-variable-equations";
+import literalEquations from "../../../content/regents/algebra-i/_bank/literal-equations";
+import systemsOfInequalities from "../../../content/regents/algebra-i/_bank/systems-of-inequalities";
+import functionFundamentals from "../../../content/regents/algebra-i/_bank/function-fundamentals";
+import rationalIrrational from "../../../content/regents/algebra-i/_bank/rational-irrational";
+import interpretingGraphs from "../../../content/regents/algebra-i/_bank/interpreting-graphs";
 
 /** A single credit level of an official constructed-response rubric. */
 export interface RubricLevel {
@@ -194,6 +200,12 @@ const BANKS: Record<string, RegentsItem[]> = {
   factoring: validateBank(factoring, "factoring"),
   "linear-functions": validateBank(linearFunctions, "linear-functions"),
   sequences: validateBank(sequences, "sequences"),
+  "one-variable-equations": validateBank(oneVariableEquations, "one-variable-equations"),
+  "literal-equations": validateBank(literalEquations, "literal-equations"),
+  "systems-of-inequalities": validateBank(systemsOfInequalities, "systems-of-inequalities"),
+  "function-fundamentals": validateBank(functionFundamentals, "function-fundamentals"),
+  "rational-irrational": validateBank(rationalIrrational, "rational-irrational"),
+  "interpreting-graphs": validateBank(interpretingGraphs, "interpreting-graphs"),
 };
 
 /** Every registered bank slug — the authoritative list for iterating all banks. */

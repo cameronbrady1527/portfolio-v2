@@ -4,7 +4,7 @@ import { STANDARD_LABELS, standardLabel } from "./standards";
 
 describe("standardLabel", () => {
   it("returns the friendly label for a known code", () => {
-    expect(standardLabel("AI-A.REI.3")).toBe("Linear inequalities");
+    expect(standardLabel("AI-A.REI.3")).toBe("Solving linear equations & inequalities");
   });
 
   it("falls back to the code itself when unmapped", () => {
