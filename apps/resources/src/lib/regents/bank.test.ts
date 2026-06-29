@@ -58,8 +58,8 @@ describe("validateBank", () => {
 describe("solving-quadratics bank", () => {
   const bank = resolveBank("solving-quadratics");
 
-  it("resolves and has the 12 ratified items", () => {
-    expect(bank).toHaveLength(12);
+  it("resolves with its ratified items (grows as the bank deepens)", () => {
+    expect(bank.length).toBeGreaterThanOrEqual(21);
   });
 
   it("fails loud for an unknown bank", () => {

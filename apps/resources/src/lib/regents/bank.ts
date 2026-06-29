@@ -21,6 +21,11 @@ import linearVsExponential from "../../../content/regents/algebra-i/_bank/linear
 import linearInequalities from "../../../content/regents/algebra-i/_bank/linear-inequalities";
 import polynomialOperations from "../../../content/regents/algebra-i/_bank/polynomial-operations";
 import functions from "../../../content/regents/algebra-i/_bank/functions";
+import quadraticFunctions from "../../../content/regents/algebra-i/_bank/quadratic-functions";
+import exponentialFunctions from "../../../content/regents/algebra-i/_bank/exponential-functions";
+import factoring from "../../../content/regents/algebra-i/_bank/factoring";
+import linearFunctions from "../../../content/regents/algebra-i/_bank/linear-functions";
+import sequences from "../../../content/regents/algebra-i/_bank/sequences";
 
 /** A single credit level of an official constructed-response rubric. */
 export interface RubricLevel {
@@ -184,7 +189,15 @@ const BANKS: Record<string, RegentsItem[]> = {
   "linear-inequalities": validateBank(linearInequalities, "linear-inequalities"),
   "polynomial-operations": validateBank(polynomialOperations, "polynomial-operations"),
   functions: validateBank(functions, "functions"),
+  "quadratic-functions": validateBank(quadraticFunctions, "quadratic-functions"),
+  "exponential-functions": validateBank(exponentialFunctions, "exponential-functions"),
+  factoring: validateBank(factoring, "factoring"),
+  "linear-functions": validateBank(linearFunctions, "linear-functions"),
+  sequences: validateBank(sequences, "sequences"),
 };
+
+/** Every registered bank slug — the authoritative list for iterating all banks. */
+export const bankSlugs = Object.keys(BANKS);
 
 /** Resolve a bank's validated items, failing loud if none is registered. */
 export function resolveBank(slug: string): RegentsItem[] {

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { prepareBank } from "./prepare";
+import { bankSlugs } from "./bank";
 import { texToHtml } from "../tex-to-html";
 
 describe("texToHtml", () => {
@@ -30,8 +31,8 @@ describe("texToHtml", () => {
 describe("prepareBank", () => {
   const items = prepareBank("solving-quadratics");
 
-  it("prepares all 12 items with their prompt math pre-rendered", () => {
-    expect(items).toHaveLength(12);
+  it("prepares every item with its prompt math pre-rendered", () => {
+    expect(items.length).toBeGreaterThanOrEqual(21);
     for (const it of items) {
       expect(it.promptHtml, it.id).toContain("katex");
     }
@@ -46,6 +47,37 @@ describe("prepareBank", () => {
       expect(it.rubric[0].criteriaHtml.length, it.id).toBeGreaterThan(0);
     }
   });
+});
+
+describe("prepareBank — every bank renders cleanly", () => {
+  // Guards all banks (not just the few spot-checked above): every authored math
+  // field must pre-render without an unbalanced `$` (which throws) and without a
+  // silent KaTeX error node (class "katex-error" / a "ParseError" title).
+  for (const slug of bankSlugs) {
+    it(`prepares "${slug}" with no KaTeX error nodes`, () => {
+      const items = prepareBank(slug);
+      expect(items.length, slug).toBeGreaterThan(0);
+      const htmlOf = (i: (typeof items)[number]): string =>
+        [
+          i.promptHtml,
+          i.figureHtml ?? "",
+          i.solutionFigureHtml ?? "",
+          i.mode === "mc"
+            ? [...i.choicesHtml, i.explanationHtml].join(" ")
+            : [
+                i.answerSummaryHtml,
+                i.modelSolutionHtml,
+                ...i.rubric.map((r) => r.criteriaHtml),
+              ].join(" "),
+        ].join(" ");
+      for (const item of items) {
+        const html = htmlOf(item);
+        expect(item.promptHtml.length, item.id).toBeGreaterThan(0);
+        expect(html, item.id).not.toContain("katex-error");
+        expect(html, item.id).not.toContain("ParseError");
+      }
+    });
+  }
 });
 
 describe("prepareBank — figures", () => {

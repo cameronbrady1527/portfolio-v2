@@ -47,12 +47,18 @@ describe("projectedLevel", () => {
     { itemId: "x", standard: "S", earned, max },
   ];
 
-  it("maps the overall credit fraction to a level 1–5", () => {
+  // Thresholds track the official NYSED raw→scale conversion (Algebra I,
+  // June 2024): L2 ≥ 0.21, L3/pass ≥ 0.34, L4 ≥ 0.58, L5 ≥ 0.80.
+  it("maps the overall credit fraction to a level 1–5 on the real curve", () => {
     expect(projectedLevel([])).toBe(1); // nothing attempted
-    expect(projectedLevel(at(2, 10))).toBe(1); // 0.20
-    expect(projectedLevel(at(5, 10))).toBe(2); // 0.50
-    expect(projectedLevel(at(68, 100))).toBe(3); // 0.68 — proficient/pass
-    expect(projectedLevel(at(75, 100))).toBe(4); // 0.75
+    expect(projectedLevel(at(20, 100))).toBe(1); // 0.20 — below L2
+    expect(projectedLevel(at(21, 100))).toBe(2); // 0.21 — L2 cut
+    expect(projectedLevel(at(30, 100))).toBe(2); // 0.30
+    expect(projectedLevel(at(34, 100))).toBe(3); // 0.34 — the pass line (L3)
+    expect(projectedLevel(at(50, 100))).toBe(3); // 0.50 — still L3 (would be ~scale 75 boundary)
+    expect(projectedLevel(at(58, 100))).toBe(4); // 0.58 — L4 cut
+    expect(projectedLevel(at(68, 100))).toBe(4); // 0.68 — comfortably L4 (NOT L3)
+    expect(projectedLevel(at(80, 100))).toBe(5); // 0.80 — L5 cut
     expect(projectedLevel(at(9, 10))).toBe(5); // 0.90 — mastery
   });
 });
