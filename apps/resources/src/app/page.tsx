@@ -1,23 +1,21 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Button, Card, CardHeader, CardTitle, CardDescription } from "@repo/ui";
+import { Card, CardHeader, CardTitle } from "@repo/ui";
 import { getContentIndex } from "@/lib/content/load";
-import { unitHref } from "@/lib/content/derive";
 
-// The hub front door: a "start here" on-ramp to the Foundations track, then the
-// full Subject -> Unit -> Topic tree as links, all derived from the content
+// Hub front door: subject → unit → topic tree, all derived from the content
 // index. Adding a topic .mdx makes it appear here automatically — no registry.
+// Foundations (Unit 0) is listed last under the heading "Fundamentals".
 export default function Home() {
   const { subjects } = getContentIndex();
 
-  // Foundations is the deliberate starting point. Feature its first unit as the
-  // "start here" on-ramp, and list the remaining subjects below.
   const foundations = subjects.find((s) => s.slug === "foundations");
-  const startHereUnit = foundations?.units[0];
-  const startHereHref = startHereUnit
-    ? unitHref(foundations!.slug, startHereUnit.slug)
-    : undefined;
-  const otherSubjects = subjects.filter((s) => s.slug !== "foundations");
+  const mainSubjects = subjects.filter((s) => s.slug !== "foundations");
+
+  const allSections = [
+    ...mainSubjects,
+    ...(foundations ? [{ ...foundations, label: "Fundamentals" }] : []),
+  ];
 
   return (
     <main className="graph-paper w-full flex-1 px-6 py-24">
@@ -36,44 +34,11 @@ export default function Home() {
           A growing library of worked examples, references, and interactive
           tools — set on warm paper, drawn on a familiar grid.
         </p>
-
-        {startHereHref ? (
-          <Button asChild>
-            <Link href={startHereHref}>
-              Start here
-              <ArrowRight className="ml-1 h-4 w-4" />
-            </Link>
-          </Button>
-        ) : null}
       </section>
 
-      {/* Start-here on-ramp: the Foundations track. */}
-      {startHereUnit && startHereHref ? (
-        <div className="mx-auto mt-20 w-full max-w-4xl">
-          <Link href={startHereHref} className="group block">
-            <Card className="border-primary/40 bg-card/80 transition-colors group-hover:border-primary">
-              <CardHeader className="gap-2">
-                <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
-                  Start here
-                </span>
-                <CardTitle className="flex items-center justify-between gap-3 font-display text-2xl text-foreground">
-                  {startHereUnit.label}
-                  <ArrowRight className="h-5 w-5 shrink-0 -translate-x-1 text-primary opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
-                </CardTitle>
-                {startHereUnit.description ? (
-                  <CardDescription className="max-w-2xl text-sm leading-relaxed">
-                    {startHereUnit.description}
-                  </CardDescription>
-                ) : null}
-              </CardHeader>
-            </Card>
-          </Link>
-        </div>
-      ) : null}
-
-      {otherSubjects.length > 0 ? (
+      {allSections.length > 0 ? (
         <div className="mx-auto mt-24 flex w-full max-w-4xl flex-col gap-16">
-          {otherSubjects.map((subject) => (
+          {allSections.map((subject) => (
             <section key={subject.slug} className="flex flex-col gap-6">
               <h2 className="font-display text-2xl font-semibold text-foreground">
                 {subject.label}
