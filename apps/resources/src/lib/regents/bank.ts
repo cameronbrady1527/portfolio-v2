@@ -31,6 +31,7 @@ import literalEquations from "../../../content/regents/algebra-i/_bank/literal-e
 import systemsOfInequalities from "../../../content/regents/algebra-i/_bank/systems-of-inequalities";
 import functionFundamentals from "../../../content/regents/algebra-i/_bank/function-fundamentals";
 import rationalIrrational from "../../../content/regents/algebra-i/_bank/rational-irrational";
+import interpretingGraphs from "../../../content/regents/algebra-i/_bank/interpreting-graphs";
 
 /** A single credit level of an official constructed-response rubric. */
 export interface RubricLevel {
@@ -204,6 +205,7 @@ const BANKS: Record<string, RegentsItem[]> = {
   "systems-of-inequalities": validateBank(systemsOfInequalities, "systems-of-inequalities"),
   "function-fundamentals": validateBank(functionFundamentals, "function-fundamentals"),
   "rational-irrational": validateBank(rationalIrrational, "rational-irrational"),
+  "interpreting-graphs": validateBank(interpretingGraphs, "interpreting-graphs"),
 };
 
 /** Every registered bank slug — the authoritative list for iterating all banks. */
