@@ -5,7 +5,7 @@ import ProjectsCTA from '@/components/projects/ProjectsCTA';
 
 export const metadata: Metadata = {
   title: 'Projects - Cameron Brady',
-  description: 'Technical projects spanning machine learning, full-stack development, and computational neuroscience research.',
+  description: 'Open educational math tools, full-stack web apps, and machine learning research.',
 }
 
 export default function ProjectsPage() {
@@ -20,11 +20,11 @@ export default function ProjectsPage() {
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-light text-slate-800 mb-4">
-            Technical Projects
+            Projects
           </h1>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            A collection of projects spanning machine learning research, full-stack development,
-            and computational tools for neuroscience applications.
+            From the open math tools I build for my students to full-stack web apps and machine
+            learning research — the things I&rsquo;ve made to help people learn and to solve real problems.
           </p>
         </div>
 

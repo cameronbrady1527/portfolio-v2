@@ -6,9 +6,20 @@
 
 const PROJECTS_DATA = [
   {
+    title: "Math Resources",
+    description: "Free, open-source interactive math tools and virtual manipulatives for students and educators",
+    about: "A growing, open-source hub of interactive math tools, virtual manipulatives, and Regents practice — free for anyone to learn from, anytime. I build what my own students need, then publish it so other teachers and developers can use and improve it: the component library ships on npm as @cameronbrady/math-components. Have an idea or a topic you want covered? Tell me and I'll bump it up the list — this is meant to be built together.",
+    demoLink: "https://resources.cameronbrady.dev",
+    imageUrl: "/imgs/math-resources-ss.png",
+    codeRepo: "https://github.com/cameronbrady1527/portfolio-v2",
+    type: ["project", "education"],
+    technologies: ["Next.js", "React", "Typescript", "MDX", "Tailwind"],
+    status: "prod"
+  },
+  {
     title: "Portfolio",
     description: "Display of projects, services, experiences, and accomplishments",  // short one line-description
-    about: "TODO",  // longer description - view when open 
+    about: "TODO",  // longer description - view when open
     demoLink: "https://cameronbrady.dev",
     imageUrl: "/imgs/portfolio-ss.png",
     codeRepo: "https://github.com/cameronbrady1527/portfolio-v2",
@@ -28,17 +39,6 @@ const PROJECTS_DATA = [
     status: "prod"
   },
   {
-    title: "Sesha",
-    description: "Article generation platform baked with AI and source aggregation",
-    about: "AI-powered article generation platform that aggregates and processes multiple sources to produce structured articles with customizable presets and export capabilities.",
-    demoLink: "",
-    imageUrl: "/imgs/sesha-library-ss.png", // ⭐
-    codeRepo: "https://github.com/astral-ai-labs/sesha-v4",
-    type: ["project", "ai"],
-    technologies: ["Anthropic Claude Sonnet 4.5", "OpenAI GPT-5", "Next.js", "React", "Typescript", "Tailwind", "Supabase"],
-    status: "prod"
-  },
-  {
     title: "Race Training Template",
     description: "Researched-developed race training plan template spreadsheet for runners of all levels",
     about: "An easy-to-use spreadsheet for runners training for a race. Well documented for easy use, helping a runner develop their own plan or bring in an existing one. Visualizations of your training statistics and goal tracking to build confidence and motivation in a virtuous cycle! Helped me crush my 2025 running goals and will be used for 2026, where I plan to run a few half marathons and my first marathon :) [IMPORTANT] Press Enable Content when you open the Template for full functionality.",
@@ -52,8 +52,30 @@ const PROJECTS_DATA = [
     status: "prod"
   },
   {
+    title: "Vocab Flashcards",
+    description: "A webpage designed to help a user learn vocabulary words.",
+    about: "Flashcards that go beyond just two sides. In a creative interface with flashcards and a dictionary, you see stats for each word, definitions, example uses, part of speech, and more! Export is supported for your own data analysis and addition of words.",
+    demoLink: "https://learn-vocab-v1.vercel.app",
+    imageUrl: "/imgs/vocab-landing-ss.png",
+    codeRepo: "https://github.com/cameronbrady1527/learn-vocab-v1",
+    type: ["project", "education"],
+    technologies: ["JavaScript", "CSS", "HTML", "Excel"],
+    status: "prod"
+  },
+  {
+    title: "Sesha",
+    description: "Article generation platform baked with AI and source aggregation",
+    about: "AI-powered article generation platform that aggregates and processes multiple sources to produce structured articles with customizable presets and export capabilities.",
+    demoLink: "",
+    imageUrl: "/imgs/sesha-library-ss.png", // ⭐
+    codeRepo: "https://github.com/astral-ai-labs/sesha-v4",
+    type: ["project", "ai"],
+    technologies: ["Anthropic Claude Sonnet 4.5", "OpenAI GPT-5", "Next.js", "React", "Typescript", "Tailwind", "Supabase"],
+    status: "prod"
+  },
+  {
     title: "ML Research Blog",
-    description: "My dedicated blogspace to share insights in machine learning, programming, and neurosciece",
+    description: "My dedicated blogspace to share insights in machine learning, programming, and neuroscience",
     about: "An open-source platform sharing machine learning research on neurological disorder early detection while fostering education and collaboration across technical and healthcare communities.",
     demoLink: "TODO",
     imageUrl: "/imgs/ml-blog-ss.png",
@@ -94,17 +116,6 @@ const PROJECTS_DATA = [
     type: ["project", "ai", "research"],
     technologies: ["Python", "ProPublica API", "Gemini 2.5 Flash", "OCR", "Tkinter"],
     status: "dev"
-  },
-  {
-    title: "Vocab Flashcards",
-    description: "A webpage designed to help a user learn vocabulary words.",
-    about: "Flashcards that go beyond just two sides. In a creative interface with flashcards and a dictionary, you see stats for each word, definitions, example uses, part of speech, and more! Export is supported for your own data analysis and addition of words.",
-    demoLink: "https://learn-vocab-v1.vercel.app",
-    imageUrl: "/imgs/vocab-landing-ss.png",
-    codeRepo: "https://github.com/cameronbrady1527/learn-vocab-v1",
-    type: ["project"],
-    technologies: ["JavaScript", "CSS", "HTML", "Excel"],
-    status: "prod"
   },
   {
     title: "McDiver Graph Navigation Game",

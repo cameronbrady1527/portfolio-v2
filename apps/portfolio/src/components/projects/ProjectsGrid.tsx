@@ -17,7 +17,7 @@ import ProjectDetailPanel from './ProjectDetailPanel'
 /* -------------------------------------------------------------------------- */
 /*                                   Types                                    */
 /* -------------------------------------------------------------------------- */
-type ProjectCategory = 'project' | 'ml' | 'ai' | 'research' | 'cornell'
+type ProjectCategory = 'project' | 'education' | 'ml' | 'ai' | 'research' | 'cornell'
 
 type Project = {
   title: string;
@@ -58,6 +58,7 @@ export default function ProjectsGrid() {
   const categories = [
     // { id: 'all', label: 'All Projects', count: allProjects.length },
     { id: 'project', label: 'All', count: allProjects.filter(p => p.type.includes('project')).length },
+    { id: 'education', label: 'Education', count: allProjects.filter(p => p.type.includes('education')).length },
     { id: 'ml', label: 'ML', count: allProjects.filter(p => p.type.includes('ml')).length },
     { id: 'ai', label: 'AI', count: allProjects.filter(p => p.type.includes('ai')).length },
     { id: 'research', label: 'Research', count: allProjects.filter(p => p.type.includes('research')).length },

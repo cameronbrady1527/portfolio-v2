@@ -13,7 +13,7 @@ export default function FeaturedWork() {
   const allProjects = useContext(ProjectsContext);
   const [expandedImage, setExpandedImage] = useState<string | null>(null);
 
-  const featuredProjects = allProjects.slice(0, 4);
+  const featuredProjects = allProjects.slice(0, 5);
 
   // Prevent body scroll when image is expanded
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function FeaturedWork() {
         >
           <h2 className="text-4xl font-light text-slate-800 mb-4">Featured Projects</h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            Highlights from my research and technical projects
+            Starting with the one I&rsquo;m building for my students — and other highlights from my work
           </p>
         </motion.div>
         
