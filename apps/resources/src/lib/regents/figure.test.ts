@@ -27,6 +27,35 @@ describe("figureToHtml — plot", () => {
   });
 });
 
+describe("figureToHtml — plot curve kinds", () => {
+  it("draws exponential, absolute-value, and square-root curves", () => {
+    const svg = figureToHtml({
+      kind: "plot",
+      range: 10,
+      curves: [
+        { kind: "exponential", a: 1, b: 2 },
+        { kind: "absolute", a: 1, h: 0, k: -3 },
+        { kind: "sqrt", a: 2, h: 1, k: 0 },
+      ],
+    });
+    expect((svg.match(/<path /g) ?? []).length).toBe(3);
+    expect(svg).not.toContain("NaN"); // sqrt domain (x<h) must break cleanly
+  });
+
+  it("draws a polyline as connected segments through its points", () => {
+    const svg = figureToHtml({
+      kind: "plot",
+      range: 10,
+      curves: [
+        { kind: "polyline", points: [[-8, -8], [-2, 4], [2, 4], [8, -6]] },
+      ],
+    });
+    const path = (svg.match(/<path d="([^"]+)"/) ?? [])[1] ?? "";
+    expect(path.startsWith("M")).toBe(true);
+    expect((path.match(/L/g) ?? []).length).toBe(3); // 4 points → 1 move + 3 lines
+  });
+});
+
 describe("figureToHtml — plot inequalities (half-plane shading)", () => {
   it("shades a half-plane and draws a SOLID boundary for a non-strict inequality", () => {
     const svg = figureToHtml({

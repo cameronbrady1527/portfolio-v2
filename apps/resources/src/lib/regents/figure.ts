@@ -1,9 +1,10 @@
 // Figures for the Regents bank, rendered to STATIC HTML/SVG at build time
 // (server-side, like the math) so the browser ships no figure-drawing JS.
-// Kinds: "plot" (coordinate plane with lines/parabolas/points, plus shaded
-// half-planes for linear inequalities), "scatter" (a scatter plot with an
-// optional best-fit line over arbitrary ranges), and "table" (a data table).
-// Extend the `Figure` union and switch in figureToHtml.
+// Kinds: "plot" (coordinate plane with curves — lines, parabolas, exponentials,
+// absolute-value, square-root, and explicit polylines for qualitative graphs —
+// plus points and shaded half-planes for linear inequalities), "scatter" (a
+// scatter plot with an optional best-fit line over arbitrary ranges), and
+// "table" (a data table). Extend the `Figure` union and switch in figureToHtml.
 
 export type FigurePoint = {
   x: number;
@@ -15,7 +16,11 @@ export type FigurePoint = {
 
 export type FigureCurve =
   | { kind: "line"; m: number; b: number } // y = m·x + b
-  | { kind: "parabola"; a: number; b: number; c: number }; // y = a·x² + b·x + c
+  | { kind: "parabola"; a: number; b: number; c: number } // y = a·x² + b·x + c
+  | { kind: "exponential"; a: number; b: number } // y = a·bˣ
+  | { kind: "absolute"; a: number; h: number; k: number } // y = a·|x − h| + k
+  | { kind: "sqrt"; a: number; h: number; k: number } // y = a·√(x − h) + k, x ≥ h
+  | { kind: "polyline"; points: [number, number][] }; // connected segments (qualitative graphs)
 
 /**
  * A linear inequality drawn as a shaded half-plane with a boundary line.
@@ -87,8 +92,24 @@ const FIT = "#b4540a";
 const DOT = "#2563b4";
 const CURVE = ["#2563b4", "#b4540a", "#7c3aed"]; // blue, orange, violet — cycled
 
-const evalCurve = (c: FigureCurve, x: number): number =>
-  c.kind === "line" ? c.m * x + c.b : c.a * x * x + c.b * x + c.c;
+// Evaluate a function-form curve at x. "polyline" is explicit (not a function of
+// x) and is drawn directly in renderPlot, so it returns NaN here.
+const evalCurve = (c: FigureCurve, x: number): number => {
+  switch (c.kind) {
+    case "line":
+      return c.m * x + c.b;
+    case "parabola":
+      return c.a * x * x + c.b * x + c.c;
+    case "exponential":
+      return c.a * Math.pow(c.b, x);
+    case "absolute":
+      return c.a * Math.abs(x - c.h) + c.k;
+    case "sqrt":
+      return x < c.h ? NaN : c.a * Math.sqrt(x - c.h) + c.k;
+    case "polyline":
+      return NaN;
+  }
+};
 
 function esc(s: string): string {
   return s.replace(/[&<>"]/g, (ch) =>
@@ -127,7 +148,7 @@ function sampledPath(
   for (let k = 0; k <= steps; k++) {
     const x = x0 + ((x1 - x0) * k) / steps;
     const y = f(x);
-    if (y < y0 || y > y1) {
+    if (!Number.isFinite(y) || y < y0 || y > y1) {
       penUp = true;
       continue;
     }
@@ -226,8 +247,16 @@ function renderPlot(fig: PlotFigure): string {
     }
   });
   (fig.curves ?? []).forEach((c, i) => {
+    const stroke = CURVE[i % CURVE.length];
+    if (c.kind === "polyline") {
+      const d = c.points
+        .map(([x, y], j) => `${j === 0 ? "M" : "L"}${sx(x)},${sy(y)}`)
+        .join("");
+      if (d) parts.push(`<path d="${d}" fill="none" stroke="${stroke}" stroke-width="2"/>`);
+      return;
+    }
     const d = sampledPath((x) => evalCurve(c, x), -R, R, -R, R, sx, sy);
-    if (d) parts.push(`<path d="${d}" fill="none" stroke="${CURVE[i % CURVE.length]}" stroke-width="2"/>`);
+    if (d) parts.push(`<path d="${d}" fill="none" stroke="${stroke}" stroke-width="2"/>`);
   });
   for (const p of fig.points ?? []) {
     parts.push(
