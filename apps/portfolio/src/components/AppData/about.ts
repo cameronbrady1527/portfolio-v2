@@ -87,30 +87,56 @@ const journeyTimeline: JourneyTimelineItem[] = [
 
 // Professional Experience Data
 const experiences: Experience[] = [
-  // Teaching & Education Experience
+  // Teaching & Education
   {
-    title: "Substitute Teacher",
-    company: "Arlington Central School District",
-    period: "2024 - Present",
-    description: "Leading full-class instruction across K-12 in a diverse district, differentiating for IEPs/504s, building rapport across age groups and backgrounds.",
+    title: "Math Teacher",
+    company: "Belmont Preparatory High School",
+    period: "2026 - Present",
+    description: "Incoming first-year teacher, teaching Geometry at a New York City public high school. Designing lessons, assessments, and the free interactive tools my students learn from.",
     iconName: "BookOpen",
     color: "green",
+    current: true
+  },
+  {
+    title: "NYC Teaching Fellow",
+    company: "NYC Teaching Fellows",
+    period: "Jun 2026 - Present",
+    description: "Selected for the NYC Teaching Fellows, a selective program that prepares accomplished career-changers to teach in high-need public schools.",
+    iconName: "GraduationCap",
+    color: "emerald",
+    current: true
+  },
+  {
+    title: "M.S.T., Adolescent Education (7–12)",
+    company: "Pace University",
+    period: "Jun 2026 - Present",
+    description: "Earning a Master of Science in Teaching alongside full-time teaching, with New York State certification to teach Mathematics (grades 7–12).",
+    iconName: "GraduationCap",
+    color: "indigo",
     current: true
   },
   {
     title: "Independent Tutor",
     company: "Private Practice",
     period: "2018 - Present",
-    description: "K-12 tutoring specializing in math and science subjects. Consistently high success rates through personalized, adaptive teaching approaches.",
+    description: "K–12 and college tutoring in math and computer science — personalized, adaptive support that meets each student where they are.",
     iconName: "Brain",
     color: "pink",
     current: true
   },
   {
+    title: "Substitute Teacher",
+    company: "Arlington Central School District",
+    period: "2024 - 2026",
+    description: "Led full-class instruction across K–12, differentiating for IEPs and 504s — the experience that turned me toward teaching for good.",
+    iconName: "BookOpen",
+    color: "green"
+  },
+  {
     title: "Head Teaching Assistant",
     company: "Cornell Dyson School",
     period: "Aug 2022 - Jan 2024",
-    description: "Led team of 5 TAs for Farm Business Management course. Used data analytics to tailor lesson planning and improve student engagement and performance.",
+    description: "Led a team of 5 TAs for a Farm Business Management course, using data to tailor lesson planning and improve student outcomes.",
     iconName: "GraduationCap",
     color: "indigo"
   },
@@ -119,7 +145,7 @@ const experiences: Experience[] = [
     title: "CEO & Co-Founder",
     company: "The Clover Project",
     period: "Feb 2019 - May 2023",
-    description: "Founded nonprofit farm organization fighting food insecurity. Donated 25+ tons of produce and built SQL volunteer tracking system. Now restructuring for national expansion.",
+    description: "Co-founded a 501(c)(3) community farm fighting food insecurity in the Hudson Valley — fresh produce for families who needed it, and real leadership roles for the high schoolers who ran it.",
     iconName: "TreePine",
     color: "emerald"
   },
@@ -127,19 +153,27 @@ const experiences: Experience[] = [
     title: "Independent Nonprofit Consultant",
     company: "Community Mindfulness Project",
     period: "Jan 2025 - Jun 2025",
-    description: "Developed free, open-source nonprofit data analysis tools covering 1.8M+ organizations. Created digital board handbook and advised on strategic program development.",
+    description: "Built free, open-source data tools for nonprofits, wrote a digital board handbook, and advised on program strategy.",
     iconName: "Briefcase",
     color: "purple"
   },
   // Technical Experience
   {
-    title: "Software Engineer",
-    company: "Astral",
-    period: "Jun 2025 - Present",
-    description: "Building full-stack AI-powered web applications and web crawling automations for clients and the Astral platform.",
+    title: "Freelance Developer",
+    company: "Self-employed",
+    period: "Apr 2026 - Present",
+    description: "Building web apps and educational tools for clients — and channeling that work into my open-source Math Resources.",
     iconName: "Code",
     color: "blue",
     current: true
+  },
+  {
+    title: "Software Engineer",
+    company: "Astral",
+    period: "Jun 2025 - May 2026",
+    description: "Built full-stack, AI-powered web applications and web-crawling automations for clients and the Astral platform.",
+    iconName: "Code",
+    color: "blue"
   }
 ];
 

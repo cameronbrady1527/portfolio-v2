@@ -20,14 +20,16 @@ const HeroSection = () => {
   }, []);
 
   const words = [
-    { text: "Cornell-Educated", className: "text-slate-800" },
+    { text: "Math", className: "text-blue-600" },
+    { text: "Teacher", className: "text-slate-800" },
+    { text: "&", className: "text-slate-400" },
     { text: "Tutor", className: "text-blue-600" },
     { text: "|", className: "text-slate-400" },
-    { text: "Math,", className: "text-slate-800" },
-    { text: "Computer", className: "text-slate-800" },
-    { text: "Science,", className: "text-slate-800" },
+    { text: "Algebra,", className: "text-slate-800" },
+    { text: "Geometry,", className: "text-slate-800" },
+    { text: "Regents", className: "text-slate-800" },
     { text: "&", className: "text-slate-400" },
-    { text: "Beyond", className: "text-slate-800" }
+    { text: "CS", className: "text-slate-800" }
   ];
 
   // const dockItems = [
@@ -47,7 +49,8 @@ const HeroSection = () => {
         >
           <TypewriterEffect words={words} className="mt-8 text-center justify-center lg:text-left lg:justify-start text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl" />
           <p className="text-lg sm:text-xl text-slate-600 mt-6 mb-8 leading-relaxed text-center lg:text-left">
-            Helping K-12 and college students master challenging concepts and build lasting confidence
+            A NYC high school math teacher helping students master Algebra, Geometry, Regents math, and
+            Computer Science — and build lasting confidence.
           </p>
 
           {/* <FloatingDock items={dockItems} /> */}

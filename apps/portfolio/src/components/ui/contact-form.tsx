@@ -134,7 +134,7 @@ const ContactForm = ({
       console.error('Form submission error:', error);
 
       toast.error("Message failed to send", {
-        description: "The contact form is currently experiencing issues. Please email me at cab495@cornell.edu or text me at (845) 264-3972 while I work on fixing this. Sorry for the inconvenience!",
+        description: "The contact form is currently experiencing issues. Please email me at cameronbrady1527@gmail.com while I work on fixing this. Sorry for the inconvenience!",
         duration: 10000, // Show for 10 seconds so users have time to read
       });
     } finally {
@@ -273,7 +273,7 @@ const ContactForm = ({
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="cab495@cornell.edu" {...field} disabled={isSubmitting} />
+                <Input type="email" placeholder="you@example.com" {...field} disabled={isSubmitting} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -287,7 +287,7 @@ const ContactForm = ({
             <FormItem>
               <FormLabel>Phone (Optional)</FormLabel>
               <FormControl>
-                <Input placeholder="(845) 264-3972" {...field} disabled={isSubmitting} />
+                <Input placeholder="(555) 123-4567" {...field} disabled={isSubmitting} />
               </FormControl>
               <FormMessage />
             </FormItem>

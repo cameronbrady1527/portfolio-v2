@@ -1,84 +1,104 @@
 "use client";
 
-import { motion } from 'motion/react';
-import { Brain, Code, Zap, BookOpen } from 'lucide-react';
+import { Fraunces } from "next/font/google";
+import { motion, useReducedMotion } from "motion/react";
+
+/**
+ * "What I bring" — authored prose + a clean definition list.
+ * No icon-bubbles, no pill clouds. Each capability reads as a sentence-like
+ * run of comma-separated terms — a person describing what they do, not a matrix.
+ * The Fraunces serif is scoped to the About page only.
+ */
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+type Entry = {
+  term: string;
+  detail: string;
+};
+
+const ENTRIES: Entry[] = [
+  {
+    term: "Subjects I teach",
+    detail:
+      "Geometry, Algebra I & II, Pre-Calculus, Calculus (AB/BC), Statistics, and Regents prep — alongside Computer Science: AP CSA & CSP, Python, Java, and the web.",
+  },
+  {
+    term: "In the classroom",
+    detail:
+      "Differentiated instruction; IEP & 504 accommodations; scaffolding; curriculum and assessment design; data-driven lesson planning; classroom management; and culturally responsive teaching.",
+  },
+  {
+    term: "Building & engineering",
+    detail:
+      "TypeScript, React, Next.js, Python, SQL, MDX, and Tailwind; testing with Vitest and Playwright; Git — plus some machine learning (TensorFlow, PyTorch) carried over from research projects.",
+  },
+  {
+    term: "Tools I reach for",
+    detail: "Vercel, PostgreSQL, Supabase, and Google Workspace.",
+  },
+];
 
 export const SkillsSection = () => {
-  const skillCategories = [
-    {
-      icon: <BookOpen className="text-orange-600 h-5 w-5" />,
-      title: "Subjects Taught",
-      skills: ['Mathematics (Pre-Algebra – AP Calculus BC)', 'Computer Science (Introductory – Machine Learning)', 'Science (Earth Science – AP Physics C)', 'All Elementary & Middle School Subjects']
-    },
-    {
-      icon: <Brain className="text-purple-600 h-5 w-5" />,
-      title: "Pedagogical Skills",
-      skills: ['Differentiated Instruction', 'IEP & 504 Accommodation', 'Curriculum Design', 'Assessment Development', 'Classroom Management', 'Scaffolded Instruction', 'Data-Driven Lesson Planning', 'Student Progress Monitoring', 'Mentoring']
-    },
-    {
-      icon: <Code className="text-blue-600 h-5 w-5" />,
-      title: "Technical Skills",
-      skills: ['Python', 'JavaScript', 'TypeScript', 'Java', 'HTML', 'CSS', 'React', 'Next.js', 'SQL', 'TensorFlow', 'PyTorch', 'Full-Stack Development', 'Data Analysics', 'AI for Education']
-    },
-    {
-      icon: <Zap className="text-green-600 h-5 w-5" />,
-      title: "Tools",
-      skills: ['Microsoft Office', 'Google Suite', 'MongoDB', 'PostgreSQL']
-    }
-  ];
+  const reduce = useReducedMotion();
 
-  const skillColors: Record<number, string> = {
-    0: 'purple',
-    1: 'blue',
-    2: 'green',
-    3: 'orange'
-  };
+  // Constant initial/target (SSR-stable); only the transition reacts to the
+  // reduced-motion preference. Per-item stagger via delay, dropped when reduced.
+  const rise = (i: number) => ({
+    initial: { opacity: 0, y: 14 },
+    whileInView: { opacity: 1, y: 0 },
+    transition: reduce
+      ? { duration: 0 }
+      : { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const, delay: i * 0.06 },
+  });
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="max-w-5xl mx-auto mb-32"
+    <section
+      aria-labelledby="skills-heading"
+      className="mx-auto max-w-3xl py-20 sm:py-28"
     >
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-light text-slate-800 mb-4">Technical Skills</h2>
-      </div>
+      <header className="mb-14 sm:mb-16">
+        <h2
+          id="skills-heading"
+          className={`${fraunces.className} text-3xl font-semibold leading-tight tracking-tight text-slate-800 sm:text-5xl`}
+        >
+          What I bring
+        </h2>
+        <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-600">
+          A teacher first, and an engineer who builds for the classroom. The
+          short version of what I can do:
+        </p>
+      </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {skillCategories.map((category, index) => (
+      <dl className="divide-y divide-slate-200 border-y border-slate-200">
+        {ENTRIES.map((entry, i) => (
           <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: index * 0.1 }}
-            className="relative"
+            key={entry.term}
+            viewport={{ once: true, margin: "-60px" }}
+            {...rise(i)}
+            className="py-8 sm:grid sm:grid-cols-[11rem_1fr] sm:gap-x-10 sm:py-10"
           >
-            <div className="flex items-center gap-2 mb-4">
-              <div className={`p-2 rounded-lg bg-${skillColors[index]}-100`}>
-                {category.icon}
-              </div>
-              <h3 className="font-semibold text-slate-800">{category.title}</h3>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {category.skills.map((skill, skillIndex) => (
-                <motion.span
-                  key={skill}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: index * 0.1 + skillIndex * 0.05 }}
-                  className={`px-3 py-1.5 bg-${skillColors[index]}-100 text-${skillColors[index]}-700 rounded-full text-sm font-medium hover:bg-${skillColors[index]}-200 transition-colors cursor-default`}
-                >
-                  {skill}
-                </motion.span>
-              ))}
-            </div>
+            <dt
+              className={`${fraunces.className} mb-3 text-lg font-medium text-slate-800 sm:mb-0 sm:pt-0.5`}
+            >
+              {entry.term}
+            </dt>
+            <dd className="text-lg leading-relaxed text-slate-600 sm:text-xl sm:leading-relaxed">
+              {entry.detail}
+            </dd>
           </motion.div>
         ))}
-      </div>
-    </motion.div>
+      </dl>
+
+      <p className="mt-10 max-w-xl text-base italic leading-relaxed text-slate-500">
+        The thread through all of it: when I find a gap in what someone
+        understands, I build the thing that closes it.
+      </p>
+    </section>
   );
 };

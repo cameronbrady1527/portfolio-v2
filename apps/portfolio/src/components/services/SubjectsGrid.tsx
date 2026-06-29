@@ -1,45 +1,38 @@
 "use client";
 
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
-import { Calculator, Code, BookOpen, TrendingUp, FlaskConical } from "lucide-react";
+import { Calculator, Code, BookOpen, TrendingUp } from "lucide-react";
 import { motion } from "motion/react";
 
 const SubjectsSection = () => {
   const subjects = [
     {
-      title: "Mathematics K-12",
-      description: "Elementary through AP Calculus AB/BC & Statistics",
+      title: "Mathematics",
+      description: "Middle school through AP — my home turf",
       icon: <Calculator className="h-8 w-8 text-blue-500" />,
-      content: ["Algebra I & II", "Geometry", "Pre-Calculus", "Calculus AB/BC", "Statistics", "All Honor & AP levels"],
+      content: ["Algebra I & II", "Geometry", "Pre-Calculus", "Calculus AB/BC", "Statistics", "All Honors & AP levels"],
       className: "md:col-span-2"
+    },
+    {
+      title: "Regents Prep",
+      description: "Targeted NYS Regents preparation",
+      icon: <TrendingUp className="h-8 w-8 text-red-500" />,
+      content: ["Algebra I", "Geometry", "Algebra II", "Past-exam practice", "Test-taking strategy"],
+      className: "md:col-span-1"
     },
     {
       title: "Computer Science",
       description: "Programming & Web Development",
       icon: <Code className="h-8 w-8 text-green-500" />,
-      content: ["AP Computer Science A & Principles", "Python, Java, JavaScript/TypeScript", "HTML/CSS", "Web Development", "CS 1 & 2", "Data Structures & Algorithms", "Discrete Structures", "Machine Learning"],
+      content: ["AP Computer Science A & Principles", "Python, Java, JavaScript/TypeScript", "HTML/CSS & Web Development", "Data Structures & Algorithms", "Intro Machine Learning"],
       className: "md:col-span-1"
     },
     {
-      title: "Sciences",
-      description: "Physics, Biology, & K-5 Sciences",
-      icon: <FlaskConical className="h-8 w-8 text-red-500" />,
-      content: ["AP Physics 1, 2, & C", "AP Biology", "Earth Science", "Chemistry", "K-5 Sciences"],
-      className: "md:col-span-1"
-    },
-    {
-      title: "Elementary & Middle School",
-      description: "All core subjects + study skills",
+      title: "Also Available",
+      description: "Beyond my core focus, on request",
       icon: <BookOpen className="h-8 w-8 text-yellow-500" />,
-      content: ["All core subjects", "Homework Help", "Reading & Writing", "Math, Science, & Social Studies", "Study skills", "Test preparation"],
-      className: "md:col-span-1"
-    },
-    {
-      title: "Entrepreneurship & Business Fundamentals",
-      description: "Introductory undergraduate courses",
-      icon: <TrendingUp className="h-8 w-8 text-purple-500" />,
-      content: ["Introductory Macro & Microeconomics", "Business Fundamentals", "Entrepreneurial Strategy & Marketing", "Farm Business Management", "Applied Economics & Management"],
-      className: "md:col-span-1"
+      content: ["Sciences (AP Physics, Biology, Earth Science, Chemistry)", "Elementary & middle school core subjects + study skills", "Intro Economics & Business fundamentals"],
+      className: "md:col-span-2"
     }
   ];
 

@@ -13,16 +13,16 @@ import { NavigationProvider } from '@/contexts/NavigationContext'
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Cameron Brady - Math, CS, & Science Tutor',
-  description: 'Educator, private tutor, and freelance developer',
-  keywords: ['machine learning', 'neuroscience', 'research', 'developer', 'AI', 'medical', 'tutor', 'education', 'math tutor', 'science tutor', 'calculus tutor', 'geometry tutor', 'advanced tutor', 'tutoring'],
+  title: 'Cameron Brady — Math Teacher, Tutor & Developer',
+  description: 'High school math teacher, tutor, and developer building free, open-source math tools for students and classrooms everywhere.',
+  keywords: ['math teacher', 'geometry teacher', 'high school math', 'Regents prep', 'math tutor', 'computer science tutor', 'developer', 'open-source math tools', 'NYC teacher', 'tutoring', 'education', 'machine learning'],
   authors: [{ name: 'Cameron Brady' }],
   icons: {
     icon: '/brain-favicon.svg',
   },
   openGraph: {
-    title: 'Cameron Brady - Math, CS, & Science Tutor',
-    description: 'Educator, private tutor, and freelance developer',
+    title: 'Cameron Brady — Math Teacher, Tutor & Developer',
+    description: 'High school math teacher, tutor, and developer building free, open-source math tools for students and classrooms everywhere.',
     url: 'https://cameronbrady.dev',
     siteName: 'Cameron Brady Website',
     type: 'website',
@@ -51,7 +51,7 @@ export default function RootLayout({
         />
         <NavigationProvider>
           <Navigation />
-          <main className="min-h-screen relative">
+          <main className="min-h-screen relative overflow-x-clip">
             {children}
             <Toaster position="top-right" />
           </main>
@@ -59,7 +59,7 @@ export default function RootLayout({
             <div className="container mx-auto px-6">
               <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
                 <p className="text-slate-600">
-                  © 2025 Cameron Brady
+                  © 2026 Cameron Brady
                 </p>
                 <Link
                   href="https://resources.cameronbrady.dev"

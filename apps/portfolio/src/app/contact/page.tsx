@@ -29,7 +29,7 @@ export default function ContactPage() {
               Let&apos;s Connect
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Need an experienced tutor? Want to chat or collaborate on a project? I&apos;d love to hear from you.
+              Looking for a tutor, want to collaborate, or have an idea for the math resources? I&apos;d love to hear from you.
             </p>
           </motion.div>
 
@@ -51,10 +51,10 @@ export default function ContactPage() {
                     <div>
                       <p className="text-sm text-slate-500 mb-1">Email</p>
                       <a
-                        href="mailto:cab495@cornell.edu"
+                        href="mailto:cameronbrady1527@gmail.com"
                         className="text-slate-700 hover:text-blue-600 transition-colors"
                       >
-                        cab495@cornell.edu
+                        cameronbrady1527@gmail.com
                       </a>
                     </div>
                   </div>
@@ -63,12 +63,7 @@ export default function ContactPage() {
                     <Phone className="text-blue-600 mt-1 shrink-0" size={20} />
                     <div>
                       <p className="text-sm text-slate-500 mb-1">Phone</p>
-                      <a
-                        href="tel:+18452643972"
-                        className="text-slate-700 hover:text-blue-600 transition-colors"
-                      >
-                        (845) 264-3972
-                      </a>
+                      <span className="text-slate-700">Available on request</span>
                     </div>
                   </div>
 
@@ -76,7 +71,7 @@ export default function ContactPage() {
                     <MapPin className="text-blue-600 mt-1 shrink-0" size={20} />
                     <div>
                       <p className="text-sm text-slate-500 mb-1">Location</p>
-                      <span className="text-slate-700">New York</span>
+                      <span className="text-slate-700">New York, NY</span>
                     </div>
                   </div>
 
@@ -124,15 +119,15 @@ export default function ContactPage() {
                 <ul className="text-sm text-slate-700 space-y-2">
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 mt-1">•</span>
-                    <span>Academic Tutoring</span>
+                    <span>Tutoring (limited availability)</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 mt-1">•</span>
-                    <span>Freelance Development</span>
+                    <span>Freelance development</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 mt-1">•</span>
-                    <span>Consulting Projects</span>
+                    <span>Collaborating on the Math Resources</span>
                   </li>
                 </ul>
               </div>
@@ -171,11 +166,11 @@ export default function ContactPage() {
                 items={[
                   {
                     question: "What subjects do you tutor?",
-                    answer: `I tutor all K-12 mathematics (Pre-Algebra through AP Calculus BC and Statistics), computer science (introductory programming through Machine Learning), and sciences (Earth Science through AP Physics C). I also work with elementary and middle school students across all core subjects. See my full subject list on my Services page (found in navigation bar above).`
+                    answer: `My focus is secondary mathematics — Algebra, Geometry, Pre-Calculus, Calculus, Statistics, and NYS Regents prep — along with computer science (intro programming through data structures and an intro to machine learning). I can also help with sciences, elementary and middle school core subjects, and intro economics on request. See my full subject list on my Services page (in the navigation bar above).`
                   },
                   {
                     question: "Do you offer online or in-person sessions?",
-                    answer: "Both! In-person sessions are available in Dutchess County, NY. Virtual sessions are available for students anywhere. I use Google Meet with screen sharing and annotations (digital whiteboards) to make online sessions just as effective as in-person."
+                    answer: "Both, though I prefer virtual now that I'm teaching full-time — it keeps scheduling flexible and works for students anywhere. I use Google Meet with screen sharing and digital whiteboards to make online sessions just as effective as in-person. In-person is possible in New York City when our schedules line up."
                   },
                   {
                     question: "What ages and grade levels do you work with?",
