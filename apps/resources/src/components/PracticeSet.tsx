@@ -13,6 +13,7 @@ import {
   type Progress,
 } from "@cameronbrady/math-components/logic";
 import { useTopicSlug } from "@/lib/topic-context";
+import { MathAnswerInput } from "./MathAnswerInput";
 
 // The hub's localStorage namespace. The package's progress adapter is
 // key-agnostic; the hub owns and passes this key to preserve existing data.
@@ -226,15 +227,12 @@ function QuestionCard({
             >
               Answer
             </label>
-            <input
+            <MathAnswerInput
               id={`input-${question.id}`}
-              type="text"
-              inputMode="text"
-              autoComplete="off"
               disabled={answered}
               value={state.response}
               onChange={(e) => onResponse(e.target.value)}
-              className="w-32 rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:opacity-50"
+              className="w-32 text-sm"
             />
             {question.unit ? (
               <span className="text-sm text-muted-foreground">
@@ -251,20 +249,15 @@ function QuestionCard({
             >
               Your answer
             </label>
-            <input
+            <MathAnswerInput
               id={`input-${question.id}`}
-              type="text"
-              inputMode="text"
-              autoComplete="off"
-              autoCapitalize="off"
-              spellCheck={false}
               disabled={answered}
               value={state.response}
               onChange={(e) => onResponse(e.target.value)}
               placeholder={
                 question.type === "equation" ? "e.g. y = 2x + 1" : "e.g. 2x + 3"
               }
-              className="w-full max-w-sm rounded-md border border-border bg-background px-3 py-2 font-mono text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:opacity-50"
+              className="w-full max-w-sm text-sm"
             />
             <p className="text-xs text-muted-foreground">
               Any equivalent form is accepted. Use <code>^</code> for powers and{" "}
