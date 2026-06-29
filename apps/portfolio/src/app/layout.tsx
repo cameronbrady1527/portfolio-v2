@@ -51,7 +51,7 @@ export default function RootLayout({
         />
         <NavigationProvider>
           <Navigation />
-          <main className="min-h-screen relative">
+          <main className="min-h-screen relative overflow-x-clip">
             {children}
             <Toaster position="top-right" />
           </main>
