@@ -42,6 +42,22 @@ describe("figureToHtml — plot curve kinds", () => {
     expect(svg).not.toContain("NaN"); // sqrt domain (x<h) must break cleanly
   });
 
+  it("renders FRAMED mode (custom x/y ranges + axis labels) for a story graph", () => {
+    const svg = figureToHtml({
+      kind: "plot",
+      xRange: [0, 20],
+      yRange: [0, 8],
+      xLabel: "Time (minutes)",
+      yLabel: "Speed (mph)",
+      curves: [{ kind: "polyline", points: [[0, 0], [2, 3], [9, 6], [12, 6], [20, 0]] }],
+    });
+    expect(svg).toContain("Time (minutes)"); // x axis label
+    expect(svg).toContain("Speed (mph)"); // y axis label
+    expect(svg).toContain("<rect"); // framed box border
+    expect(svg).toContain("20"); // x tick at max
+    expect(svg).not.toContain("NaN");
+  });
+
   it("draws a polyline as connected segments through its points", () => {
     const svg = figureToHtml({
       kind: "plot",

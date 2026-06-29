@@ -38,8 +38,17 @@ export type FigureInequality = {
 
 export type PlotFigure = {
   kind: "plot";
-  /** Axes span −range..range on both axes (default 10). */
+  /** SYMMETRIC mode: axes span −range..range on both axes (default 10). */
   range?: number;
+  /** FRAMED mode: explicit x-axis span [min, max]. When set, the figure is drawn
+   * as a labelled box over xRange × yRange (e.g. a first-quadrant time/quantity
+   * graph) instead of the symmetric ±range grid. */
+  xRange?: [number, number];
+  /** FRAMED mode: explicit y-axis span [min, max] (defaults to xRange). */
+  yRange?: [number, number];
+  /** FRAMED mode: axis labels. */
+  xLabel?: string;
+  yLabel?: string;
   curves?: FigureCurve[];
   /** Shaded half-planes for linear inequalities / systems of inequalities. */
   inequalities?: FigureInequality[];
@@ -171,17 +180,28 @@ function shadeTest(ineq: FigureInequality): (x: number, y: number) => number {
     : (x, y) => y - (m * x + b);
 }
 
-// Clip the plot's [−R,R]² box to the half-plane g(x,y) ≥ 0 (Sutherland–Hodgman),
-// returning the resulting (convex) polygon's vertices in DATA coordinates.
+// Pick a "nice" tick step (1/2/2.5/5 × 10ⁿ) giving ~10 intervals over [min,max].
+function niceStep(min: number, max: number): number {
+  const raw = (max - min) / 10 || 1;
+  const pow = Math.pow(10, Math.floor(Math.log10(raw)));
+  for (const m of [1, 2, 2.5, 5, 10]) if (m * pow >= raw - 1e-9) return m * pow;
+  return 10 * pow;
+}
+
+// Clip the plot's [xmin,xmax]×[ymin,ymax] box to the half-plane g(x,y) ≥ 0
+// (Sutherland–Hodgman), returning the (convex) polygon's vertices in DATA coords.
 function clipBoxToHalfPlane(
-  R: number,
+  xmin: number,
+  xmax: number,
+  ymin: number,
+  ymax: number,
   g: (x: number, y: number) => number,
 ): [number, number][] {
   const box: [number, number][] = [
-    [-R, -R],
-    [R, -R],
-    [R, R],
-    [-R, R],
+    [xmin, ymin],
+    [xmax, ymin],
+    [xmax, ymax],
+    [xmin, ymax],
   ];
   const out: [number, number][] = [];
   for (let i = 0; i < box.length; i++) {
@@ -199,35 +219,78 @@ function clipBoxToHalfPlane(
 }
 
 function renderPlot(fig: PlotFigure): string {
-  const R = fig.range ?? 10;
-  const span = SIZE - 2 * PAD;
-  const unit = span / (2 * R);
-  const cx = PAD + R * unit;
-  const cy = PAD + R * unit;
-  const sx = (x: number) => +(cx + x * unit).toFixed(2);
-  const sy = (y: number) => +(cy - y * unit).toFixed(2);
   const parts: string[] = [];
+  let xmin: number, xmax: number, ymin: number, ymax: number;
+  let sx: (x: number) => number, sy: (y: number) => number;
+  let W = SIZE, H = SIZE;
 
-  for (let v = -R; v <= R; v++) {
+  if (fig.xRange) {
+    // ——— FRAMED mode: labelled box over xRange × yRange ———
+    [xmin, xmax] = fig.xRange;
+    [ymin, ymax] = fig.yRange ?? fig.xRange;
+    W = 320;
+    H = 240;
+    const padL = 40;
+    const padR = 14;
+    const padT = 12;
+    const padB = fig.xLabel ? 34 : 24;
+    const pw = W - padL - padR;
+    const ph = H - padT - padB;
+    sx = (x) => +(padL + ((x - xmin) / (xmax - xmin)) * pw).toFixed(2);
+    sy = (y) => +(padT + ((ymax - y) / (ymax - ymin)) * ph).toFixed(2);
+    const xs = niceStep(xmin, xmax);
+    const ys = niceStep(ymin, ymax);
+    for (let v = Math.ceil(xmin / xs) * xs; v <= xmax + 1e-9; v += xs) {
+      parts.push(`<line x1="${sx(v)}" y1="${padT}" x2="${sx(v)}" y2="${padT + ph}" stroke="${GRID}"/>`);
+      parts.push(`<text x="${sx(v)}" y="${padT + ph + 11}" fill="${AXIS}" font-size="8" text-anchor="middle">${fmt(v)}</text>`);
+    }
+    for (let v = Math.ceil(ymin / ys) * ys; v <= ymax + 1e-9; v += ys) {
+      parts.push(`<line x1="${padL}" y1="${sy(v)}" x2="${padL + pw}" y2="${sy(v)}" stroke="${GRID}"/>`);
+      parts.push(`<text x="${padL - 4}" y="${sy(v) + 3}" fill="${AXIS}" font-size="8" text-anchor="end">${fmt(v)}</text>`);
+    }
+    parts.push(`<rect x="${padL}" y="${padT}" width="${pw}" height="${ph}" fill="none" stroke="${AXIS}" stroke-width="1.5"/>`);
+    if (fig.xLabel) {
+      parts.push(`<text x="${padL + pw / 2}" y="${H - 4}" fill="${INK}" font-size="9" text-anchor="middle">${esc(fig.xLabel)}</text>`);
+    }
+    if (fig.yLabel) {
+      parts.push(`<text x="10" y="${padT + ph / 2}" fill="${INK}" font-size="9" text-anchor="middle" transform="rotate(-90 10 ${padT + ph / 2})">${esc(fig.yLabel)}</text>`);
+    }
+  } else {
+    // ——— SYMMETRIC mode: ±range coordinate plane ———
+    const R = fig.range ?? 10;
+    xmin = -R;
+    xmax = R;
+    ymin = -R;
+    ymax = R;
+    const span = SIZE - 2 * PAD;
+    const unit = span / (2 * R);
+    const cx = PAD + R * unit;
+    const cy = PAD + R * unit;
+    sx = (x) => +(cx + x * unit).toFixed(2);
+    sy = (y) => +(cy - y * unit).toFixed(2);
+    for (let v = -R; v <= R; v++) {
+      parts.push(
+        `<line x1="${sx(v)}" y1="${PAD}" x2="${sx(v)}" y2="${SIZE - PAD}" stroke="${GRID}"/>`,
+        `<line x1="${PAD}" y1="${sy(v)}" x2="${SIZE - PAD}" y2="${sy(v)}" stroke="${GRID}"/>`,
+      );
+    }
     parts.push(
-      `<line x1="${sx(v)}" y1="${PAD}" x2="${sx(v)}" y2="${SIZE - PAD}" stroke="${GRID}"/>`,
-      `<line x1="${PAD}" y1="${sy(v)}" x2="${SIZE - PAD}" y2="${sy(v)}" stroke="${GRID}"/>`,
+      `<line x1="${PAD}" y1="${sy(0)}" x2="${SIZE - PAD}" y2="${sy(0)}" stroke="${AXIS}" stroke-width="1.5"/>`,
+      `<line x1="${sx(0)}" y1="${PAD}" x2="${sx(0)}" y2="${SIZE - PAD}" stroke="${AXIS}" stroke-width="1.5"/>`,
     );
+    for (let v = -R; v <= R; v++) {
+      if (v === 0 || v % 5 !== 0) continue;
+      parts.push(
+        `<text x="${sx(v)}" y="${sy(0) + 12}" fill="${AXIS}" font-size="8" text-anchor="middle">${v}</text>`,
+        `<text x="${sx(0) - 5}" y="${sy(v) + 3}" fill="${AXIS}" font-size="8" text-anchor="end">${v}</text>`,
+      );
+    }
   }
-  parts.push(
-    `<line x1="${PAD}" y1="${sy(0)}" x2="${SIZE - PAD}" y2="${sy(0)}" stroke="${AXIS}" stroke-width="1.5"/>`,
-    `<line x1="${sx(0)}" y1="${PAD}" x2="${sx(0)}" y2="${SIZE - PAD}" stroke="${AXIS}" stroke-width="1.5"/>`,
-  );
-  for (let v = -R; v <= R; v++) {
-    if (v === 0 || v % 5 !== 0) continue;
-    parts.push(
-      `<text x="${sx(v)}" y="${sy(0) + 12}" fill="${AXIS}" font-size="8" text-anchor="middle">${v}</text>`,
-      `<text x="${sx(0) - 5}" y="${sy(v) + 3}" fill="${AXIS}" font-size="8" text-anchor="end">${v}</text>`,
-    );
-  }
+
+  // ——— shared: shaded inequalities, curves/polylines, points ———
   (fig.inequalities ?? []).forEach((ineq, i) => {
     const color = CURVE[i % CURVE.length];
-    const poly = clipBoxToHalfPlane(R, shadeTest(ineq));
+    const poly = clipBoxToHalfPlane(xmin, xmax, ymin, ymax, shadeTest(ineq));
     if (poly.length >= 3) {
       const pts = poly.map(([x, y]) => `${sx(x)},${sy(y)}`).join(" ");
       parts.push(`<polygon points="${pts}" fill="${color}" fill-opacity="0.18"/>`);
@@ -235,14 +298,14 @@ function renderPlot(fig: PlotFigure): string {
     const dash = ineq.strict ? ` stroke-dasharray="5,4"` : "";
     if ("x" in ineq.boundary) {
       const k = ineq.boundary.x;
-      if (k >= -R && k <= R) {
+      if (k >= xmin && k <= xmax) {
         parts.push(
-          `<line x1="${sx(k)}" y1="${sy(R)}" x2="${sx(k)}" y2="${sy(-R)}" stroke="${color}" stroke-width="2"${dash}/>`,
+          `<line x1="${sx(k)}" y1="${sy(ymax)}" x2="${sx(k)}" y2="${sy(ymin)}" stroke="${color}" stroke-width="2"${dash}/>`,
         );
       }
     } else {
       const { m, b } = ineq.boundary;
-      const d = sampledPath((x) => m * x + b, -R, R, -R, R, sx, sy);
+      const d = sampledPath((x) => m * x + b, xmin, xmax, ymin, ymax, sx, sy);
       if (d) parts.push(`<path d="${d}" fill="none" stroke="${color}" stroke-width="2"${dash}/>`);
     }
   });
@@ -255,7 +318,7 @@ function renderPlot(fig: PlotFigure): string {
       if (d) parts.push(`<path d="${d}" fill="none" stroke="${stroke}" stroke-width="2"/>`);
       return;
     }
-    const d = sampledPath((x) => evalCurve(c, x), -R, R, -R, R, sx, sy);
+    const d = sampledPath((x) => evalCurve(c, x), xmin, xmax, ymin, ymax, sx, sy);
     if (d) parts.push(`<path d="${d}" fill="none" stroke="${stroke}" stroke-width="2"/>`);
   });
   for (const p of fig.points ?? []) {
@@ -268,7 +331,7 @@ function renderPlot(fig: PlotFigure): string {
       );
     }
   }
-  return svg(parts.join(""), fig.caption ?? "Coordinate-plane graph", fig.caption);
+  return svg(parts.join(""), fig.caption ?? "Coordinate-plane graph", fig.caption, W, H);
 }
 
 function renderScatter(fig: ScatterFigure): string {
