@@ -50,6 +50,15 @@ export {
 } from "./IsoscelesTriangle";
 export { CPCTC, type CPCTCProps } from "./CPCTC";
 export {
+  CongruenceChecker,
+  classifyCriterion,
+  CHECKER_PRESETS,
+  type CongruenceCheckerProps,
+  type CheckerCriterion,
+  type CheckerPreset,
+  type Mark,
+} from "./CongruenceChecker";
+export {
   CongruenceCriteria,
   type CongruenceCriteriaProps,
 } from "./CongruenceCriteria";
