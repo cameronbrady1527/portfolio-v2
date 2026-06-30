@@ -1,0 +1,133 @@
+---
+title: CPCTC
+order: 50
+description: Once two triangles are congruent, every pair of corresponding parts is congruent — the skill is reading the correspondence from the statement, not from where the triangle sits.
+---
+
+import { CPCTC } from "@cameronbrady/math-components";
+
+Once you know two triangles are congruent, you get a whole list of equal parts for
+free. That is what <Term id="cpctc">CPCTC</Term> stands for: **Corresponding Parts
+of Congruent Triangles are Congruent**. If one triangle can be carried exactly onto
+the other, then each side lands on a matching side and each angle lands on a
+matching angle — so all six pairs are equal.
+
+The one new skill is **reading the correspondence**. A congruence statement lists
+its vertices in matching order on purpose:
+
+$$\triangle ABC \cong \triangle DEF \quad\Longrightarrow\quad A\leftrightarrow D,\ \ B\leftrightarrow E,\ \ C\leftrightarrow F.$$
+
+From that single line you can read off every equal part — pair the **letters in the
+same position**, never the parts that happen to look closest on the page.
+
+## Read the correspondence
+
+The second triangle below is drawn **turned and flipped**, so you cannot trust
+position. Click a side or angle of the first triangle and watch its true partner
+light up in the second — matched by the order $A\!\to\!D,\ B\!\to\!E,\ C\!\to\!F$.
+
+<CPCTC />
+
+## Make a prediction
+
+<PredictThenCheck
+  prompt="Given △ABC ≅ △DEF, which side of the second triangle is congruent to BC?"
+  choices={["DE", "EF", "DF", "It depends on how the triangle is drawn"]}
+>
+
+It is **EF**. Read the letters by position: $B$ matches $E$ and $C$ matches $F$, so
+the side $BC$ corresponds to the side $EF$ — written in the same order, $BC \cong
+EF$. How the second triangle is turned or flipped makes no difference; the
+correspondence comes from the statement. Select **BC** in the tool and watch $EF$
+light up.
+
+</PredictThenCheck>
+
+## Why the order matters
+
+CPCTC does not ask you to re-prove anything — the triangles are *already* congruent.
+It asks you to **name the right partner**. The trap is matching by appearance: a
+reflected triangle can put $E$ where you expect $D$, so a part that *looks* like it
+pairs with $AB$ may really be $EF$. Reading straight from $\triangle ABC \cong
+\triangle DEF$ keeps you right every time:
+
+- Sides: $AB \cong DE$, $\;BC \cong EF$, $\;CA \cong FD$.
+- Angles: $\angle A \cong \angle D$, $\;\angle B \cong \angle E$, $\;\angle C \cong \angle F$.
+
+<Takeaway>
+
+**CPCTC**: if $\triangle ABC \cong \triangle DEF$, then every corresponding pair is
+congruent. Find a partner by pairing the **letters in the same position** of the
+congruence statement — not by which parts sit closest on the diagram.
+
+</Takeaway>
+
+<WorkedExample title="Given △PQR ≅ △STU, find the partner of ∠R and of side PQ.">
+  <Step
+    check={{
+      id: "we-cpctc-angle",
+      type: "mc",
+      prompt: "Which angle is congruent to ∠R?",
+      choices: ["∠S", "∠T", "∠U"],
+      answer: 2,
+      hints: ["R is the third letter of △PQR. Take the third letter of △STU."],
+      explanation: "R sits in the third position, and U is third in △STU, so ∠R ≅ ∠U.",
+    }}
+  >
+    Line the statements up by position: $P\leftrightarrow S$, $Q\leftrightarrow T$,
+    $R\leftrightarrow U$. The third letters match, so $\angle R \cong \angle U$.
+  </Step>
+  <Step
+    check={{
+      id: "we-cpctc-side",
+      type: "mc",
+      prompt: "Which side is congruent to PQ?",
+      choices: ["ST", "TU", "SU"],
+      answer: 0,
+      hints: ["P matches S and Q matches T."],
+      explanation: "P↔S and Q↔T, so the side PQ corresponds to ST: PQ ≅ ST.",
+    }}
+  >
+    Pair each letter: $P\leftrightarrow S$ and $Q\leftrightarrow T$. So the side
+    $PQ$ corresponds to $ST$, giving $PQ \cong ST$.
+  </Step>
+</WorkedExample>
+
+export const practice = [
+  {
+    id: "cpctc-side-partner",
+    type: "mc",
+    prompt: "Given △ABC ≅ △DEF, which side is congruent to CA?",
+    choices: ["DE", "EF", "FD", "DF"],
+    answer: 2,
+    hints: ["C matches F and A matches D, in that order."],
+    explanation: "C↔F and A↔D, so CA corresponds to FD: CA ≅ FD.",
+  },
+  {
+    id: "cpctc-angle-partner",
+    type: "mc",
+    prompt: "Given △ABC ≅ △DEF, which angle is congruent to ∠B?",
+    choices: ["∠D", "∠E", "∠F"],
+    answer: 1,
+    hints: ["B is the second letter; take the second letter of △DEF."],
+    explanation: "B sits in the second position and E is second in △DEF, so ∠B ≅ ∠E.",
+  },
+  {
+    id: "cpctc-reflected-trap",
+    type: "mc",
+    prompt: "△JKL ≅ △XYZ, and the second triangle is drawn reflected. Which side is congruent to JK?",
+    choices: ["XY", "YZ", "XZ", "The reflection changes the answer"],
+    answer: 0,
+    hints: ["A reflection does not change the congruence statement — read J↔X and K↔Y."],
+    explanation: "Reflection does not change the correspondence. J↔X and K↔Y, so JK ≅ XY.",
+  },
+  {
+    id: "cpctc-statement-order",
+    type: "mc",
+    prompt: "Two triangles are congruent and you know ∠A ≅ ∠R, ∠B ≅ ∠S, ∠C ≅ ∠T. Which is the correct congruence statement?",
+    choices: ["△ABC ≅ △RST", "△ABC ≅ △STR", "△ABC ≅ △TRS", "△ABC ≅ △RTS"],
+    answer: 0,
+    hints: ["The statement must list corresponding vertices in the same order."],
+    explanation: "Corresponding vertices are A↔R, B↔S, C↔T, so the statement is △ABC ≅ △RST.",
+  },
+];

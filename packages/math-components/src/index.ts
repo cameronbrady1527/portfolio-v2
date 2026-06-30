@@ -48,6 +48,7 @@ export {
   IsoscelesTriangle,
   type IsoscelesTriangleProps,
 } from "./IsoscelesTriangle";
+export { CPCTC, type CPCTCProps } from "./CPCTC";
 export {
   SequenceBuilder,
   type SequenceBuilderProps,
