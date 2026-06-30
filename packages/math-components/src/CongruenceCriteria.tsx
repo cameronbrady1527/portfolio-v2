@@ -193,7 +193,7 @@ const VERTEX_LABELS = ["A", "B", "C"];
 const SIDE_TICKS = [1, 2, 3];
 const ANGLE_ARCS = [1, 2];
 
-const WOBBLE_MS = 900; // one springs-back attempt
+const WOBBLE_MS = 1000; // one springs-back attempt — a few decaying bounces
 const DISMISS_MS = 7000; // auto-return the named beat to inquiry
 
 export interface CongruenceCriteriaProps {
@@ -270,13 +270,14 @@ export function CongruenceCriteria({
     }
     // Push in an alternating direction so repeated taps feel like real prodding.
     const dir = attempts % 2 === 0 ? 1 : -1;
-    const amp = 0.55 * dir;
+    const amp = 1.15 * dir; // a hard shove — the corner visibly jumps
     const start = performance.now();
     const tick = (now: number) => {
       const k = Math.min(1, (now - start) / WOBBLE_MS);
-      // A damped spring: a couple of decaying oscillations that settle at 0.
-      const decay = (1 - k) ** 2;
-      const wob = Math.sin(k * Math.PI * 3) * decay;
+      // A stiff damped spring: several decaying bounces that settle hard at 0,
+      // so however the student shoves the corner it springs straight back.
+      const decay = (1 - k) ** 1.3;
+      const wob = Math.sin(k * Math.PI * 6) * decay;
       setOffset({ x: amp * wob, y: amp * 0.7 * wob });
       if (k < 1) rafRef.current = requestAnimationFrame(tick);
       else {
