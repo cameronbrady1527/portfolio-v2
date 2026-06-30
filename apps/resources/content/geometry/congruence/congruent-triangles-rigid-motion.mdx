@@ -1,0 +1,160 @@
+---
+title: Congruent Triangles & Rigid Motion
+order: 1
+description: "Congruent" is not a vague synonym for "same" — it has a precise meaning: one figure can be slid, turned, and flipped until it lands exactly on the other. See it happen.
+---
+
+import { CongruenceByMotion } from "@cameronbrady/math-components";
+
+You have met the [rigid motions](/geometry/transformations/translations) —
+**translations**, **rotations**, and **reflections** — the moves that slide,
+turn, and flip a figure without changing its size or shape. Congruence is simply
+the *result* of those moves, stated as a definition:
+
+> Two figures are **congruent** when some sequence of rigid motions carries one
+> of them **exactly** onto the other.
+
+So "congruent" is not a loose word for "looks the same." It is a promise you can
+check: pick up the first figure, slide it, turn it, flip it if you must — and if
+it can be made to land precisely on the second, with no part sticking out and no
+gap, the two are congruent.
+
+## See it land
+
+Below are two triangles, $\triangle ABC$ and $\triangle DEF$, that are the same
+shape and size but drawn in different positions. Choose a pose for the second
+triangle, then press **Carry $\triangle ABC$ onto $\triangle DEF$** and watch the
+first one travel — a slide, then a quarter-turn, and (for the flipped pose) a
+reflection — until it covers the second exactly.
+
+<CongruenceByMotion initialPose="rotated" />
+
+Try all three poses. **Slid far** needs only a translation. **Turned** needs a
+slide and a rotation. **Flipped** is a *mirror image*, so no amount of sliding
+and turning is enough — it takes a reflection too. In every case the triangle
+lands perfectly, because the two were congruent all along.
+
+## Corresponding parts
+
+Watch what comes to rest on what. When $\triangle ABC$ lands, vertex $A$ sits on
+$D$, vertex $B$ on $E$, and vertex $C$ on $F$. Side $AB$ lies along $DE$, side
+$BC$ along $EF$, and side $CA$ along $FD$ — and each angle settles onto its
+partner. These matched-up pieces are the **corresponding parts**, and the tool
+marks each pair with the same colour and the same number of ticks or arcs.
+
+This is why we are careful to write a congruence statement *in order*:
+
+$$\triangle ABC \cong \triangle DEF$$
+
+The order is not decoration — it *names the correspondence*. The first letters
+$A$ and $D$ are partners, the seconds $B$ and $E$, the thirds $C$ and $F$. Read
+off any pair you like: $\overline{AB} \cong \overline{DE}$, or
+$\angle C \cong \angle F$. Once you can trust the correspondence, every
+corresponding part is automatically equal — the idea you will lean on later as
+**CPCTC** (*corresponding parts of congruent triangles are congruent*).
+
+<PredictThenCheck
+  prompt="A reflection is the only rigid motion that reverses a figure's orientation (its 'handedness'). For which pose of the second triangle is a reflection unavoidable?"
+  choices={["Slid far", "Turned", "Flipped", "None — a slide always suffices"]}
+>
+
+The **flipped** pose. Sliding and turning a figure never change its orientation —
+trace its vertices and they still run clockwise (or still counter-clockwise).
+A *mirror image* has the opposite orientation, so the only way to match it is to
+reflect. That is exactly what the tool does on the **Flipped** pose: it slides,
+turns, *and* flips. Watch the third beat of the motion — the triangle folds
+across the dashed line and lands mirror-side down on $\triangle DEF$.
+
+</PredictThenCheck>
+
+## Why the definition is so useful
+
+Defining congruence through motion does two things at once. First, it makes
+"congruent" *checkable* — you are no longer eyeballing whether two figures match,
+you are asking a precise question: is there a rigid motion that superimposes
+them? Second, it hands you the corresponding parts for free. The moment the
+figures land on each other, you know which side equals which and which angle
+equals which — and that is the engine behind every congruence proof to come.
+
+<Takeaway>
+
+$\triangle ABC \cong \triangle DEF$ means a rigid motion carries the first
+triangle exactly onto the second. The vertices that land on each other —
+$A \leftrightarrow D$, $B \leftrightarrow E$, $C \leftrightarrow F$ — are the
+**corresponding parts**, and corresponding parts of congruent figures are equal.
+
+</Takeaway>
+
+<WorkedExample title="Given that △PQR ≅ △STU, name the side congruent to QR and the angle congruent to ∠P.">
+  <Step
+    check={{
+      id: "we-corr-side",
+      type: "mc",
+      prompt: "Which side of △STU corresponds to QR?",
+      choices: ["ST", "TU", "SU"],
+      answer: 1,
+      hints: ["Match letter positions: P↔S, Q↔T, R↔U. QR uses the 2nd and 3rd letters."],
+      explanation: "The statement pairs P↔S, Q↔T, R↔U. So Q↔T and R↔U, which makes QR correspond to TU.",
+    }}
+  >
+    Read the correspondence straight off the statement: $P \leftrightarrow S$,
+    $Q \leftrightarrow T$, $R \leftrightarrow U$. Side $QR$ joins the second and
+    third vertices, so its partner joins the second and third vertices of
+    $\triangle STU$ — that is $\overline{TU}$. Hence
+    $\overline{QR} \cong \overline{TU}$.
+  </Step>
+  <Step>
+    The angle at $P$ corresponds to the angle at its partner $S$, so
+    $\angle P \cong \angle S$. Notice you never had to look at a picture — the
+    correspondence order told you everything.
+  </Step>
+</WorkedExample>
+
+export const practice = [
+  {
+    id: "congruence-definition",
+    type: "mc",
+    prompt: "Two triangles are congruent exactly when…",
+    choices: [
+      "they have the same area",
+      "some sequence of translations, rotations, and reflections carries one exactly onto the other",
+      "they are both drawn the same way up",
+      "they share at least one equal angle",
+    ],
+    answer: 1,
+    hints: ["Congruence is defined through rigid motion, not through a single measurement."],
+    explanation:
+      "Congruent means superposable by a rigid motion: you can slide, turn, and flip one figure until it lands exactly on the other. Equal area or a single equal angle is not enough.",
+  },
+  {
+    id: "corresponding-side",
+    type: "mc",
+    prompt: "If △ABC ≅ △DEF, which side is congruent to AC?",
+    choices: ["DE", "EF", "DF"],
+    answer: 2,
+    hints: ["A↔D, B↔E, C↔F. AC joins the 1st and 3rd vertices."],
+    explanation:
+      "The correspondence is A↔D, B↔E, C↔F. Side AC joins the first and third vertices, so it corresponds to DF. Thus AC ≅ DF.",
+  },
+  {
+    id: "corresponding-angle",
+    type: "mc",
+    prompt: "If △ABC ≅ △DEF, which angle is congruent to ∠E?",
+    choices: ["∠A", "∠B", "∠C"],
+    answer: 1,
+    hints: ["E is the 2nd letter of DEF; match it to the 2nd letter of ABC."],
+    explanation:
+      "E corresponds to B (both are the second vertex listed), so ∠E ≅ ∠B.",
+  },
+  {
+    id: "reflection-needed",
+    type: "mc",
+    prompt:
+      "A triangle and its mirror image are congruent. To carry one onto the other, you must use at least one…",
+    choices: ["translation only", "rotation only", "reflection", "dilation"],
+    answer: 2,
+    hints: ["Only one rigid motion reverses orientation (handedness)."],
+    explanation:
+      "Slides and turns preserve orientation, so they can never match a mirror image on their own. A reflection is required. (A dilation is not a rigid motion — it changes size.)",
+  },
+];

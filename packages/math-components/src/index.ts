@@ -49,6 +49,13 @@ export {
   type IsoscelesTriangleProps,
 } from "./IsoscelesTriangle";
 export {
+  CongruenceByMotion,
+  buildCongruencePose,
+  CONGRUENCE_SOURCE,
+  type CongruenceByMotionProps,
+  type Pose,
+} from "./CongruenceByMotion";
+export {
   SequenceBuilder,
   type SequenceBuilderProps,
   type SequencePuzzle,
