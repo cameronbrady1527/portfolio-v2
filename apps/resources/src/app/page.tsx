@@ -7,11 +7,16 @@ import type { SubjectNode } from "@/lib/content/derive";
 
 // The hub front door. Subjects render in content-index order (driven by each
 // subject's _meta.json `order`), so the lead subject is whichever sorts first —
-// today that's Geometry, the flagship interactive track. Adding a topic .mdx
-// makes it appear here automatically — no registry.
+// today that's Geometry, the flagship interactive track. Foundations (Unit 0)
+// shows under the heading "Fundamentals". Adding a topic .mdx makes it appear
+// here automatically — no registry.
 export default function Home() {
   const { subjects } = getContentIndex();
-  const [lead, ...rest] = subjects;
+  // Foundations is presented as "Fundamentals" on the front door only.
+  const sections = subjects.map((s) =>
+    s.slug === "foundations" ? { ...s, label: "Fundamentals" } : s,
+  );
+  const [lead, ...rest] = sections;
   const leadHref = lead ? subjectHref(lead.slug) : undefined;
 
   return (

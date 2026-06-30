@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check } from "lucide-react";
 import { Button, cn } from "@repo/ui";
 import { grade, type PracticeQuestion } from "@cameronbrady/math-components/logic";
+import { MathAnswerInput } from "./MathAnswerInput";
 
 export interface SelfCheckProps {
   /** Lead-in label before the prompt. */
@@ -69,14 +70,12 @@ export function SelfCheck({
           ))}
         </fieldset>
       ) : (
-        <input
-          type="text"
-          inputMode="text"
+        <MathAnswerInput
           value={response}
           disabled={solved}
           onChange={(e) => setResponse(e.target.value)}
           aria-label={question.prompt}
-          className="w-40 rounded-md border border-border bg-background p-2 text-sm focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="w-40 text-sm"
         />
       )}
 

@@ -3,6 +3,7 @@
 import { useEffect, useReducer, useState } from "react";
 import { Check, Sparkles, X } from "lucide-react";
 import { Button, cn } from "@repo/ui";
+import { MathAnswerInput } from "./MathAnswerInput";
 import {
   DEFAULT_FLUENCY_THRESHOLD,
   fluencyReducer,
@@ -146,17 +147,14 @@ export function Drill({
           <label htmlFor="drill-answer" className="sr-only">
             Your answer
           </label>
-          <input
+          <MathAnswerInput
             id="drill-answer"
-            type="text"
-            inputMode={problem.type === "numeric" ? "numeric" : "text"}
-            autoComplete="off"
             autoFocus
             disabled={answered}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your answer"
-            className="w-44 rounded-md border border-border bg-background px-3 py-2 font-mono text-base outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:opacity-60"
+            className="w-44 text-base"
           />
           {!answered ? (
             <Button type="submit" disabled={input.trim() === ""}>
