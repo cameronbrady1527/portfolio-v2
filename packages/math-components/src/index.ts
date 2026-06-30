@@ -50,6 +50,10 @@ export {
 } from "./IsoscelesTriangle";
 export { CPCTC, type CPCTCProps } from "./CPCTC";
 export {
+  CongruenceCriteria,
+  type CongruenceCriteriaProps,
+} from "./CongruenceCriteria";
+export {
   CongruenceByMotion,
   buildCongruencePose,
   CONGRUENCE_SOURCE,
