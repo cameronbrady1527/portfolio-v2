@@ -55,6 +55,15 @@ export {
   type Midsegment,
   type SSSTriangle,
 } from "./geometry/triangle";
+export {
+  solutionCount,
+  solveTriangles,
+  congruenceCheck,
+  type Criterion,
+  type Parts,
+  type Determinacy,
+  type CongruenceResult,
+} from "./geometry/congruence";
 
 // Deterministic PRNG — shared seeded randomness for reproducible practice.
 export { mulberry32 } from "./random";

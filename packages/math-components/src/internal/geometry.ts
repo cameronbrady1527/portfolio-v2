@@ -145,6 +145,50 @@ export function congruenceTickCounts(sides: number[], relTol = 0.012): number[] 
 }
 
 /**
+ * `count` concentric congruence arcs marking the angle at vertex `v` between the
+ * rays to `p` and `q` — the angle analogue of {@link sideTicks}. Equal angles
+ * carry the same number of arcs (the single/double/triple convention). Each arc
+ * sweeps the (minor) interior angle, the innermost at radius `r0` and each
+ * subsequent one `gap` further out. Returns one polyline per arc.
+ */
+export function angleArcs(
+  v: Pt,
+  p: Pt,
+  q: Pt,
+  count: number,
+  r0 = 0.3,
+  gap = 0.12,
+): [number, number][][] {
+  const angP = Math.atan2(p.y - v.y, p.x - v.x) / D;
+  const angQ = Math.atan2(q.y - v.y, q.x - v.x) / D;
+  const delta = ((angQ - angP + 540) % 360) - 180; // signed minor sweep
+  const arcs: [number, number][][] = [];
+  for (let i = 0; i < count; i++) {
+    arcs.push(arcPoints(v, angP, angP + delta, r0 + i * gap));
+  }
+  return arcs;
+}
+
+/**
+ * The little square that marks a right angle at vertex `v` between the rays to
+ * `p` and `q`: the foot a distance `size` along VP, the outer corner, then the
+ * foot a distance `size` along VQ — a 3-point polyline. (Drawn for any angle; it
+ * only reads as a true square when the angle is 90°.)
+ */
+export function rightAngleSquare(v: Pt, p: Pt, q: Pt, size = 0.3): [number, number][] {
+  const lp = Math.hypot(p.x - v.x, p.y - v.y) || 1;
+  const lq = Math.hypot(q.x - v.x, q.y - v.y) || 1;
+  const ux = (p.x - v.x) / lp;
+  const uy = (p.y - v.y) / lp;
+  const wx = (q.x - v.x) / lq;
+  const wy = (q.y - v.y) / lq;
+  const foot1: [number, number] = [v.x + ux * size, v.y + uy * size];
+  const foot2: [number, number] = [v.x + wx * size, v.y + wy * size];
+  const corner: [number, number] = [v.x + (ux + wx) * size, v.y + (uy + wy) * size];
+  return [foot1, corner, foot2];
+}
+
+/**
  * `count` short congruence ticks centred on segment p→q's midpoint, each drawn
  * perpendicular to the side. Returns one [start, end] segment per tick (render
  * each as a Polyline). `len` is half a tick's length and `gap` the spacing

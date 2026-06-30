@@ -42,3 +42,12 @@ export {
   type TriangleSide,
   type Midsegment,
 } from "./triangle";
+export {
+  solutionCount,
+  solveTriangles,
+  congruenceCheck,
+  type Criterion,
+  type Parts,
+  type Determinacy,
+  type CongruenceResult,
+} from "./congruence";
