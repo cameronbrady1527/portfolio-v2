@@ -64,6 +64,23 @@ export {
   type Determinacy,
   type CongruenceResult,
 } from "./geometry/congruence";
+export {
+  gradeProof,
+  generateProof,
+  verticalAngles,
+  PROOF_FAMILIES,
+  REASON_LABELS,
+  type ReasonId,
+  type ScaffoldLevel,
+  type ProofStatement,
+  type ProofDistractor,
+  type ProofSpec,
+  type ProofFigure,
+  type ProofArrangement,
+  type RowVerdict,
+  type ProofVerdict,
+  type ProofFamily,
+} from "./geometry/proof";
 
 // Deterministic PRNG — shared seeded randomness for reproducible practice.
 export { mulberry32 } from "./random";

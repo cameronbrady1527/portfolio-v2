@@ -51,3 +51,20 @@ export {
   type Determinacy,
   type CongruenceResult,
 } from "./congruence";
+export {
+  gradeProof,
+  generateProof,
+  verticalAngles,
+  PROOF_FAMILIES,
+  REASON_LABELS,
+  type ReasonId,
+  type ScaffoldLevel,
+  type ProofStatement,
+  type ProofDistractor,
+  type ProofSpec,
+  type ProofFigure,
+  type ProofArrangement,
+  type RowVerdict,
+  type ProofVerdict,
+  type ProofFamily,
+} from "./proof";
