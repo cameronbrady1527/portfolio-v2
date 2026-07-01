@@ -1,0 +1,196 @@
+---
+title: SSS & SAS
+order: 2
+description: You rarely get to slide one triangle onto another — you get a handful of measurements. Which measurements are enough to force congruence? Discover the first two shortcuts by trying, and failing, to build a different triangle.
+---
+
+import { CongruenceCriteria } from "@cameronbrady/math-components";
+
+On the [last page](/geometry/congruence/congruent-triangles-rigid-motion) we
+defined congruence through motion: two triangles are congruent when a rigid
+motion carries one **exactly** onto the other. That is the precise idea — but in
+practice you almost never get to pick a triangle up and slide it. You get a few
+**measurements**: a side here, an angle there. So the real question becomes:
+
+> How many parts of a triangle do you have to pin down before the triangle has
+> no choice but to be a *single* shape and size?
+
+A triangle has six parts — three sides and three angles. It turns out you never
+need all six. Some **three** of them are enough to lock the whole triangle. The
+trick is discovering *which* threes work, and the honest way to discover that is
+to try to break them.
+
+## The game: try to build a *different* one
+
+Here is the inquiry. You are handed a set of parts, drawn on a triangle in green.
+Your job is to **build a different triangle from the same parts** — to grab a
+corner and find some other triangle that still honours every green mark. If you
+*can't* — if every nudge springs back — then those parts *determine* the
+triangle, and you have found a genuine congruence shortcut.
+
+Start with **SSS** (all three sides), then switch to **SAS** (two sides and the
+angle between them). Push the corner. Watch what happens. Only when you are
+convinced should you press **Name it**.
+
+<CongruenceCriteria initialCriterion="SSS" />
+
+Notice that the tool never tells you the answer up front. It lets you prod the
+figure first, stays non-judgmental while you explore ("it won't budge"), and only
+names the criterion when *you* decide you have seen enough. The verdict it gives
+is read straight from the geometry — the figure cannot claim a shortcut is valid
+unless the math agrees.
+
+## SSS — three sides lock it
+
+Give a triangle its three side lengths and it has nowhere to flex. This is the
+property that makes triangles the workhorse of bridges, roof trusses, and
+bicycle frames: a triangle of fixed-length bars is **rigid**, while a four-bar
+square sags into a rhombus the moment you lean on it. There is no second triangle
+hiding in three fixed sides.
+
+$$\text{If } \overline{AB}\cong\overline{DE},\ \overline{BC}\cong\overline{EF},\ \overline{CA}\cong\overline{FD}, \text{ then } \triangle ABC \cong \triangle DEF. \quad (\text{SSS})$$
+
+## SAS — and the angle must be *between*
+
+Now drop one side and keep two sides with the angle **wedged between them**. Set
+the two sides, fix the angle at their shared corner, and the third side is forced
+to connect their far ends — there is only one way to close it up.
+
+$$\text{If } \overline{AB}\cong\overline{DE},\ \angle A\cong\angle D,\ \overline{AC}\cong\overline{FD}, \text{ then } \triangle ABC \cong \triangle DEF. \quad (\text{SAS})$$
+
+The word **included** is doing real work here. SAS is *Side–Angle–Side*: the angle
+sits **between** the two sides you know. Keep that order in mind — when the angle
+drifts to a position *not* between the two sides, the guarantee can fail, and that
+failure (the infamous **SSA**) is the whole story of a later page.
+
+<PredictThenCheck
+  prompt="You know two sides of a triangle and one angle — but the angle is NOT the one between those two sides. Are the two sides and that angle guaranteed to lock the triangle?"
+  choices={["Yes — any two sides and one angle is enough", "No — the angle has to be the included angle for the guarantee", "Only if the triangle is right-angled"]}
+>
+
+**No — the angle has to be *included*.** SAS guarantees congruence only when the
+known angle sits *between* the two known sides. When the angle is off to the side
+instead (the **SSA** arrangement), the third side can sometimes swing to two
+different landing spots, giving two different triangles from the same three
+measurements. That is exactly why we say "SAS," not "any two sides and an angle."
+You will watch that swing happen — and see the one case where a right angle
+rescues it — on the [HL & why SSA/AAA fail](/geometry/congruence/hl-and-ssa) page.
+
+</PredictThenCheck>
+
+## The whole set, at a glance
+
+SSS and SAS are the first two of **five** valid congruence criteria. Here is the
+complete scorecard you are building toward across this unit — five shortcuts that
+lock a triangle, and two plausible-looking arrangements that do **not**:
+
+<table>
+  <thead>
+    <tr>
+      <th>Criterion</th>
+      <th>What you know</th>
+      <th>Locks the triangle?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>SSS</strong></td><td>all three sides</td><td>✓ valid</td></tr>
+    <tr><td><strong>SAS</strong></td><td>two sides and the <em>included</em> angle</td><td>✓ valid</td></tr>
+    <tr><td><strong>ASA</strong></td><td>two angles and the <em>included</em> side</td><td>✓ valid</td></tr>
+    <tr><td><strong>AAS</strong></td><td>two angles and a non-included side</td><td>✓ valid</td></tr>
+    <tr><td><strong>HL</strong></td><td>hypotenuse and a leg of a right triangle</td><td>✓ valid</td></tr>
+    <tr><td><strong>SSA</strong></td><td>two sides and a non-included angle</td><td>✗ ambiguous (the "two triangles" case)</td></tr>
+    <tr><td><strong>AAA</strong></td><td>all three angles</td><td>✗ same shape, any size (similar, not congruent)</td></tr>
+  </tbody>
+</table>
+
+This page nailed down the first two rows. The next pages take on
+[ASA & AAS](/geometry/congruence/asa-and-aas), then the right-angle special case
+**HL** alongside the two famous failures, **SSA** and **AAA**.
+
+<Takeaway>
+
+**SSS** (three sides) and **SAS** (two sides and the angle *between* them) each
+pin a triangle down to a single shape and size — so if two triangles share those
+parts, they are congruent. In **SAS** the angle must be the **included** one;
+slide it elsewhere and the guarantee can break.
+
+</Takeaway>
+
+<WorkedExample title="In △ABC and △DEF you know AB = DE, AC = DF, and ∠A = ∠D. Are the triangles congruent, and by which criterion?">
+  <Step
+    check={{
+      id: "we-sas-included",
+      type: "mc",
+      prompt: "Where does the known angle ∠A sit relative to the two known sides AB and AC?",
+      choices: ["Between them (the included angle)", "Opposite one of them", "It is not related to those sides"],
+      answer: 0,
+      hints: ["AB and AC are the two sides meeting at vertex A. ∠A is the angle at that very vertex."],
+      explanation: "AB and AC both have an endpoint at A, so they are the two sides meeting at A, and ∠A is the angle between them — the included angle.",
+    }}
+  >
+    List what is given: two pairs of sides, $\overline{AB}\cong\overline{DE}$ and
+    $\overline{AC}\cong\overline{DF}$, plus one pair of angles,
+    $\angle A\cong\angle D$. Both sides $AB$ and $AC$ meet at vertex $A$, and
+    $\angle A$ is the angle at that vertex — so the angle is **between** the two
+    sides.
+  </Step>
+  <Step>
+    Two sides and the angle *included* between them is exactly the **SAS** pattern.
+    Therefore $\triangle ABC \cong \triangle DEF$ by **SAS**. (Had the equal angle
+    been $\angle B$ instead — opposite side $AC$, not between $AB$ and $AC$ — this
+    would be the unreliable SSA arrangement, and we could not conclude congruence.)
+  </Step>
+</WorkedExample>
+
+export const practice = [
+  {
+    id: "sss-recognise",
+    type: "mc",
+    prompt: "Two triangles have all three pairs of sides equal. Which criterion proves them congruent?",
+    choices: ["SSS", "SAS", "AAA", "None — you also need an angle"],
+    answer: 0,
+    hints: ["Count what you are given: three sides, no angles."],
+    explanation:
+      "Three pairs of equal sides is the SSS criterion, and three fixed sides leave a triangle no freedom to flex — the triangles are congruent.",
+  },
+  {
+    id: "sas-included-angle",
+    type: "mc",
+    prompt: "For SAS to apply, the equal angle must be…",
+    choices: [
+      "any angle in the triangle",
+      "the angle included between the two equal sides",
+      "the largest angle",
+      "a right angle",
+    ],
+    answer: 1,
+    hints: ["The middle letter of S-A-S sits between the two S's."],
+    explanation:
+      "SAS requires the angle to be included between the two known sides. An equal angle in some other position (SSA) does not guarantee congruence.",
+  },
+  {
+    id: "classify-given-sas",
+    type: "mc",
+    prompt: "In △PQR and △XYZ: PQ = XY, QR = YZ, and ∠Q = ∠Y. Which criterion applies?",
+    choices: ["SSS", "SAS", "SSA — not valid", "Not enough information"],
+    answer: 1,
+    hints: ["Sides PQ and QR both meet at Q; ∠Q is the angle between them."],
+    explanation:
+      "PQ and QR meet at vertex Q, and ∠Q is the included angle between them. Two sides plus the included angle is SAS, so △PQR ≅ △XYZ.",
+  },
+  {
+    id: "aaa-not-congruence",
+    type: "mc",
+    prompt: "Two triangles have all three pairs of angles equal but you know none of their sides. Are they necessarily congruent?",
+    choices: [
+      "Yes — equal angles force congruence",
+      "No — they have the same shape but can be different sizes",
+      "Yes, but only if one is right-angled",
+      "Only if they are equilateral",
+    ],
+    answer: 1,
+    hints: ["Think of a small triangle and a photocopy enlarged 200%."],
+    explanation:
+      "Equal angles (AAA) fix the shape but not the size — the triangles are similar, not necessarily congruent. You can scale one freely and keep all three angles.",
+  },
+];

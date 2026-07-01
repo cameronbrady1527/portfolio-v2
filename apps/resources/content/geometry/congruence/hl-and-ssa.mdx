@@ -1,0 +1,216 @@
+---
+title: HL & why SSA/AAA fail
+order: 4
+description: Two plausible-looking arrangements — two sides and a stray angle (SSA), and all three angles (AAA) — do NOT lock a triangle. Watch each one fail, and watch a single right angle rescue SSA. That rescue is exactly the HL criterion.
+---
+
+import { CongruenceCriteria } from "@cameronbrady/math-components";
+
+So far every shortcut has *worked*: [SSS and SAS](/geometry/congruence/sss-and-sas),
+then [ASA and AAS](/geometry/congruence/asa-and-aas), each pinned a triangle down
+to a single shape and size. This page is about the ones that **don't** — and the
+honest reason a right angle turns one of them back into a guarantee.
+
+There are two famous near-misses. Both look like they ought to work:
+
+- **SSA** — two sides and an angle, but the angle is *not* between the two sides.
+- **AAA** — all three angles, and nothing else.
+
+The way to trust a criterion is to *try to break it*. Here you finally can: these
+two arrangements break, and seeing *how* they break is the whole lesson.
+
+## SSA — the side that swings like a door
+
+Keep two sides and one angle, but put the angle **off to the side** instead of
+between them. Now one of your sides is hinged at a corner with nothing fixing
+where its far end lands — it can **swing like a door**. As you lengthen that
+swinging side, count how many times it reaches the base.
+
+Start on **SSA** in the tool below. Drag the *swinging side BC* slider slowly up
+from the bottom and watch the dashed swing-circle:
+
+<CongruenceCriteria criteria={["HL", "SSA", "AAA"]} initialCriterion="SSA" />
+
+You should see three distinct regimes as the swinging side grows:
+
+1. **Too short → no triangle.** The side can't stretch down to the base at all.
+   The swing-circle floats above it and never touches.
+2. **Just long enough → exactly one triangle.** The circle becomes *tangent* to
+   the base — it kisses it at a single point. Notice the little square that
+   appears: the side has met the base at a **right angle**. Hold onto that.
+3. **Longer still → two triangles.** The circle now cuts the base in **two**
+   places, so the same three measurements describe two genuinely different
+   triangles. Switch between **Solution 1** and **Solution 2** to compare them —
+   same angle at $A$, same side $AB$, same swinging side $BC$, but a different
+   third side and a different triangle. Press **Name it** here and the tool
+   reports the verdict it reads from the geometry: **SSA is not a valid
+   congruence criterion.**
+
+That middle case — exactly one triangle — only happens at one special length, the
+length where the swing meets the base **perpendicularly**.
+
+## HL — the right angle that kills the second solution
+
+Look again at regime 2. The ambiguity disappears at exactly the moment the
+swinging side stands **perpendicular** to the base. A right angle sits precisely
+on the boundary between "two triangles" and "no triangle," so it leaves room for
+only **one**.
+
+That is the whole idea behind **HL** (Hypotenuse–Leg). HL is SSA with the angle
+*forced* to be a right angle:
+
+$$\text{In right triangles, if the hypotenuses are equal and one pair of legs is equal, the triangles are congruent.} \quad (\text{HL})$$
+
+Switch the tool to **HL** and try to nudge the corner: it won't budge. With the
+right angle fixed, the hypotenuse and one leg, Pythagoras forces the other leg
+to one exact length — there is no second triangle to find. HL is the one place
+where "two sides and a non-included angle" becomes trustworthy, and it is
+trustworthy *because* the right angle lands exactly on SSA's boundary.
+
+<PredictThenCheck
+  prompt="Two right triangles have equal hypotenuses and one pair of equal legs. Why does this guarantee congruence when general SSA does not?"
+  choices={["Because right triangles are always congruent", "Because the right angle sits exactly at the boundary where SSA's second triangle disappears", "Because the hypotenuse is the longest side"]}
+>
+
+**Because the right angle sits exactly on SSA's boundary.** General SSA is
+ambiguous because the swinging side can reach the base in two places. A right
+angle is the one position where those two landing points merge into a single
+one — the swing is tangent to the base. So fixing a right angle (HL) removes the
+second triangle that made SSA unreliable. With the hypotenuse and one leg known,
+Pythagoras then determines the remaining leg exactly.
+
+</PredictThenCheck>
+
+## AAA — same shape, any size
+
+The other near-miss keeps all three **angles** and no sides at all. Switch the
+tool to **AAA** and drag the *Triangle size* slider.
+
+Every triangle in the family has the identical three angles — the identical
+**shape** — but the size grows and shrinks freely. There is no length anywhere to
+anchor the triangle, so the angles alone can never tell you *how big* it is. A
+triangle and its enlargement on a photocopier have equal angles and are plainly
+not congruent. Press **Name it** and the tool reports: **AAA is not a congruence
+criterion** — it gives *similarity* (same shape), not congruence (same shape
+**and** size).
+
+<Takeaway>
+
+**SSA** (two sides and a non-included angle) is ambiguous: the opposite side can
+swing to two different landing points, giving two different triangles from the
+same parts. The single exception is when that side meets the base at a **right
+angle** — and forcing a right angle is exactly the **HL** criterion, which is why
+HL works when general SSA does not. **AAA** (three angles) fixes a triangle's
+*shape* but not its *size*, so it gives **similar**, not congruent, triangles.
+
+</Takeaway>
+
+## The whole scorecard, complete
+
+With this page the table you have been building across the unit is finished —
+five arrangements that lock a triangle, and two that only look like they should:
+
+<table>
+  <thead>
+    <tr>
+      <th>Criterion</th>
+      <th>What you know</th>
+      <th>Locks the triangle?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>SSS</strong></td><td>all three sides</td><td>✓ valid</td></tr>
+    <tr><td><strong>SAS</strong></td><td>two sides and the <em>included</em> angle</td><td>✓ valid</td></tr>
+    <tr><td><strong>ASA</strong></td><td>two angles and the <em>included</em> side</td><td>✓ valid</td></tr>
+    <tr><td><strong>AAS</strong></td><td>two angles and a non-included side</td><td>✓ valid</td></tr>
+    <tr><td><strong>HL</strong></td><td>hypotenuse and a leg of a <em>right</em> triangle</td><td>✓ valid (SSA with the angle forced to 90°)</td></tr>
+    <tr><td><strong>SSA</strong></td><td>two sides and a non-included angle</td><td>✗ ambiguous — the swinging side can land twice</td></tr>
+    <tr><td><strong>AAA</strong></td><td>all three angles</td><td>✗ similar, not congruent — same shape, any size</td></tr>
+  </tbody>
+</table>
+
+<WorkedExample title="In △ABC and △XYZ you know ∠B = ∠Y = 90°, the hypotenuses AC = XZ, and the legs AB = XY. Are the triangles congruent?">
+  <Step
+    check={{
+      id: "we-hl-which",
+      type: "mc",
+      prompt: "You have a right angle, a pair of equal hypotenuses, and a pair of equal legs. Which criterion applies?",
+      choices: ["SSA — so you cannot conclude congruence", "HL — hypotenuse and leg of a right triangle", "AAA — equal angles"],
+      answer: 1,
+      hints: ["The triangles are right-angled, and you know a hypotenuse and a leg."],
+      explanation: "A right angle, equal hypotenuses, and one pair of equal legs is exactly the HL pattern.",
+    }}
+  >
+    Both triangles are right-angled at $B$ and $Y$. You are given the
+    **hypotenuses** $AC \cong XZ$ and one pair of **legs** $AB \cong XY$. A right
+    angle, the hypotenuse, and a leg is the **HL** arrangement.
+  </Step>
+  <Step>
+    By **HL**, $\triangle ABC \cong \triangle XYZ$. (Without the right angle this
+    would be plain SSA — two sides and a non-included angle — and the leg could
+    swing to a second position. The right angle is exactly what removes that
+    second triangle.)
+  </Step>
+</WorkedExample>
+
+Next, on the [CPCTC & first proofs](/geometry/congruence/cpctc) page, you finally
+*use* a congruence criterion inside a proof — once two triangles are congruent,
+every pair of corresponding parts must be equal too.
+
+export const practice = [
+  {
+    id: "ssa-ambiguous",
+    type: "mc",
+    prompt: "You know two sides of a triangle and an angle that is NOT between them. How many triangles can fit those measurements?",
+    choices: [
+      "Always exactly one",
+      "Sometimes two — the third side can swing to two landing spots",
+      "Always two",
+      "None — it is impossible",
+    ],
+    answer: 1,
+    hints: ["Think of the side hinged at a corner, swinging like a door toward the base."],
+    explanation:
+      "SSA is ambiguous: depending on the lengths, the swinging side can meet the base at two different points, giving two different triangles from the same three measurements (and at one special length — the right angle — exactly one).",
+  },
+  {
+    id: "hl-why",
+    type: "mc",
+    prompt: "Why does HL guarantee congruence when general SSA does not?",
+    choices: [
+      "Because right triangles are all congruent",
+      "Because the right angle is the boundary where SSA's second triangle disappears",
+      "Because the hypotenuse is always the longest side",
+      "Because HL uses three sides",
+    ],
+    answer: 1,
+    hints: ["What happens to the two SSA solutions exactly when the swinging side is perpendicular to the base?"],
+    explanation:
+      "A right angle is precisely the position where SSA's two landing points merge into one, so forcing a right angle (HL) removes the ambiguity. Pythagoras then fixes the remaining leg exactly.",
+  },
+  {
+    id: "aaa-similar",
+    type: "mc",
+    prompt: "Two triangles have all three pairs of angles equal but no known sides. What can you conclude?",
+    choices: [
+      "They are congruent",
+      "They are similar — same shape, but possibly different sizes",
+      "They are right triangles",
+      "Nothing at all",
+    ],
+    answer: 1,
+    hints: ["Picture a triangle and a photocopy enlarged 200%."],
+    explanation:
+      "AAA fixes the shape but not the size, so equal angles give similar triangles. They are congruent only if their sizes also happen to match.",
+  },
+  {
+    id: "classify-hl",
+    type: "mc",
+    prompt: "In right triangles △ABC and △DEF, ∠C = ∠F = 90°, AB = DE (hypotenuses), and BC = EF (legs). Which criterion proves them congruent?",
+    choices: ["SSA — not valid", "HL", "AAA", "Not enough information"],
+    answer: 1,
+    hints: ["Right angle, hypotenuse, leg."],
+    explanation:
+      "A right angle, equal hypotenuses, and one pair of equal legs is the HL criterion, so △ABC ≅ △DEF.",
+  },
+];

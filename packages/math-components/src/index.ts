@@ -48,6 +48,27 @@ export {
   IsoscelesTriangle,
   type IsoscelesTriangleProps,
 } from "./IsoscelesTriangle";
+export { CPCTC, type CPCTCProps } from "./CPCTC";
+export {
+  CongruenceChecker,
+  classifyCriterion,
+  CHECKER_PRESETS,
+  type CongruenceCheckerProps,
+  type CheckerCriterion,
+  type CheckerPreset,
+  type Mark,
+} from "./CongruenceChecker";
+export {
+  CongruenceCriteria,
+  type CongruenceCriteriaProps,
+} from "./CongruenceCriteria";
+export {
+  CongruenceByMotion,
+  buildCongruencePose,
+  CONGRUENCE_SOURCE,
+  type CongruenceByMotionProps,
+  type Pose,
+} from "./CongruenceByMotion";
 export {
   SequenceBuilder,
   type SequenceBuilderProps,

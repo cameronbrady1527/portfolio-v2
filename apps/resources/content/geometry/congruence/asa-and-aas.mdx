@@ -1,0 +1,204 @@
+---
+title: ASA & AAS
+order: 3
+description: Two of the three parts that lock a triangle can be angles. Give a triangle a side and two angles and the rays meet at exactly one point — discover the two angle-driven shortcuts, ASA and AAS, by trying and failing to build a different triangle.
+---
+
+import { CongruenceCriteria } from "@cameronbrady/math-components";
+
+On the [previous page](/geometry/congruence/sss-and-sas) you locked a triangle
+with **three sides** (SSS) and with **two sides and the angle between them**
+(SAS). Both shortcuts leaned heavily on *sides*. But a triangle is made of angles
+too — and it turns out that **two angles and a single side** are also enough to
+pin the whole figure. That is the lesson of this page: the two angle-driven
+shortcuts, **ASA** and **AAS**.
+
+> If you know one side of a triangle and the two angles that "stand on" it, how
+> much freedom is left? Set the side down, send a ray out from each end at its
+> fixed angle, and ask: how many ways can the triangle close?
+
+## The game: try to build a *different* one
+
+The inquiry is the same one you played last page. You are handed a set of parts,
+drawn on a triangle in green, and your job is to **build a different triangle
+from the same parts** — grab a corner and hunt for some other triangle that still
+honours every green mark. If every nudge springs back, those parts *determine* the
+triangle, and you have found a real congruence shortcut.
+
+Start with **ASA** (two angles and the side *between* them), then switch to
+**AAS** (two angles and a side *not* between them). Push the corner. Watch what
+happens. Only when you are convinced should you press **Name it**.
+
+<CongruenceCriteria criteria={["ASA", "AAS"]} initialCriterion="ASA" />
+
+As before, the tool stays non-judgmental while you explore and reads its verdict
+straight from the geometry — it cannot call a shortcut valid unless the math
+agrees that the parts leave the triangle no room to move.
+
+## ASA — a side and its two angles meet at one point
+
+Put a segment down. From one end, draw a ray at the first angle; from the other
+end, draw a ray at the second angle. Two non-parallel rays in a plane cross at
+**exactly one point** — and that single intersection is the triangle's third
+vertex. There is no second place for the rays to meet, so the triangle is forced.
+
+$$\text{If } \angle A\cong\angle D,\ \overline{AB}\cong\overline{DE},\ \angle B\cong\angle E, \text{ then } \triangle ABC \cong \triangle DEF. \quad (\text{ASA})$$
+
+The word **included** is doing the same work it did for SAS, just with the roles
+swapped. ASA is *Angle–Side–Angle*: the **side sits between the two angles** you
+know. That is the configuration the tool draws — the green side is flanked by the
+two green angles, and their rays close to a single apex.
+
+<PredictThenCheck
+  prompt="You know two angles of a triangle and one side, but the side is NOT between the two angles — it is off to the side (this is the AAS arrangement). Is that still enough to lock the triangle?"
+  choices={["No — only ASA works; the side has to be the included one", "Yes — two angles fix the third, so any side pins the whole triangle", "Only if the triangle is right-angled"]}
+>
+
+**Yes — AAS works too.** Here is the trick: the three angles of any triangle sum
+to $180°$, so the moment you know **two** angles, the **third is determined**
+($180°$ minus the other two). That means a non-included side is secretly an
+*included* side — it sits between one known angle and the third angle you just
+computed. AAS quietly **reduces to ASA**. So both arrangements lock the triangle;
+the only honest non-rule with two angles is **AAA**, where you know *no* side at
+all and the triangle is free to scale.
+
+</PredictThenCheck>
+
+## AAS — because two angles fix the third
+
+Switch the tool to **AAS** and try to flex it: it springs back just like ASA. The
+reason is the angle-sum argument above. Knowing $\angle A$ and $\angle B$ forces
+
+$$\angle C = 180° - \angle A - \angle B,$$
+
+so you really know all three angles *and* one side. A known side wedged between
+two known angles is exactly ASA — which you already saw is rigid. AAS is not a
+separate miracle; it is ASA wearing a disguise, and the $180°$ angle sum is what
+pulls off the mask.
+
+## Where ASA and AAS fit in the whole set
+
+ASA and AAS are the third and fourth of the **five** valid congruence criteria.
+Here is the running scorecard, with this page's two rows now filled in — five
+shortcuts that lock a triangle, and two plausible-looking arrangements that do
+**not**:
+
+<table>
+  <thead>
+    <tr>
+      <th>Criterion</th>
+      <th>What you know</th>
+      <th>Locks the triangle?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>SSS</strong></td><td>all three sides</td><td>✓ valid</td></tr>
+    <tr><td><strong>SAS</strong></td><td>two sides and the <em>included</em> angle</td><td>✓ valid</td></tr>
+    <tr><td><strong>ASA</strong></td><td>two angles and the <em>included</em> side</td><td>✓ valid</td></tr>
+    <tr><td><strong>AAS</strong></td><td>two angles and a non-included side</td><td>✓ valid</td></tr>
+    <tr><td><strong>HL</strong></td><td>hypotenuse and a leg of a right triangle</td><td>✓ valid</td></tr>
+    <tr><td><strong>SSA</strong></td><td>two sides and a non-included angle</td><td>✗ ambiguous (the "two triangles" case)</td></tr>
+    <tr><td><strong>AAA</strong></td><td>all three angles</td><td>✗ same shape, any size (similar, not congruent)</td></tr>
+  </tbody>
+</table>
+
+Notice the pattern across the four valid criteria you now hold: each one fixes
+**three** parts, and each one includes **at least one side**. That last point is
+the seed of the next page — three *angles* and no side (AAA) fixes only the
+*shape*, not the size, so it cannot guarantee congruence.
+
+<Takeaway>
+
+**ASA** (two angles and the side *between* them) and **AAS** (two angles and a
+side *not* between them) each pin a triangle down to a single shape and size — so
+two triangles sharing those parts are congruent. AAS is not a new idea: because
+the angles sum to $180°$, knowing two angles fixes the third, so AAS **reduces to
+ASA**. The only two-angle arrangement that fails is **AAA**, where no side is
+given at all.
+
+</Takeaway>
+
+<WorkedExample title="In △ABC and △DEF you know ∠A = ∠D, ∠C = ∠F, and BC = EF. Are the triangles congruent, and by which criterion?">
+  <Step
+    check={{
+      id: "we-asa-aas-position",
+      type: "mc",
+      prompt: "The known side BC sits between which two angles of △ABC — and are both of those angles among the ones you were given (∠A and ∠C)?",
+      choices: ["Between ∠B and ∠C — and only ∠C was given, not ∠B", "Between ∠A and ∠C — both were given", "It is not between any two angles"],
+      answer: 0,
+      hints: ["Side BC joins vertices B and C, so it is flanked by ∠B and ∠C. Check which of those you actually know."],
+      explanation: "BC joins B and C, so it lies between ∠B and ∠C. You were given ∠A and ∠C — so only ∠C is one of the angles adjacent to BC. The known side is NOT included between the two known angles, which makes this AAS, not ASA.",
+    }}
+  >
+    List what is given: two pairs of angles, $\angle A\cong\angle D$ and
+    $\angle C\cong\angle F$, plus one pair of sides, $\overline{BC}\cong\overline{EF}$.
+    Side $BC$ joins vertices $B$ and $C$, so it is flanked by $\angle B$ and
+    $\angle C$. But the angles you *know* are $\angle A$ and $\angle C$ — so the
+    known side is **not** wedged between the two known angles.
+  </Step>
+  <Step>
+    Two angles and a **non-included** side is the **AAS** pattern, so
+    $\triangle ABC \cong \triangle DEF$ by **AAS**. (You can also see why it must
+    hold: $\angle B = 180° - \angle A - \angle C$ is forced, so $BC$ is really
+    included between the known $\angle C$ and the now-known $\angle B$ — AAS
+    collapsing into ASA.)
+  </Step>
+</WorkedExample>
+
+This page filled in the **ASA** and **AAS** rows. Next comes the right-angle
+special case **HL**, set alongside the two famous failures — **SSA**, where a side
+can swing to two landing spots, and **AAA**, where the triangle scales freely:
+[HL & why SSA/AAA fail](/geometry/congruence/hl-and-ssa).
+
+export const practice = [
+  {
+    id: "asa-recognise",
+    type: "mc",
+    prompt: "Two triangles have two pairs of equal angles and the pair of sides BETWEEN those angles is equal. Which criterion proves them congruent?",
+    choices: ["ASA", "AAS", "AAA", "SAS"],
+    answer: 0,
+    hints: ["The known side sits between the two known angles — read the letters in order: Angle, Side, Angle."],
+    explanation:
+      "A side included between two known angles is the ASA criterion. The two rays from the side's ends meet at exactly one point, so the triangle is locked.",
+  },
+  {
+    id: "aas-reduces-to-asa",
+    type: "mc",
+    prompt: "Why is AAS (two angles and a non-included side) a valid congruence criterion?",
+    choices: [
+      "Because the angles sum to 180°, so knowing two angles fixes the third — making the side an included side after all",
+      "Because any two angles and any side always work",
+      "Because AAS is actually the same as SSS",
+      "It is not valid — AAS does not guarantee congruence",
+    ],
+    answer: 0,
+    hints: ["What do the three angles of any triangle add up to?"],
+    explanation:
+      "The angle sum is 180°, so two known angles determine the third. With all three angles known, the given side is included between two of them — AAS reduces to ASA, which is rigid.",
+  },
+  {
+    id: "classify-given-asa",
+    type: "mc",
+    prompt: "In △PQR and △XYZ: ∠P = ∠X, PQ = XY, and ∠Q = ∠Y. Which criterion applies?",
+    choices: ["SAS", "ASA", "AAS", "Not enough information"],
+    answer: 1,
+    hints: ["Side PQ joins P and Q; the two known angles are at P and Q — exactly the endpoints of that side."],
+    explanation:
+      "PQ joins vertices P and Q, and the known angles ∠P and ∠Q sit at its two ends. A side included between two known angles is ASA, so △PQR ≅ △XYZ.",
+  },
+  {
+    id: "aaa-not-asa",
+    type: "mc",
+    prompt: "Two triangles have all three pairs of angles equal but you know NONE of their sides. Which criterion applies?",
+    choices: [
+      "ASA",
+      "AAS",
+      "AAA — but it is not a valid congruence criterion",
+      "SSS",
+    ],
+    answer: 2,
+    hints: ["ASA and AAS each require at least one known side. How many sides do you know here?"],
+    explanation:
+      "With three angles and no side, this is AAA — which fixes the shape but not the size. You can scale one triangle freely and keep all three angles, so they are similar, not necessarily congruent.",
+  },
+];

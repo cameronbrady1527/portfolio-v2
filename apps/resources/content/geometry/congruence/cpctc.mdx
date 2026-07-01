@@ -1,0 +1,381 @@
+---
+title: CPCTC & First Proofs
+order: 50
+description: Once two triangles are congruent, every pair of corresponding parts is congruent — the skill is reading the correspondence, then using it as the last line of a proof.
+---
+
+import { CPCTC, CongruenceChecker } from "@cameronbrady/math-components";
+
+export const ProofTable = ({ rows }) => (
+  <table
+    style={{
+      width: "100%",
+      borderCollapse: "collapse",
+      margin: "1.25rem 0",
+      fontSize: "0.95rem",
+      lineHeight: 1.5,
+    }}
+  >
+    <thead>
+      <tr>
+        <th
+          style={{
+            border: "1px solid var(--border, #e2ddd0)",
+            background: "var(--muted, #f5f2ea)",
+            padding: "0.5rem 0.75rem",
+            textAlign: "left",
+            fontWeight: 600,
+            width: "52%",
+          }}
+        >
+          Statements
+        </th>
+        <th
+          style={{
+            border: "1px solid var(--border, #e2ddd0)",
+            background: "var(--muted, #f5f2ea)",
+            padding: "0.5rem 0.75rem",
+            textAlign: "left",
+            fontWeight: 600,
+          }}
+        >
+          Reasons
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((row, i) => (
+        <tr key={i}>
+          <td
+            style={{
+              border: "1px solid var(--border, #e2ddd0)",
+              padding: "0.5rem 0.75rem",
+              verticalAlign: "top",
+            }}
+          >
+            <span style={{ color: "var(--muted-foreground, #6b6353)", marginRight: "0.4rem" }}>
+              {i + 1}.
+            </span>
+            {row[0]}
+          </td>
+          <td
+            style={{
+              border: "1px solid var(--border, #e2ddd0)",
+              padding: "0.5rem 0.75rem",
+              verticalAlign: "top",
+            }}
+          >
+            {row[1]}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+);
+
+Once you know two triangles are congruent, you get a whole list of equal parts for
+free. That is what <Term id="cpctc">CPCTC</Term> stands for: **Corresponding Parts
+of Congruent Triangles are Congruent**. If one triangle can be carried exactly onto
+the other, then each side lands on a matching side and each angle lands on a
+matching angle — so all six pairs are equal.
+
+The one new skill is **reading the correspondence**. A congruence statement lists
+its vertices in matching order on purpose:
+
+$$\triangle ABC \cong \triangle DEF \quad\Longrightarrow\quad A\leftrightarrow D,\ \ B\leftrightarrow E,\ \ C\leftrightarrow F.$$
+
+From that single line you can read off every equal part — pair the **letters in the
+same position**, never the parts that happen to look closest on the page.
+
+## Read the correspondence
+
+The second triangle below is drawn **turned and flipped**, so you cannot trust
+position. Click a side or angle of the first triangle and watch its true partner
+light up in the second — matched by the order $A\!\to\!D,\ B\!\to\!E,\ C\!\to\!F$.
+
+<CPCTC />
+
+## Make a prediction
+
+<PredictThenCheck
+  prompt="Given △ABC ≅ △DEF, which side of the second triangle is congruent to BC?"
+  choices={["DE", "EF", "DF", "It depends on how the triangle is drawn"]}
+>
+
+It is **EF**. Read the letters by position: $B$ matches $E$ and $C$ matches $F$, so
+the side $BC$ corresponds to the side $EF$ — written in the same order, $BC \cong
+EF$. How the second triangle is turned or flipped makes no difference; the
+correspondence comes from the statement. Select **BC** in the tool and watch $EF$
+light up.
+
+</PredictThenCheck>
+
+## Why the order matters
+
+CPCTC does not ask you to re-prove anything — the triangles are *already* congruent.
+It asks you to **name the right partner**. The trap is matching by appearance: a
+reflected triangle can put $E$ where you expect $D$, so a part that *looks* like it
+pairs with $AB$ may really be $EF$. Reading straight from $\triangle ABC \cong
+\triangle DEF$ keeps you right every time:
+
+- Sides: $AB \cong DE$, $\;BC \cong EF$, $\;CA \cong FD$.
+- Angles: $\angle A \cong \angle D$, $\;\angle B \cong \angle E$, $\;\angle C \cong \angle F$.
+
+<Takeaway>
+
+**CPCTC**: if $\triangle ABC \cong \triangle DEF$, then every corresponding pair is
+congruent. Find a partner by pairing the **letters in the same position** of the
+congruence statement — not by which parts sit closest on the diagram.
+
+</Takeaway>
+
+<WorkedExample title="Given △PQR ≅ △STU, find the partner of ∠R and of side PQ.">
+  <Step
+    check={{
+      id: "we-cpctc-angle",
+      type: "mc",
+      prompt: "Which angle is congruent to ∠R?",
+      choices: ["∠S", "∠T", "∠U"],
+      answer: 2,
+      hints: ["R is the third letter of △PQR. Take the third letter of △STU."],
+      explanation: "R sits in the third position, and U is third in △STU, so ∠R ≅ ∠U.",
+    }}
+  >
+    Line the statements up by position: $P\leftrightarrow S$, $Q\leftrightarrow T$,
+    $R\leftrightarrow U$. The third letters match, so $\angle R \cong \angle U$.
+  </Step>
+  <Step
+    check={{
+      id: "we-cpctc-side",
+      type: "mc",
+      prompt: "Which side is congruent to PQ?",
+      choices: ["ST", "TU", "SU"],
+      answer: 0,
+      hints: ["P matches S and Q matches T."],
+      explanation: "P↔S and Q↔T, so the side PQ corresponds to ST: PQ ≅ ST.",
+    }}
+  >
+    Pair each letter: $P\leftrightarrow S$ and $Q\leftrightarrow T$. So the side
+    $PQ$ corresponds to $ST$, giving $PQ \cong ST$.
+  </Step>
+</WorkedExample>
+
+## Using CPCTC in a proof
+
+CPCTC is almost always the **last line** of a proof. The strategy is a fixed
+two-step move:
+
+1. **Get a triangle congruence.** Find two triangles that contain the parts you
+   care about, and prove them congruent by one of the criteria — SSS, SAS, ASA,
+   AAS, or HL.
+2. **Harvest a part with CPCTC.** Once the triangles are congruent, the specific
+   side or angle you actually wanted is congruent *because* corresponding parts of
+   congruent triangles are congruent.
+
+So before you can write CPCTC, you have to choose the **right criterion** from the
+given parts. That single decision — *which three parts are given, and what do they
+spell?* — is the whole game.
+
+## Is it congruent? — the checker
+
+Practice the criterion-choosing move on five marked pairs. Four are genuine
+congruences; **one is a deliberate trap**. The verdict comes straight from the
+figure's coordinates, so it cannot drift from the math.
+
+<CongruenceChecker />
+
+<PredictThenCheck
+  prompt="One pair marks two sides and an angle that is NOT between them (SSA), yet the two triangles look different. Are they congruent?"
+  choices={["Yes — two sides and an angle is always enough", "No — SSA does not force congruence", "Only if the angle is obtuse"]}
+>
+
+**No.** SSA — two sides and a *non-included* angle — is one of the two famous
+non-criteria. The marked angle leaves the third side free to swing to **two**
+different landing points, so the same three given parts fit two genuinely
+different triangles. The checker reports **Not congruent** for that pair because
+the two triangles really do not coincide. Valid shortcuts are **SSS, SAS, ASA,
+AAS, HL**; the impostors are **SSA** and **AAA**.
+
+</PredictThenCheck>
+
+## Three worked proofs
+
+Each proof makes the same two decisions — *which criterion?* then *what does CPCTC
+give?* Predict each before you reveal the finished two-column proof.
+
+### Proof 1 — SSS, then CPCTC
+
+**Given:** $AB \cong CB$, and $M$ is the midpoint of $\overline{AC}$.
+**Prove:** $\angle A \cong \angle C$.
+
+The two triangles to compare are $\triangle ABM$ and $\triangle CBM$ — they share
+the segment $BM$, and the midpoint splits $AC$ into two equal halves.
+
+<PredictThenCheck
+  prompt="Which criterion proves △ABM ≅ △CBM?"
+  choices={["SSS", "SAS", "ASA", "AAS"]}
+>
+
+**SSS.** List the three pairs of sides: $AB \cong CB$ is given; $AM \cong CM$
+because $M$ is the midpoint of $\overline{AC}$; and $BM \cong BM$ by the reflexive
+property (it is the *same* segment in both triangles). Three pairs of congruent
+sides — that is **SSS**. No angle information is needed.
+
+</PredictThenCheck>
+
+<PredictThenCheck
+  prompt="Now that △ABM ≅ △CBM, what does CPCTC let you conclude?"
+  choices={["∠A ≅ ∠C", "∠A ≅ ∠B", "AM ≅ BM", "Nothing more"]}
+>
+
+**$\angle A \cong \angle C$.** Under $\triangle ABM \cong \triangle CBM$ the first
+letters $A$ and $C$ correspond, so $\angle A$ and $\angle C$ are corresponding
+angles — and corresponding parts of congruent triangles are congruent. (This is
+exactly the proof that the **base angles of an isosceles triangle are equal**.)
+
+</PredictThenCheck>
+
+<ProofTable
+  rows={[
+    ["AB ≅ CB; M is the midpoint of AC", "Given"],
+    ["AM ≅ CM", "A midpoint divides a segment into two congruent segments"],
+    ["BM ≅ BM", "Reflexive property"],
+    ["△ABM ≅ △CBM", "SSS"],
+    ["∠A ≅ ∠C", "CPCTC"],
+  ]}
+/>
+
+### Proof 2 — SAS, then CPCTC
+
+**Given:** $\overline{AC}$ and $\overline{BD}$ bisect each other at $E$.
+**Prove:** $AB \cong CD$.
+
+"Bisect each other" means $E$ is the midpoint of *both* diagonals, so it splits
+each into two equal pieces. Compare $\triangle AEB$ and $\triangle CED$.
+
+<PredictThenCheck
+  prompt="Which criterion proves △AEB ≅ △CED?"
+  choices={["SSS", "SAS", "ASA", "HL"]}
+>
+
+**SAS.** The bisected diagonals give two pairs of sides: $AE \cong CE$ and
+$BE \cong DE$. The angle *between* those sides at $E$ — $\angle AEB$ and
+$\angle CED$ — are **vertical angles**, hence congruent. Two sides and the
+**included** angle: **SAS**.
+
+</PredictThenCheck>
+
+<PredictThenCheck
+  prompt="Once △AEB ≅ △CED, what does CPCTC give you?"
+  choices={["AB ≅ CD", "AE ≅ BE", "∠B ≅ ∠C", "Nothing more"]}
+>
+
+**$AB \cong CD$.** Under $\triangle AEB \cong \triangle CED$ the correspondence is
+$A\leftrightarrow C$, $B\leftrightarrow D$, so the side $AB$ corresponds to $CD$ —
+and CPCTC makes corresponding sides congruent.
+
+</PredictThenCheck>
+
+<ProofTable
+  rows={[
+    ["AC and BD bisect each other at E", "Given"],
+    ["AE ≅ CE, BE ≅ DE", "A bisector divides a segment into two congruent segments"],
+    ["∠AEB ≅ ∠CED", "Vertical angles are congruent"],
+    ["△AEB ≅ △CED", "SAS"],
+    ["AB ≅ CD", "CPCTC"],
+  ]}
+/>
+
+### Proof 3 — ASA, then CPCTC
+
+**Given:** $AB \parallel CD$ and $AD \parallel BC$.
+**Prove:** $AB \cong CD$.
+
+Two pairs of parallel sides make $ABCD$ a parallelogram. Draw the diagonal
+$\overline{AC}$ and compare $\triangle ABC$ with $\triangle CDA$.
+
+<PredictThenCheck
+  prompt="Which criterion proves △ABC ≅ △CDA?"
+  choices={["SSS", "SAS", "ASA", "SSA"]}
+>
+
+**ASA.** The diagonal $AC$ is a transversal of *both* pairs of parallel lines, so
+it creates two pairs of **alternate interior angles**: $\angle BAC \cong \angle
+DCA$ (from $AB \parallel CD$) and $\angle BCA \cong \angle DAC$ (from $AD \parallel
+BC$). The side $AC \cong AC$ sits **between** those angles by the reflexive
+property. Two angles and the **included** side: **ASA**.
+
+</PredictThenCheck>
+
+<PredictThenCheck
+  prompt="With △ABC ≅ △CDA established, what does CPCTC conclude?"
+  choices={["AB ≅ CD", "AC ≅ BD", "∠B ≅ ∠A", "Nothing more"]}
+>
+
+**$AB \cong CD$.** Under $\triangle ABC \cong \triangle CDA$ the correspondence is
+$A\leftrightarrow C$, $B\leftrightarrow D$, $C\leftrightarrow A$, so $AB$
+corresponds to $CD$. CPCTC gives $AB \cong CD$ — this is the proof that
+**opposite sides of a parallelogram are congruent**.
+
+</PredictThenCheck>
+
+<ProofTable
+  rows={[
+    ["AB ∥ CD, AD ∥ BC", "Given"],
+    ["∠BAC ≅ ∠DCA", "Alternate interior angles (AB ∥ CD)"],
+    ["AC ≅ AC", "Reflexive property"],
+    ["∠BCA ≅ ∠DAC", "Alternate interior angles (AD ∥ BC)"],
+    ["△ABC ≅ △CDA", "ASA"],
+    ["AB ≅ CD", "CPCTC"],
+  ]}
+/>
+
+<Takeaway>
+
+To prove two parts congruent, **find two triangles that contain them, prove the
+triangles congruent by a criterion, then finish with CPCTC**. The criterion you
+pick is dictated by the given parts: three sides → SSS, two sides and the included
+angle → SAS, two angles and the included side → ASA. These three proofs are the
+classic results behind isosceles base angles, bisected diagonals, and the opposite
+sides of a parallelogram.
+
+</Takeaway>
+
+export const practice = [
+  {
+    id: "cpctc-side-partner",
+    type: "mc",
+    prompt: "Given △ABC ≅ △DEF, which side is congruent to CA?",
+    choices: ["DE", "EF", "FD", "DF"],
+    answer: 2,
+    hints: ["C matches F and A matches D, in that order."],
+    explanation: "C↔F and A↔D, so CA corresponds to FD: CA ≅ FD.",
+  },
+  {
+    id: "cpctc-angle-partner",
+    type: "mc",
+    prompt: "Given △ABC ≅ △DEF, which angle is congruent to ∠B?",
+    choices: ["∠D", "∠E", "∠F"],
+    answer: 1,
+    hints: ["B is the second letter; take the second letter of △DEF."],
+    explanation: "B sits in the second position and E is second in △DEF, so ∠B ≅ ∠E.",
+  },
+  {
+    id: "cpctc-reflected-trap",
+    type: "mc",
+    prompt: "△JKL ≅ △XYZ, and the second triangle is drawn reflected. Which side is congruent to JK?",
+    choices: ["XY", "YZ", "XZ", "The reflection changes the answer"],
+    answer: 0,
+    hints: ["A reflection does not change the congruence statement — read J↔X and K↔Y."],
+    explanation: "Reflection does not change the correspondence. J↔X and K↔Y, so JK ≅ XY.",
+  },
+  {
+    id: "cpctc-statement-order",
+    type: "mc",
+    prompt: "Two triangles are congruent and you know ∠A ≅ ∠R, ∠B ≅ ∠S, ∠C ≅ ∠T. Which is the correct congruence statement?",
+    choices: ["△ABC ≅ △RST", "△ABC ≅ △STR", "△ABC ≅ △TRS", "△ABC ≅ △RTS"],
+    answer: 0,
+    hints: ["The statement must list corresponding vertices in the same order."],
+    explanation: "Corresponding vertices are A↔R, B↔S, C↔T, so the statement is △ABC ≅ △RST.",
+  },
+];
