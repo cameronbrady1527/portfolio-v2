@@ -49,6 +49,7 @@ export {
   type IsoscelesTriangleProps,
 } from "./IsoscelesTriangle";
 export { CPCTC, type CPCTCProps } from "./CPCTC";
+export { ProofBuilder, type ProofBuilderProps } from "./ProofBuilder";
 export {
   CongruenceChecker,
   classifyCriterion,

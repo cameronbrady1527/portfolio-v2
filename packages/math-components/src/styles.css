@@ -317,6 +317,95 @@
   }
 }
 
+/* ── Proof builder ───────────────────────────────────────────────────────────
+ * The two-column proof table, its coordinated figure, and the tile banks. Rows
+ * seat green when correct; a wrong tile shakes the active row (motion-safe) and
+ * does not seat. Highlight (row ↔ figure) is a warm tint, redundant with the
+ * figure's brightened arcs. */
+.cbmc-proof-head {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0 0 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-left: 3px solid var(--cbmc-accent, #176844);
+  background: var(--cbmc-control-bg, #fffdf7);
+  border-radius: 0.25rem;
+}
+
+.cbmc-proof-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.cbmc-proof-table th {
+  border: 1px solid var(--cbmc-control-border, #cfc7b5);
+  background: var(--cbmc-control-bg-hover, #f1ebda);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+}
+.cbmc-proof-table td {
+  border: 1px solid var(--cbmc-control-border, #cfc7b5);
+  padding: 0.5rem 0.75rem;
+  vertical-align: top;
+}
+.cbmc-proof-num {
+  color: var(--cbmc-muted, #6b6353);
+  margin-right: 0.4rem;
+}
+.cbmc-proof-slot {
+  color: var(--cbmc-muted, #6b6353);
+  font-style: italic;
+}
+.cbmc-proof-reason-ok {
+  color: var(--cbmc-found-fg, #14603f);
+  font-weight: 600;
+}
+/* The statement text as a subtle highlight-toggling button. */
+.cbmc-proof-stmt {
+  font: inherit;
+  text-align: left;
+  border: 0;
+  background: none;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  cursor: pointer;
+  border-bottom: 1px dotted transparent;
+}
+.cbmc-proof-stmt:hover,
+.cbmc-proof-stmt:focus-visible {
+  border-bottom-color: var(--cbmc-accent, #176844);
+  outline: none;
+}
+.cbmc-proof-row-active > td {
+  background: var(--cbmc-control-bg-hover, #f1ebda);
+}
+.cbmc-proof-row-seated > td {
+  background: var(--cbmc-found-bg, #e3f1e9);
+}
+.cbmc-proof-row-hot > td {
+  box-shadow: inset 3px 0 0 var(--cbmc-accent, #176844);
+}
+
+@keyframes cbmc-nudge {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+.cbmc-nudge > td {
+  animation: cbmc-nudge 380ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cbmc-nudge > td {
+    animation: none;
+  }
+}
+
 /* A pressed/selected chip (segmented option, or a toggle like "Show side
  * lengths") takes the accent tint. The symmetry "found" chip adds a ✓ on top. */
 .cbmc-chip[aria-pressed="true"] {
