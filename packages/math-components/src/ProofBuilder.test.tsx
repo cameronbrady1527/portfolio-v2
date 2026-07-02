@@ -103,6 +103,28 @@ describe("ProofBuilder — Level 1 (reason-only)", () => {
   });
 });
 
+describe("ProofBuilder — fixed (single illustrative proof)", () => {
+  it("completes but offers no 'Next proof' — only Start over, and never advances", () => {
+    const s = spec();
+    const { container } = render(<ProofBuilder spec={s} level={1} fixed />);
+    for (const st of s.statements) clickReason(st.reasons[0]);
+    expect(isComplete(container)).toBe("true");
+    expect(screen.queryByRole("button", { name: /next proof/i })).toBeNull();
+    expect(screen.getByRole("button", { name: /start over/i })).toBeInTheDocument();
+    // Fixed proofs never bank a completion toward a fade.
+    expect(attr(container, "data-cbmc-completions")).toBe("0");
+    expect(attr(container, "data-cbmc-level")).toBe("1");
+  });
+
+  it("does not emit progress to a host on completion", () => {
+    const s = spec();
+    const onProgressChange = vi.fn();
+    render(<ProofBuilder spec={s} level={1} fixed onProgressChange={onProgressChange} />);
+    for (const st of s.statements) clickReason(st.reasons[0]);
+    expect(onProgressChange).not.toHaveBeenCalled();
+  });
+});
+
 describe("ProofBuilder — Level 2 (Parsons order + pair)", () => {
   const placeStep = (spc: ProofSpec, id: string) => {
     const st = spc.statements.find((s) => s.id === id)!;

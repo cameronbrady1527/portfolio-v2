@@ -6,73 +6,6 @@ description: Once two triangles are congruent, every pair of corresponding parts
 
 import { CPCTC, CongruenceChecker } from "@cameronbrady/math-components";
 
-export const ProofTable = ({ rows }) => (
-  <table
-    style={{
-      width: "100%",
-      borderCollapse: "collapse",
-      margin: "1.25rem 0",
-      fontSize: "0.95rem",
-      lineHeight: 1.5,
-    }}
-  >
-    <thead>
-      <tr>
-        <th
-          style={{
-            border: "1px solid var(--border, #e2ddd0)",
-            background: "var(--muted, #f5f2ea)",
-            padding: "0.5rem 0.75rem",
-            textAlign: "left",
-            fontWeight: 600,
-            width: "52%",
-          }}
-        >
-          Statements
-        </th>
-        <th
-          style={{
-            border: "1px solid var(--border, #e2ddd0)",
-            background: "var(--muted, #f5f2ea)",
-            padding: "0.5rem 0.75rem",
-            textAlign: "left",
-            fontWeight: 600,
-          }}
-        >
-          Reasons
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      {rows.map((row, i) => (
-        <tr key={i}>
-          <td
-            style={{
-              border: "1px solid var(--border, #e2ddd0)",
-              padding: "0.5rem 0.75rem",
-              verticalAlign: "top",
-            }}
-          >
-            <span style={{ color: "var(--muted-foreground, #6b6353)", marginRight: "0.4rem" }}>
-              {i + 1}.
-            </span>
-            {row[0]}
-          </td>
-          <td
-            style={{
-              border: "1px solid var(--border, #e2ddd0)",
-              padding: "0.5rem 0.75rem",
-              verticalAlign: "top",
-            }}
-          >
-            {row[1]}
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-);
-
 Once you know two triangles are congruent, you get a whole list of equal parts for
 free. That is what <Term id="cpctc">CPCTC</Term> stands for: **Corresponding Parts
 of Congruent Triangles are Congruent**. If one triangle can be carried exactly onto
@@ -235,15 +168,9 @@ exactly the proof that the **base angles of an isosceles triangle are equal**.)
 
 </PredictThenCheck>
 
-<ProofTable
-  rows={[
-    ["AB ≅ CB; M is the midpoint of AC", "Given"],
-    ["AM ≅ CM", "A midpoint divides a segment into two congruent segments"],
-    ["BM ≅ BM", "Reflexive property"],
-    ["△ABM ≅ △CBM", "SSS"],
-    ["∠A ≅ ∠C", "CPCTC"],
-  ]}
-/>
+Now build it: each statement is given in order — supply the reason that justifies it.
+
+<CpctcProof id="sss-isosceles" />
 
 ### Proof 2 — SAS, then CPCTC
 
@@ -276,15 +203,7 @@ and CPCTC makes corresponding sides congruent.
 
 </PredictThenCheck>
 
-<ProofTable
-  rows={[
-    ["AC and BD bisect each other at E", "Given"],
-    ["AE ≅ CE, BE ≅ DE", "A bisector divides a segment into two congruent segments"],
-    ["∠AEB ≅ ∠CED", "Vertical angles are congruent"],
-    ["△AEB ≅ △CED", "SAS"],
-    ["AB ≅ CD", "CPCTC"],
-  ]}
-/>
+<CpctcProof id="sas-bisect" />
 
 ### Proof 3 — ASA, then CPCTC
 
@@ -319,16 +238,7 @@ corresponds to $CD$. CPCTC gives $AB \cong CD$ — this is the proof that
 
 </PredictThenCheck>
 
-<ProofTable
-  rows={[
-    ["AB ∥ CD, AD ∥ BC", "Given"],
-    ["∠BAC ≅ ∠DCA", "Alternate interior angles (AB ∥ CD)"],
-    ["AC ≅ AC", "Reflexive property"],
-    ["∠BCA ≅ ∠DAC", "Alternate interior angles (AD ∥ BC)"],
-    ["△ABC ≅ △CDA", "ASA"],
-    ["AB ≅ CD", "CPCTC"],
-  ]}
-/>
+<CpctcProof id="asa-parallelogram" />
 
 <Takeaway>
 

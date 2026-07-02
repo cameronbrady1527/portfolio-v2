@@ -115,6 +115,9 @@ export interface ProofBuilderProps {
   seed?: number;
   /** STARTING scaffold level (1–4); the fade may advance from here. Default 1. */
   level?: ScaffoldLevel;
+  /** A single, illustrative proof: no fade, no "Next proof", no progress emitted.
+   *  For a fixed `spec` embedded in content (e.g. worked proofs), not a drill. */
+  fixed?: boolean;
   className?: string;
   /** Hydration: clean completions already banked at the starting level. */
   initialCompletions?: number;
@@ -180,6 +183,7 @@ export function ProofBuilder({
   spec: specProp,
   seed = DEFAULT_SEED,
   level: levelProp,
+  fixed = false,
   className,
   initialCompletions = 0,
   initialComfortable = false,
@@ -339,6 +343,12 @@ export function ProofBuilder({
   // A clean completion of the CURRENT proof. Below Level 4 it banks a completion
   // toward the fade; at Level 4 a clean pass is mastery ("comfortable").
   const registerCompletion = () => {
+    // A fixed, illustrative proof is terminal: no fade, no nudge, no persistence
+    // (the `done` instruction already reads "Proof complete — every step…").
+    if (fixed) {
+      setFlash(null);
+      return;
+    }
     if (holistic) {
       setComfortable(true);
       setFlash(null);
@@ -1242,7 +1252,7 @@ export function ProofBuilder({
       />
 
       <div className="cbmc-controls" style={{ marginTop: "0.5rem" }}>
-        {done ? (
+        {done && !fixed ? (
           <button type="button" className="cbmc-btn cbmc-btn-primary" onClick={nextProof}>
             Next proof
           </button>
@@ -1266,7 +1276,9 @@ export function ProofBuilder({
             ? "Points sit on a line, with congruent segments tick-marked. "
             : fig?.kind === "rays-from-point"
               ? "Rays share a vertex, with congruent angles arc-marked. "
-              : "Two lines cross, forming the numbered angles shown. "}
+              : fig?.kind === "intersecting-lines"
+                ? "Two lines cross, forming the numbered angles shown. "
+                : ""}
         Build a two-column proof that <MathText source={spec.proveText} />:{" "}
         {holistic
           ? "assemble the whole argument in a valid order, then submit it to be checked all at once — the unaided standard"
