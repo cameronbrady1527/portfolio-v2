@@ -63,7 +63,7 @@ export function ProofTutorial({ className }: ProofTutorialProps) {
           </ol>
           {!seen ? (
             <button type="button" className="cbmc-btn cbmc-btn-primary" onClick={dismiss}>
-              Got it — let's go
+              {"Got it — let's go"}
             </button>
           ) : null}
         </div>
