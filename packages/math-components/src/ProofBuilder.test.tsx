@@ -125,6 +125,35 @@ describe("ProofBuilder — fixed (single illustrative proof)", () => {
   });
 });
 
+describe("ProofBuilder — familyPool (interleaved practice)", () => {
+  it("renders a valid proof drawn from the pool (mixed types don't crash)", () => {
+    // Pool spans a figureless family (what-is-a-proof) and figure-bearing ones.
+    render(
+      <ProofBuilder
+        familyPool={["what-is-a-proof", "vertical-angles", "congruence-cpctc"]}
+        level={1}
+      />,
+    );
+    expect(screen.getByText(/Given:/)).toBeInTheDocument();
+    expect(screen.getByText(/Prove:/)).toBeInTheDocument();
+    expect(reasonBank()).toBeInTheDocument();
+  });
+
+  it("draws different families across seeds (interleaving is real)", () => {
+    // Render the same pool at a spread of seeds; the set of Given headers should
+    // contain more than one distinct proof — i.e. the pool is actually sampled.
+    const givens = new Set<string>();
+    for (const seed of [1, 2, 3, 4, 5, 6, 7, 8]) {
+      const { container, unmount } = render(
+        <ProofBuilder familyPool={["what-is-a-proof", "congruence-cpctc"]} seed={seed} />,
+      );
+      givens.add(container.querySelector(".cbmc-proof-head")?.textContent ?? "");
+      unmount();
+    }
+    expect(givens.size).toBeGreaterThan(1);
+  });
+});
+
 describe("ProofBuilder — Level 2 (Parsons order + pair)", () => {
   const placeStep = (spc: ProofSpec, id: string) => {
     const st = spc.statements.find((s) => s.id === id)!;

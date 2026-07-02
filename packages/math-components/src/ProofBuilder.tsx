@@ -109,7 +109,12 @@ export interface ProofProgressSnapshot {
 export interface ProofBuilderProps {
   /** Which registered proof family to generate from. Default "vertical-angles". */
   familyId?: string;
-  /** An explicit spec to build (overrides `familyId`/`seed`/fade generation). */
+  /** A pool of family ids to INTERLEAVE: each generated proof (initial + every
+   *  "Next proof") is drawn from the pool by seed, so the student meets a random
+   *  proof type each round — the anti-gaming, strategy-selection drill. Overrides
+   *  `familyId` when non-empty. */
+  familyPool?: string[];
+  /** An explicit spec to build (overrides `familyId`/`familyPool`/fade generation). */
   spec?: ProofSpec;
   /** Seed for the deterministic generator + tile shuffles. Default is fixed. */
   seed?: number;
@@ -180,6 +185,7 @@ type Generation = { level: ScaffoldLevel; seed: number };
 
 export function ProofBuilder({
   familyId = "vertical-angles",
+  familyPool,
   spec: specProp,
   seed = DEFAULT_SEED,
   level: levelProp,
@@ -203,11 +209,17 @@ export function ProofBuilder({
   const highlightOn = curLevel <= 3; // coordinated figure ↔ table highlight
   const holistic = curLevel >= 4; // assemble-then-Submit, whole-DAG verdict
 
-  // Generate once per (family, level, seed). A supplied spec wins outright.
-  const spec = useMemo<ProofSpec>(
-    () => specProp ?? generateProof(familyId, gen.level, mulberry32(gen.seed)),
-    [specProp, familyId, gen.level, gen.seed],
-  );
+  // Generate once per (family, level, seed). A supplied spec wins outright; a
+  // non-empty `familyPool` interleaves — the family is drawn from the pool by an
+  // independent hash of the seed, so consecutive proofs vary in type.
+  const spec = useMemo<ProofSpec>(() => {
+    if (specProp) return specProp;
+    const pool = familyPool && familyPool.length > 0 ? familyPool : null;
+    const fam = pool
+      ? pool[Math.floor(mulberry32((gen.seed ^ 0x85ebca6b) >>> 0)() * pool.length)]
+      : familyId;
+    return generateProof(fam, gen.level, mulberry32(gen.seed));
+  }, [specProp, familyPool, familyId, gen.level, gen.seed]);
 
   const statements = spec.statements;
   const distractors = useMemo(() => spec.distractors ?? [], [spec]);

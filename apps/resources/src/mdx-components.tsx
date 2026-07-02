@@ -18,6 +18,7 @@ import {
   IsoscelesFig,
 } from "@/components/TriangleDiagrams";
 import { ProofPractice } from "@/components/ProofPractice";
+import { MixedProofPractice } from "@/components/MixedProofPractice";
 import { CpctcProof } from "@/components/CpctcProof";
 
 // Required by @next/mdx in the App Router. Topic prose inherits the global
@@ -47,6 +48,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     TriangleInequalityFig,
     IsoscelesFig,
     ProofPractice,
+    MixedProofPractice,
     CpctcProof,
     ...components,
   };
