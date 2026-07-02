@@ -50,6 +50,19 @@ export {
 } from "./IsoscelesTriangle";
 export { CPCTC, type CPCTCProps } from "./CPCTC";
 export {
+  ProofBuilder,
+  type ProofBuilderProps,
+  type ProofProgressSnapshot,
+} from "./ProofBuilder";
+export type {
+  ProofSpec,
+  ProofStatement,
+  ProofDistractor,
+  ProofFigure,
+  ReasonId,
+  ScaffoldLevel,
+} from "./logic/geometry/proof";
+export {
   CongruenceChecker,
   classifyCriterion,
   CHECKER_PRESETS,

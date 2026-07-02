@@ -11,9 +11,10 @@ const nextConfig: NextConfig = {
 const withMDX = createMDX({
   // Plugins are given by string name (not function refs) so they resolve inside
   // Turbopack's worker. remark-frontmatter parses/strips the `---` block;
+  // remark-gfm adds GitHub-flavored markdown (tables, strikethrough, task lists);
   // remark-math + rehype-katex render `$…$` / `$$…$$` to KaTeX at build time.
   options: {
-    remarkPlugins: [["remark-frontmatter"], ["remark-math"]],
+    remarkPlugins: [["remark-frontmatter"], ["remark-gfm"], ["remark-math"]],
     rehypePlugins: [["rehype-katex"]],
   },
 });
