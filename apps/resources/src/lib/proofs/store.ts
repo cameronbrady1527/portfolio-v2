@@ -31,6 +31,9 @@ export type ProofsProgress = {
   version: 1;
   /** State per proof-family id. */
   families: Record<string, FamilyProgress>;
+  /** Whether the student has seen (and dismissed) the how-to-use intro. Shown
+   *  once on first encounter; afterwards it stays collapsed but re-openable. */
+  tutorialSeen?: boolean;
 };
 
 // ---------------------------------------------------------------------------
@@ -72,6 +75,11 @@ export function markComfortable(
       [familyId]: { ...prev, familyId, comfortable: true },
     },
   };
+}
+
+/** Mark the how-to-use intro as seen, returning NEW progress. */
+export function markTutorialSeen(progress: ProofsProgress): ProofsProgress {
+  return { ...progress, tutorialSeen: true };
 }
 
 /** Per-family reset: drop this family's state entirely, returning NEW progress. */
@@ -122,7 +130,9 @@ export function normalizeProofsProgress(value: unknown): ProofsProgress {
     // well-formed for THAT id (a mismatched inner familyId is malformed).
     if (isFamilyProgress(f) && f.familyId === id) families[id] = f;
   }
-  return { version: PROOFS_PROGRESS_VERSION, families };
+  const tutorialSeen =
+    (value as { tutorialSeen?: unknown }).tutorialSeen === true ? true : undefined;
+  return { version: PROOFS_PROGRESS_VERSION, families, tutorialSeen };
 }
 
 // ---------------------------------------------------------------------------

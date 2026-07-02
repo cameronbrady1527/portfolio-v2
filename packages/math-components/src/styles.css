@@ -64,7 +64,10 @@
  *   --cbmc-focus-ring               focus outline color
  */
 .cbmc-instruction {
-  font-weight: 500;
+  font-weight: 600;
+  /* Same accent as the active-row bar, so the prompt and the row it refers to
+   * read as one unit — "this is where you are, this is what to do". */
+  color: var(--cbmc-accent, #176844);
   margin: 0 0 0.6rem;
 }
 
@@ -283,6 +286,18 @@
   transition: opacity 150ms ease;
 }
 
+/* Only the interactive hit-regions in a proof figure receive pointer events.
+ * The decorative marks (angle arcs, congruence ticks, labels, the crossing
+ * lines, the grid) sit on top of the clickable regions and would otherwise
+ * intercept the click meant for the region beneath — making angle/part
+ * selection flaky. Disable events on the figure SVG, re-enable on the targets. */
+.cbmc-graph-paper svg {
+  pointer-events: none;
+}
+.cbmc-graph-paper .cbmc-angle-hit {
+  pointer-events: auto;
+}
+
 /* Selectable angle wedges: a subtle outline on hover/keyboard focus. */
 .cbmc-angle-hit {
   cursor: pointer;
@@ -383,6 +398,13 @@
 .cbmc-proof-row-active > td {
   background: var(--cbmc-control-bg-hover, #f1ebda);
 }
+/* An accent left-bar (on the row's first cell only, so it reads as one marker
+ * down the left edge — not a line between the two columns) flags the row you are
+ * building right now — the "box we are selecting" — tying it to the
+ * accent-coloured instruction below. */
+.cbmc-proof-row-active > td:first-child {
+  box-shadow: inset 3px 0 0 var(--cbmc-accent, #176844);
+}
 .cbmc-proof-row-seated > td {
   background: var(--cbmc-found-bg, #e3f1e9);
 }
@@ -413,7 +435,7 @@
   font-weight: 600;
   color: var(--cbmc-found-fg, #14603f);
 }
-.cbmc-proof-row-hot > td {
+.cbmc-proof-row-hot > td:first-child {
   box-shadow: inset 3px 0 0 var(--cbmc-accent, #176844);
 }
 

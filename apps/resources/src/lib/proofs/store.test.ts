@@ -4,6 +4,7 @@ import {
   emptyProofsProgress,
   loadProofsProgress,
   markComfortable,
+  markTutorialSeen,
   normalizeProofsProgress,
   recordFamilyResult,
   resetFamily,
@@ -43,6 +44,28 @@ describe("markComfortable", () => {
     const p = markComfortable(emptyProofsProgress(), "isosceles");
     expect(p.families.isosceles.comfortable).toBe(true);
     expect(p.families.isosceles.level).toBe(4);
+  });
+});
+
+describe("markTutorialSeen", () => {
+  it("sets the flag and survives a save/load round-trip", () => {
+    const p = markTutorialSeen(emptyProofsProgress());
+    expect(p.tutorialSeen).toBe(true);
+    saveProofsProgress("resources:proofs:test-tut", p);
+    expect(loadProofsProgress("resources:proofs:test-tut").tutorialSeen).toBe(true);
+  });
+
+  it("defaults to unseen (undefined) and preserves family state", () => {
+    expect(emptyProofsProgress().tutorialSeen).toBeUndefined();
+    const withFam = recordFamilyResult(emptyProofsProgress(), {
+      familyId: "vertical-angles",
+      level: 2,
+      completions: 1,
+      comfortable: false,
+    });
+    const p = markTutorialSeen(withFam);
+    expect(p.tutorialSeen).toBe(true);
+    expect(p.families["vertical-angles"].level).toBe(2);
   });
 });
 

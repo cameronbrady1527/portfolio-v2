@@ -5,6 +5,7 @@ import {
   ProofBuilder,
   type ProofProgressSnapshot,
 } from "@cameronbrady/math-components";
+import { ProofTutorial } from "@/components/ProofTutorial";
 import {
   loadProofsProgress,
   markComfortable,
@@ -70,15 +71,18 @@ export function ProofPractice({
   // Before hydration, render the builder at its Level-1 default so the server
   // and first client paint agree; after hydration, remount with saved state.
   return (
-    <ProofBuilder
-      key={hydrated ? `${familyId}:hydrated` : `${familyId}:initial`}
-      familyId={familyId}
-      className={className}
-      level={hydrated?.level ?? 1}
-      initialCompletions={hydrated?.completions ?? 0}
-      initialComfortable={hydrated?.comfortable ?? false}
-      onProgressChange={onProgressChange}
-      onStartOver={onStartOver}
-    />
+    <>
+      <ProofTutorial />
+      <ProofBuilder
+        key={hydrated ? `${familyId}:hydrated` : `${familyId}:initial`}
+        familyId={familyId}
+        className={className}
+        level={hydrated?.level ?? 1}
+        initialCompletions={hydrated?.completions ?? 0}
+        initialComfortable={hydrated?.comfortable ?? false}
+        onProgressChange={onProgressChange}
+        onStartOver={onStartOver}
+      />
+    </>
   );
 }
