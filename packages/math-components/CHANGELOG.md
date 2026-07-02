@@ -1,5 +1,84 @@
 # @cameronbrady/math-components
 
+## 0.5.0
+
+### Minor Changes
+
+- 4bdc62f: Add the `congruence-cpctc` proof family plus a triangle-pair figure for the
+  `ProofBuilder`. The pure, seeded generator proves two triangles congruent by the
+  criterion the givens force — **SSS**, **SAS**, or **ASA** — and then concludes a
+  pair of corresponding parts congruent by **CPCTC**. The structure varies in ways
+  that change the DAG: the criterion (which alters the congruence row's reason and
+  which prerequisite rows exist, including a derived pair of right angles via
+  "all right angles are congruent"), the given/prove split, and the goal (a
+  corresponding angle vs a corresponding segment). Distractors gate in at level ≥ 3
+  (a wrong-correspondence CPCTC conclusion, a scrambled-correspondence congruence).
+
+  A new `triangle-pair` `ProofFigure` variant draws two congruent triangles with
+  standard congruence markings — matching tick counts on congruent sides, matching
+  arc counts on congruent angles, and a right-angle square where relevant — built
+  additively in `internal/proof-figure.ts` (`buildTrianglePair`, reusing
+  `triangleFromSSS` and the `sideTicks` / `angleArcs` / `rightAngleSquare` marking
+  primitives) and rendered in `ProofBuilder` with coordinated letter-based
+  highlight (focus a row to glow the parts it cites; click a vertex to find its
+  rows). Mounts on the new `geometry/proofs/congruent-triangles` page.
+
+- e36e1b0: Add the `ProofBuilder` component — the Proofs unit's flagship two-column proof
+  interaction. A student meets a machine-drawn intersecting-lines figure beside a
+  Given/Prove table and constructs the proof by placing tiles: Level 1 supplies the
+  reasons for pre-printed statements, Level 2 (Parsons) orders and pairs shuffled
+  statement and reason tiles. Every judgement is read from the pure engine's
+  `gradeProof` (any valid topological order is accepted; a premature or wrongly-reasoned
+  row nudges back and does not seat). The figure is coordinated both ways with the
+  table (focus a row to glow the angles it cites; click an angle to find its rows),
+  fully keyboard/tap operable (no drag required), reduced-motion aware, and
+  colour-independent. Ships the `internal/proof-figure.ts` renderer and mounts on the
+  new `geometry/proofs/vertical-angles` page.
+- 778d484: Add a `familyPool` prop to `ProofBuilder` for interleaved practice: when given a
+  list of family ids, each generated proof (initial and every "Next proof") is
+  drawn from the pool by an independent hash of the seed, so the student meets a
+  random proof type each round — the anti-gaming, strategy-selection drill that
+  powers the Proofs unit's mixed-practice capstone.
+- ae5bd6d: Add a `fixed` mode to `ProofBuilder` for embedding a single, illustrative proof
+  in content: with `fixed`, the builder never fades, offers no "Next proof", and
+  emits no progress — the student simply justifies each step of the given proof.
+  Also export the proof spec types from the package root (`ProofSpec`,
+  `ProofStatement`, `ProofDistractor`, `ProofFigure`, `ReasonId`, `ScaffoldLevel`)
+  so hosts can author fixed specs, and render a figureless spec cleanly (no stray
+  figure caption).
+- 4bdc62f: Complete the `ProofBuilder` scaffold dial (Levels 3–4) with an adaptive fade. At
+  Level 3 the statement and reason banks gain the engine's plausible distractor
+  tiles (a distractor is rejected on placement and nudges without seating) while
+  per-row feedback and the coordinated figure highlight stay on. Level 4 (mastery)
+  shows the full bank at minimal scaffold: the figure highlight turns OFF and
+  feedback goes HOLISTIC — the student assembles the whole proof (rows seat without
+  per-row gating), presses Submit for one whole-DAG verdict against `gradeProof`,
+  wrong rows are flagged, and retry keeps the sound prefix. Within a practice set
+  the difficulty AUTO-FADES: two clean completions at a level advance the next
+  generated proof (fresh seed) one step, and a clean Level-4 pass marks the family
+  "comfortable". Persistence is delegated to the host via new pure hooks
+  (`onProgressChange` / `onStartOver`, `initialCompletions` / `initialComfortable`,
+  `ProofProgressSnapshot`), so the package stays storage-free. The current level,
+  completions, comfortable flag, submission state, and flagged rows are surfaced on
+  `data-cbmc-*` attributes.
+- 4bdc62f: Add the `segment-addition` and `angle-addition` proof families and their shared
+  figure primitives. Two pure, seeded `ProofFamily` generators build two-column
+  proofs on collinear points (Segment Addition Postulate) and on rays from a vertex
+  (Angle Addition Postulate), structurally varied across build-up, break-down,
+  perpendicular right-angle, and transitive midpoint/bisector templates, with
+  distractors gated to level ≥ 3 and property-tested to grade valid under any
+  topological order across levels 1–4.
+
+  Extends `ProofFigure` with two additive variants — `points-on-line` (labelled
+  collinear points with congruence ticks) and `rays-from-point` (rays from a shared
+  vertex with congruence arcs and right-angle squares) — plus pure builders
+  (`buildPointsOnLine`, `buildRaysFromPoint`) and coordinated figure↔table
+  highlighting in `ProofBuilder`. Ships the `segment-addition` and `angle-addition`
+  topic pages.
+
+- 2253476: Add the two-column proof engine foundation (`logic/geometry/proof.ts`): `ProofSpec`/`ProofFamily`/`ReasonId`/`ScaffoldLevel` types, the SME-ratified reason bank (`REASON_LABELS`), a dependency-graph `gradeProof` that accepts any valid ordering (reason-id sets + alternative derivation paths), the `generateProof` family registry, and the property-tested `vertical-angles` reference family.
+- 4bdc62f: Add the `what-is-a-proof` proof family — the simplest on-ramp to the two-column form: a figureless algebraic proof that, given a linear equation, proves `x = k` justified line-by-line by the Properties of Equality. Pure and seeded like every `ProofFamily`, with structural variation across seeds (one-/two-/three-step forms; Addition, Subtraction, Multiplication, Division, and Distributive properties; varied integer coefficients and solutions) and level-gated distractors. Registered in the `generateProof` family map and exported from the `/logic` and `/logic/geometry` barrels. The accompanying `geometry/proofs/what-is-a-proof.mdx` page mounts the figureless `ProofBuilder` for this family.
+
 ## 0.4.0
 
 ### Minor Changes
