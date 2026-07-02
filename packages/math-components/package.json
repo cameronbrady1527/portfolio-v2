@@ -1,6 +1,6 @@
 {
   "name": "@cameronbrady/math-components",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Accessible, interactive math components — a coordinate-plane transformations Grapher plus framework-agnostic geometry, grading, and progress logic.",
   "license": "MIT",
   "private": false,
