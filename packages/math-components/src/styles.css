@@ -386,6 +386,33 @@
 .cbmc-proof-row-seated > td {
   background: var(--cbmc-found-bg, #e3f1e9);
 }
+/* Level 4 holistic: a row is placed but not yet judged (neutral) until Submit,
+ * then a wrong row is flagged red. */
+.cbmc-proof-row-placed > td {
+  background: var(--cbmc-control-bg, #fffdf7);
+}
+.cbmc-proof-row-wrong > td {
+  background: var(--cbmc-wrong-bg, #f8e6e2);
+  box-shadow: inset 3px 0 0 var(--cbmc-wrong-fg, #a3341f);
+}
+.cbmc-proof-reason {
+  color: inherit;
+}
+.cbmc-proof-reason-wrong {
+  color: var(--cbmc-wrong-fg, #a3341f);
+  font-weight: 600;
+}
+/* Non-interactive statement text (Level 4 — no coordinated highlight). */
+.cbmc-proof-stmt-static {
+  color: inherit;
+}
+/* Minimal readiness indicator — a quiet "comfortable" badge, no score. */
+.cbmc-proof-comfortable {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cbmc-found-fg, #14603f);
+}
 .cbmc-proof-row-hot > td {
   box-shadow: inset 3px 0 0 var(--cbmc-accent, #176844);
 }

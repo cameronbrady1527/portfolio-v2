@@ -51,10 +51,14 @@ export {
   type Determinacy,
   type CongruenceResult,
 } from "./congruence";
+export { segmentAddition } from "./proof-families/segment-addition";
+export { angleAddition } from "./proof-families/angle-addition";
+export { congruenceCpctc } from "./proof-families/congruence-cpctc";
 export {
   gradeProof,
   generateProof,
   verticalAngles,
+  whatIsAProof,
   PROOF_FAMILIES,
   REASON_LABELS,
   type ReasonId,
@@ -63,6 +67,7 @@ export {
   type ProofDistractor,
   type ProofSpec,
   type ProofFigure,
+  type TriangleFigureMark,
   type ProofArrangement,
   type RowVerdict,
   type ProofVerdict,

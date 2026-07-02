@@ -7,6 +7,10 @@
  * rendering/client dependency so it stays statically renderable and
  * property-testable in a plain node environment. Mirrors `congruence.ts`.
  */
+import { whatIsAProof } from "./proof-families/what-is-a-proof";
+import { segmentAddition } from "./proof-families/segment-addition";
+import { angleAddition } from "./proof-families/angle-addition";
+import { congruenceCpctc } from "./proof-families/congruence-cpctc";
 
 /** A justification from the controlled, SME-ratified reason bank. Properties of
  *  Equality (`-eq`, for `=` on measures/lengths) are kept distinct from
@@ -110,8 +114,14 @@ export type ScaffoldLevel = 1 | 2 | 3 | 4;
  */
 export interface ProofStatement {
   id: string;
-  /** Statement text; may contain LaTeX (`$…$`). */
+  /** Plain-text statement, in unicode (e.g. "AB ≅ CD", "m∠1 + m∠2 = 180°"). This
+   *  is the canonical form: the figure-highlight matcher and the accessible label
+   *  both read it, so it must stay free of LaTeX markup. */
   text: string;
+  /** Optional display form with inline math delimited by `$…$` (e.g.
+   *  "$\\overline{AB} \\cong \\overline{CD}$"), rendered by `<MathText>` for
+   *  Regents-faithful notation. Falls back to {@link text} when absent. */
+  tex?: string;
   /** The SET of acceptable reasons (≥1). */
   reasons: ReasonId[];
   /** OR of AND-groups of prior statement ids this step follows from. */
@@ -126,6 +136,8 @@ export interface ProofStatement {
 export interface ProofDistractor {
   id: string;
   text: string;
+  /** Optional `$…$` display form; see {@link ProofStatement.tex}. */
+  tex?: string;
   reason?: ReasonId;
 }
 
@@ -133,6 +145,9 @@ export interface ProofDistractor {
  *  distractors in play at this scaffold level. */
 export interface ProofSpec {
   figure?: ProofFigure;
+  /** Given/Prove header strings, display forms with inline math delimited by
+   *  `$…$` (rendered by `<MathText>`). Header-only, so — unlike a statement's
+   *  `text` — these carry the math markup directly. */
   givenText: string;
   proveText: string;
   statements: ProofStatement[];
@@ -141,15 +156,60 @@ export interface ProofSpec {
 }
 
 /** Figure descriptor carried by the spec. The engine never interprets it — the
- *  renderer (a later slice) draws it. Discriminated on `kind`. */
-export type ProofFigure = {
-  kind: "intersecting-lines";
-  /** Direction (degrees) of the two crossing lines. */
-  line1Deg: number;
-  line2Deg: number;
-  /** Labels for the four rays, clockwise from `line1Deg`. */
-  rayLabels: [string, string, string, string];
-};
+ *  renderer (`internal/proof-figure.ts` + `ProofBuilder`) draws it. Discriminated
+ *  on `kind`. New kinds are added ADDITIVELY (each in its own clearly-commented
+ *  block) so parallel slices extend the union without clobbering one another. */
+export type ProofFigure =
+  | {
+      kind: "intersecting-lines";
+      /** Direction (degrees) of the two crossing lines. */
+      line1Deg: number;
+      line2Deg: number;
+      /** Labels for the four rays, clockwise from `line1Deg`. */
+      rayLabels: [string, string, string, string];
+    }
+  // --- points-on-line figure (segment-addition family) ---
+  | {
+      kind: "points-on-line";
+      /** Collinear labelled points, in order, `at` a fraction along the line. */
+      points: { label: string; at: number }[];
+      /** Congruence tick marks on the sub-segment from point `a` to point `b`. */
+      ticks?: { a: string; b: string; count: number }[];
+    }
+  // --- rays-from-point figure (angle-addition family) ---
+  | {
+      kind: "rays-from-point";
+      /** The shared vertex label (the middle letter of every angle name). */
+      vertex: string;
+      /** Rays fanning from the vertex, each at direction `deg`. */
+      rays: { label: string; deg: number }[];
+      /** Congruence arc marks on the angle between rays `a` and `b`. */
+      arcs?: { a: string; b: string; count: number }[];
+      /** Right-angle squares on the angle between rays `a` and `b`. */
+      rightAngles?: { a: string; b: string }[];
+    }
+  // --- triangle-pair figure (congruence-cpctc) ---
+  | {
+      kind: "triangle-pair";
+      /** Vertex labels for triangle 1 and triangle 2, in [0,1,2] order. The two
+       *  triangles are congruent under the positional correspondence i ↔ i. */
+      labels: [[string, string, string], [string, string, string]];
+      /** Side lengths [|01|, |12|, |20|] both congruent triangles are drawn from. */
+      sides: [number, number, number];
+      /** Congruence markings — the parts the givens establish. Each names the
+       *  triangle (0/1) and the vertex letter(s) it sits on, so the renderer can
+       *  resolve it and the coordinated highlight can match it to the proof text. */
+      marks: TriangleFigureMark[];
+    };
+
+/** One congruence marking on the triangle-pair figure. A `side` carries `count`
+ *  matching ticks, an `angle` carries `count` matching arcs, and a `right` draws
+ *  the little right-angle square. `at` is the vertex letter(s): two for a side
+ *  (its endpoints), one for an angle/right (its vertex). */
+export type TriangleFigureMark =
+  | { kind: "side"; tri: 0 | 1; at: string; count: number }
+  | { kind: "angle"; tri: 0 | 1; at: string; count: number }
+  | { kind: "right"; tri: 0 | 1; at: string };
 
 /** What the student built: statement rows in the order they placed them. */
 export interface ProofArrangement {
@@ -241,12 +301,12 @@ export const verticalAngles: ProofFamily = (level, rng) => {
   const line2Deg = line1Deg + choose(rng, [60, 70, 110, 120]);
 
   const statements: ProofStatement[] = [
-    { id: "g", text: `Lines intersect, forming ∠${a}, ∠${shared}, ∠${c}`, reasons: ["given"], deps: [[]], given: true },
-    { id: "s1", text: `m∠${a} + m∠${shared} = 180°`, reasons: ["linear-pair-supp"], deps: [["g"]] },
-    { id: "s2", text: `m∠${shared} + m∠${c} = 180°`, reasons: ["linear-pair-supp"], deps: [["g"]] },
-    { id: "s3", text: `m∠${a} + m∠${shared} = m∠${shared} + m∠${c}`, reasons: ["subst", "transitive-eq"], deps: [["s1", "s2"]] },
-    { id: "s4", text: `m∠${a} = m∠${c}`, reasons: ["sub-eq"], deps: [["s3"]] },
-    { id: "s5", text: `∠${a} ≅ ∠${c}`, reasons: ["def-congr-angles"], deps: [["s4"]], goal: true },
+    { id: "g", text: `Lines intersect, forming ∠${a}, ∠${shared}, ∠${c}`, tex: `Lines intersect, forming $\\angle ${a}$, $\\angle ${shared}$, $\\angle ${c}$`, reasons: ["given"], deps: [[]], given: true },
+    { id: "s1", text: `m∠${a} + m∠${shared} = 180°`, tex: `$m\\angle ${a} + m\\angle ${shared} = 180^\\circ$`, reasons: ["linear-pair-supp"], deps: [["g"]] },
+    { id: "s2", text: `m∠${shared} + m∠${c} = 180°`, tex: `$m\\angle ${shared} + m\\angle ${c} = 180^\\circ$`, reasons: ["linear-pair-supp"], deps: [["g"]] },
+    { id: "s3", text: `m∠${a} + m∠${shared} = m∠${shared} + m∠${c}`, tex: `$m\\angle ${a} + m\\angle ${shared} = m\\angle ${shared} + m\\angle ${c}$`, reasons: ["subst", "transitive-eq"], deps: [["s1", "s2"]] },
+    { id: "s4", text: `m∠${a} = m∠${c}`, tex: `$m\\angle ${a} = m\\angle ${c}$`, reasons: ["sub-eq"], deps: [["s3"]] },
+    { id: "s5", text: `∠${a} ≅ ∠${c}`, tex: `$\\angle ${a} \\cong \\angle ${c}$`, reasons: ["def-congr-angles"], deps: [["s4"]], goal: true },
   ];
 
   // Distractors — plausible but wrong — appear only once the student is past the
@@ -254,8 +314,8 @@ export const verticalAngles: ProofFamily = (level, rng) => {
   const distractors: ProofDistractor[] =
     level >= 3
       ? [
-          { id: "d1", text: `m∠${a} = m∠${shared}`, reason: "sub-eq" },
-          { id: "d2", text: `∠${a} ≅ ∠${shared}`, reason: "def-congr-angles" },
+          { id: "d1", text: `m∠${a} = m∠${shared}`, tex: `$m\\angle ${a} = m\\angle ${shared}$`, reason: "sub-eq" },
+          { id: "d2", text: `∠${a} ≅ ∠${shared}`, tex: `$\\angle ${a} \\cong \\angle ${shared}$`, reason: "def-congr-angles" },
         ]
       : [];
 
@@ -266,16 +326,22 @@ export const verticalAngles: ProofFamily = (level, rng) => {
       line2Deg,
       rayLabels: [`${n(0)}`, `${n(1)}`, `${n(2)}`, `${n(3)}`],
     },
-    givenText: `Two lines intersect, forming ∠${a}, ∠${shared}, and ∠${c}`,
-    proveText: `∠${a} ≅ ∠${c}`,
+    givenText: `Two lines intersect, forming $\\angle ${a}$, $\\angle ${shared}$, and $\\angle ${c}$`,
+    proveText: `$\\angle ${a} \\cong \\angle ${c}$`,
     statements,
     distractors,
     level,
   };
 };
 
+export { whatIsAProof };
+
 const FAMILIES: Record<string, ProofFamily> = {
+  "what-is-a-proof": whatIsAProof,
   "vertical-angles": verticalAngles,
+  "segment-addition": segmentAddition,
+  "angle-addition": angleAddition,
+  "congruence-cpctc": congruenceCpctc,
 };
 
 /** The registered proof-family ids. */
