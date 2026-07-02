@@ -49,7 +49,16 @@ export interface MathTextProps {
 /** Render `source` with its `$…$` spans as KaTeX and the rest as prose. */
 export function MathText({ source, ariaHidden, className }: MathTextProps) {
   return (
-    <span className={className} aria-hidden={ariaHidden || undefined}>
+    <span
+      className={className}
+      aria-hidden={ariaHidden || undefined}
+      // When decorative inside a labelled control (ariaHidden), make the rendered
+      // KaTeX click-transparent: its nested sub-spans otherwise swallow the first
+      // pointer click (mousedown/mouseup landing on different sub-elements → no
+      // click), which reads as "you have to press the tile twice". The control's
+      // own click handler + aria-label do the real work.
+      style={ariaHidden ? { pointerEvents: "none" } : undefined}
+    >
       {segments(source).map((seg, i) =>
         seg.math ? (
           <span key={i} dangerouslySetInnerHTML={{ __html: renderMath(seg.value) }} />

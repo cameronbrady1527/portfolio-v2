@@ -116,3 +116,42 @@
     linear-gradient(to bottom, var(--line) 1px, transparent 1px);
   background-size: 26px 26px;
 }
+
+/* Proof builder onboarding — a quiet, re-openable "how to use" intro shown above
+ * the two-column builder. Matches the builder's accent (same --cbmc token). */
+.cbmc-proof-tutorial {
+  margin: 0 0 0.75rem;
+}
+.cbmc-proof-tutorial-toggle {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0.15rem 0;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--cbmc-accent, #176844);
+  cursor: pointer;
+}
+.cbmc-proof-tutorial-toggle:hover {
+  text-decoration: underline;
+}
+.cbmc-proof-tutorial-body {
+  margin-top: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--cbmc-border, #e2ddd0);
+  border-left: 3px solid var(--cbmc-accent, #176844);
+  border-radius: 0.5rem;
+  background: var(--cbmc-found-bg, #eef5f0);
+}
+.cbmc-proof-tutorial-body ol {
+  margin: 0 0 0.75rem;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+.cbmc-proof-tutorial-body ol li {
+  padding-left: 0.15rem;
+}

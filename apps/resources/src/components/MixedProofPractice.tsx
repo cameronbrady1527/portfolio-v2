@@ -5,6 +5,7 @@ import {
   ProofBuilder,
   type ProofProgressSnapshot,
 } from "@cameronbrady/math-components";
+import { ProofTutorial } from "@/components/ProofTutorial";
 import {
   loadProofsProgress,
   markComfortable,
@@ -73,15 +74,18 @@ export function MixedProofPractice({ className }: MixedProofPracticeProps) {
   };
 
   return (
-    <ProofBuilder
-      key={hydrated ? "mixed:hydrated" : "mixed:initial"}
-      familyPool={FAMILY_POOL}
-      className={className}
-      level={hydrated?.level ?? 1}
-      initialCompletions={hydrated?.completions ?? 0}
-      initialComfortable={hydrated?.comfortable ?? false}
-      onProgressChange={onProgressChange}
-      onStartOver={onStartOver}
-    />
+    <>
+      <ProofTutorial />
+      <ProofBuilder
+        key={hydrated ? "mixed:hydrated" : "mixed:initial"}
+        familyPool={FAMILY_POOL}
+        className={className}
+        level={hydrated?.level ?? 1}
+        initialCompletions={hydrated?.completions ?? 0}
+        initialComfortable={hydrated?.comfortable ?? false}
+        onProgressChange={onProgressChange}
+        onStartOver={onStartOver}
+      />
+    </>
   );
 }
